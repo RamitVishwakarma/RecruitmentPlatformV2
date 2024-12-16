@@ -14,36 +14,36 @@ datasource db {
 }
 
 model SocialLink {
-  id     Int    @id @default(autoincrement())
+  id     String    @id @default(uuid())
   name   String
   link   String
-  userId Int
+  userId String
   user   User   @relation(fields: [userId], references: [id])
 }
 
 model UserAptitudeDetails {
-  id            Int  @id @default(autoincrement())
-  userId        Int  @unique
+  id            String  @id @default(uuid())
+  userId        String  @unique
   user          User @relation(fields: [userId], references: [id])
   aptitudeScore Int
 }
 
 model User {
-  id              Int                  @id @default(autoincrement()) // Primary key
+  id              String               @id @default(uuid()) // Primary key
   createdAt       DateTime             @default(now())
-  updatedAt       DateTime
+  updatedAt       DateTime?
   email           String               @unique
   name            String
   password        String //hashed password
   admissionNumber String
-  photo           String
-  year            Int
+  photo           String?
+  year            Int?
   resume          String
-  aptitudeScore   Int
-  aptitudeId      Int?
+  aptitudeScore   Int?
+  aptitudeId      String?
   aptitude        UserAptitudeDetails? @relation
-  domain          String
-  socialLinkId    Int?
+  domain          String?
+  socialLinkId    String?
   socialLinks     SocialLink[]
   aptitudeStatus  Boolean              @default(false)
   projectStatus   Boolean              @default(false)
