@@ -20,13 +20,12 @@ model User {
 }
 
 model Aptitude {
-  id                Int        @id @default(autoincrement())
+  id                String     @id @default(uuid())
   aptitudeTitle     String
-  aptitudeShortDesc String     @db.VarChar(255)
-  aptitudeLongDesc  String?     @db.VarChar(1000)
+  aptitudeShortDesc String
+  aptitudeLongDesc  String?
   aptitudeDomain    String
   aptitudeYear      Int
   aptitudeQuestions Question[] @relation
   aptitudeDuration  Int
-  aptitudeType      String 
 }
