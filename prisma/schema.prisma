@@ -14,22 +14,22 @@ datasource db {
 }
 
 model User {
-  id    Int    @id @default(autoincrement())
+  id    String @id @default(uuid())
   name  String
   email String @unique
 }
 
 model Question {
-  id                Int      @id @default(autoincrement())
-  questionShortDesc String   @db.VarChar(50)
-  questionLongDesc  String?  @db.VarChar(250)
+  id                String   @id @default(uuid())
+  questionShortDesc String
+  questionLongDesc  String?
   options           Option[]
   aptitudeId        Int
   aptitude          Aptitude @relation(fields: [aptitudeId], references: [id])
 }
 
 model Option {
-  id         Int      @id @default(autoincrement())
+  id         String   @id @default(uuid())
   optionText String
   isCorrect  Boolean
   questionId Int
