@@ -38,7 +38,7 @@ model User {
   admissionNumber String
   photo           String?
   year            Int?
-  resume          String
+  resume          String?
   aptitudeScore   Int?
   aptitudeId      String?
   aptitude        UserAptitudeDetails? @relation
