@@ -51,3 +51,20 @@ model User {
   shortlistStatus Boolean              @default(false)
   interviewStatus Boolean              @default(false)
 }
+
+model Question {
+  id                String   @id @default(uuid())
+  questionShortDesc String
+  questionLongDesc  String?
+  options           Option[]
+  aptitudeId        Int
+  aptitude          Aptitude @relation(fields: [aptitudeId], references: [id])
+}
+
+model Option {
+  id         String   @id @default(uuid())
+  optionText String
+  isCorrect  Boolean
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id])
+}
