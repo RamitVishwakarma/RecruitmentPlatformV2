@@ -13,10 +13,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model SocialLink {
+  id     String    @id @default(uuid())
+  name   String
+  link   String
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model UserAptitudeDetails {
+  id            String  @id @default(uuid())
+  userId        String  @unique
+  user          User @relation(fields: [userId], references: [id])
+  aptitudeScore Int
+}
+
 model User {
-  id    String @id @default(uuid())
-  name  String
-  email String @unique
+  id              String               @id @default(uuid()) // Primary key
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime?
+  email           String               @unique
+  name            String
+  password        String //hashed password
+  admissionNumber String
+  photo           String?
+  year            Int?
+  resume          String?
+  aptitudeScore   Int?
+  aptitudeId      String?
+  aptitude        UserAptitudeDetails? @relation
+  domain          String?
+  socialLinkId    String?
+  socialLinks     SocialLink[]
+  aptitudeStatus  Boolean              @default(false)
+  projectStatus   Boolean              @default(false)
+  reviewStatus    Boolean              @default(false)
+  shortlistStatus Boolean              @default(false)
+  interviewStatus Boolean              @default(false)
 }
 
 model Question {
