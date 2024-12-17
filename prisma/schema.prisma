@@ -68,3 +68,14 @@ model Option {
   questionId Int
   question   Question @relation(fields: [questionId], references: [id])
 }
+
+model Aptitude {
+  id                String     @id @default(uuid())
+  aptitudeTitle     String
+  aptitudeShortDesc String
+  aptitudeLongDesc  String?
+  aptitudeDomain    String
+  aptitudeYear      Int
+  aptitudeQuestions Question[] @relation
+  aptitudeDuration  Int
+}
