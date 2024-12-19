@@ -57,15 +57,15 @@ model Question {
   questionShortDesc String
   questionLongDesc  String?
   options           Option[]
-  aptitudeId        Int
-  aptitude          Aptitude @relation(fields: [aptitudeId], references: [id])
+  aptitudeId        String
+  aptitude          Aptitude @relation(fields: [aptitudeId], references: [id], onDelete: Cascade)
 }
 
 model Option {
   id         String   @id @default(uuid())
   optionText String
   isCorrect  Boolean
-  questionId Int
+  questionId String
   question   Question @relation(fields: [questionId], references: [id])
 }
 
