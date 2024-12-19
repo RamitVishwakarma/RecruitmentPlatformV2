@@ -58,7 +58,7 @@ model Question {
   questionLongDesc  String?
   options           Option[]
   aptitudeId        String
-  aptitude          Aptitude @relation(fields: [aptitudeId], references: [id])
+  aptitude          Aptitude @relation(fields: [aptitudeId], references: [id], onDelete: Cascade)
 }
 
 model Option {
