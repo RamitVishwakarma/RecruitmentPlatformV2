@@ -1,11 +1,8 @@
-import express from "express";
-import { config } from "dotenv";
-import userRouter from "./userRoutes.js";
-
-config();
-
+import userRoutes from "./userRoutes.js";
+import aptitudeRoutes from "./aptitudeRoutes.js";
+import userAptitudeDetailsRoutes from "./userAptitudeDetailsRoutes.js";
 const router = express.Router();
-
-router.use("/users", userRouter);
-
-export default router;
+router.use("/", aptitudeRoutes);
+router.use("/", userRoutes);
+router.use("/", userAptitudeDetailsRoutes);
+export { userRoutes, aptitudeRoutes, userAptitudeDetailsRoutes };
