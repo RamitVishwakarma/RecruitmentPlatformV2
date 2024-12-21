@@ -23,7 +23,7 @@ const createUser = async (req, res) => {
   });
 
   if (existingUser) {
-    return res.status(400).json({ message: "User already exists! 🧐" });
+    return res.status(400).json({ message: "User already exists!" });
   }
 
   try {
@@ -51,11 +51,11 @@ const createUser = async (req, res) => {
       },
     });
 
-    res.status(201).json({ message: "User created! 🥳", user });
+    res.status(201).json({ message: "User created!", user });
   } catch (error) {
     console.log(error);
 
-    res.status(500).json({ message: "Internal Server Error! 🥲" });
+    res.status(500).json({ message: "Internal Server Error!" });
   }
 };
 
@@ -71,7 +71,7 @@ const getUsers = async (req, res) => {
 
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error! 🥲" });
+    res.status(500).json({ message: "Internal Server Error!" });
   }
 };
 
@@ -86,12 +86,12 @@ const getUserById = async (req, res) => {
     });
 
     if (!user) {
-      res.status(404).json({ msg: "User not found! 😞" });
+      res.status(404).json({ msg: "User not found!" });
     }
 
-    res.status(200).json({ "Fetched user 😃": user });
+    res.status(200).json({ msg: "User fetched!", user });
   } catch (err) {
-    res.status(500).json({ message: "Internal Server Error! 🥲" });
+    res.status(500).json({ message: "Internal Server Error!" });
   }
 };
 
@@ -114,14 +114,14 @@ const updateUser = async (req, res) => {
   } = req.body;
 
   if (!name && !email && !domain && !year && !photo && !resume) {
-    return res.status(400).json({ message: "No fields provided! 🤔" });
+    return res.status(400).json({ message: "No fields provided!" });
   }
 
   try {
     const existingUser = await prisma.user.findUnique({ where: { id } });
 
     if (!existingUser) {
-      return res.status(404).json({ message: "User not found 😥" });
+      return res.status(404).json({ message: "User not found!" });
     }
 
     const user = await prisma.user.update({
@@ -160,7 +160,7 @@ const updateUser = async (req, res) => {
         .json({ message: "Email or admission number already in use" });
     }
 
-    res.status(500).json({ message: "Internal server error! 🥲" });
+    res.status(500).json({ message: "Internal server error!" });
   }
 };
 
@@ -169,23 +169,23 @@ const deleteUser = async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.status(400).json({ msg: "User ID is required! 😳" });
+    return res.status(400).json({ msg: "User ID is required!" });
   }
 
   try {
     const existingUser = await prisma.user.findUnique({ where: { id } });
 
     if (!existingUser) {
-      return res.status(404).json({ msg: "User not found! 🥲" });
+      return res.status(404).json({ msg: "User not found!" });
     }
 
     const user = await prisma.user.delete({
       where: { id },
     });
 
-    return res.status(200).json({ msg: "User updated! 👶", user });
+    return res.status(200).json({ msg: "User updated!", user });
   } catch (error) {
-    return res.status(500).json({ msg: "Internal server error! 🥲" });
+    return res.status(500).json({ msg: "Internal server error!" });
   }
 };
 
