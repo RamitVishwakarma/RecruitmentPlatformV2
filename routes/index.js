@@ -18,4 +18,5 @@ export {
   userAptitudeDetailsRoutes,
   questionsRoutes,
   optionsRoutes,
+  userRoutes,
 };
