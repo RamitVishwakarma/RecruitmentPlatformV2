@@ -4,7 +4,7 @@ import {
   userRoutes,
   aptitudeRoutes,
   userAptitudeDetailsRoutes,
-  questionsRoutes,
+  questionRoutes,
   optionsRoutes,
 } from "./routes/index.js";
 
@@ -20,7 +20,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/users", userRoutes);
-app.use("/questions", questionsRoutes);
+app.use("/questions", questionRoutes);
 app.use("/options", optionsRoutes);
 app.use("/aptitude", aptitudeRoutes);
 app.use("/users", userAptitudeDetailsRoutes);
