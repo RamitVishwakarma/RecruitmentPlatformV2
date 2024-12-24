@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createAptitude,getAllAptitudes,getAptitudesById,updateAptitude,deleteAptitude } from "../controllers/aptitudecontroller.js";
+import { createAptitude,getAllAptitudes,getAptitudesById,updateAptitude,deleteAptitude } from "../controllers/aptitudecontroller.js"; 
 const router = Router();
 
 router.route('/create-aptitude').post(createAptitude)
