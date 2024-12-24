@@ -1,15 +1,18 @@
 import { Router } from "express";
-import prisma from "../utils/prisma.js";
+import {
+  createUser,
+  getUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+} from "../controllers/userController.js";
+
 const router = Router();
 
-router.get("/", async (req, res) => {
-  try {
-    const users = await prisma.user.findMany();
-    res.json(users);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Something went wrong" });
-  }
-});
+router.get("/", getUsers);
+router.get("/:id", getUserById);
+router.post("/create-user", createUser);
+router.put("/update-user/:id", updateUser);
+router.delete("/delete-user/:id", deleteUser);
 
 export default router;

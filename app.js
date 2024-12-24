@@ -6,6 +6,7 @@ import {
   userAptitudeDetailsRoutes,
   questionRoutes,
   optionsRoutes,
+  userSocialLinksRoutes,
 } from "./routes/index.js";
 
 const app = express();
@@ -24,4 +25,5 @@ app.use("/questions", questionRoutes);
 app.use("/options", optionsRoutes);
 app.use("/aptitude", aptitudeRoutes);
 app.use("/users", userAptitudeDetailsRoutes);
+app.use("/social-links", userSocialLinksRoutes);
 export default app;
