@@ -17,6 +17,7 @@ model SocialLink {
   id     String    @id @default(uuid())
   name   String
   link   String
+  isDeleted Boolean @default(false)
   userId String
   user   User   @relation(fields: [userId], references: [id])
 }
