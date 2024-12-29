@@ -2,18 +2,18 @@ import prisma from "../utils/prisma.js";
 
 const createAptitude = async (req, res) => {
     const { title, shortDescription, longDescription, questions, domain, year, duration } = req.body;
-    if (!title || !shortDescription || !domain || !year || !duration || !questions) {
+    if (!title || !shortDescription || !domain || !year || !duration) {
         res.status(500).json({ error: "All Fields are required" })
     }
     try {
         const aptitude = await prisma.aptitude.create({
             data: {
-                title,
-                shortDescription,
-                longDescription: longDescription ?? null,
-                domain,
-                year,
-                duration,
+                aptitudeTitle: title,
+                aptitudeShortDesc: shortDescription,
+                aptitudeLongDesc: longDescription ?? null,
+                aptitudeDomain: domain,
+                aptitudeYear: year,
+                aptitudeDuration: duration,
                 aptitudeQuestions: {
                     create: questions,
                 },
@@ -22,9 +22,10 @@ const createAptitude = async (req, res) => {
                 aptitudeQuestions: true,
             },
         });
+
         res.status(201).json({ message: 'Aptitude created successfully', aptitude });
     } catch (error) {
-        res.status(500).json({ error: "Aptitude creation failed" });
+        res.status(500).json({ message: "Aptitude creation failed", error: error.message });
     }
 };
 
@@ -43,7 +44,7 @@ const getAptitudesById = async (req, res) => {
 
     try {
         const aptitude = await prisma.aptitude.findUnique({
-            where: { id:parseInt(id)},
+            where: { id: (id) },
             include: { aptitudeQuestions: true },
         });
 
@@ -59,28 +60,23 @@ const getAptitudesById = async (req, res) => {
 
 const updateAptitude = async (req, res) => {
     const { id } = req.params;
-    const { title, shortDescription, longDescription, questions, domain, year, duration } = req.body;
+    const { title, shortDescription, longDescription, domain, year, duration } = req.body;
 
     try {
         const updatedAptitude = await prisma.aptitude.update({
-            where: { id: parseInt(id) },
+            where: { id: (id) },
             data: {
-                title,
-                shortDescription,
-                longDescription,
-                domain,
-                year,
-                duration,
-                type,
-                aptitudeQuestions: {
-                    create: questions,
-                },
-            },
-            include: { aptitudeQuestions: true },
+                aptitudeTitle: title,
+                aptitudeShortDesc: shortDescription,
+                aptitudeLongDesc: longDescription ?? null,
+                aptitudeDomain: domain,
+                aptitudeYear: year,
+                aptitudeDuration: duration,
+            }
         });
         res.status(201).json({ message: 'Aptitude updated successfully', updatedAptitude });
     } catch (error) {
-        res.status(500).json({ error: "Failed to update Aptitude" });
+        res.status(500).json({ message: "Failed to update Aptitude",error:error.message });
     }
 };
 
@@ -89,7 +85,7 @@ const deleteAptitude = async (req, res) => {
 
     try {
         await prisma.aptitude.delete({
-            where: { id: parseInt(id) }
+            where: { id: (id) }
         });
         res.status(201).json({ message: 'Aptitude deleted successfully' });
     } catch (error) {

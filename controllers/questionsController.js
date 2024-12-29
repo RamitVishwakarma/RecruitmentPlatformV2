@@ -2,45 +2,32 @@ import prisma from "../utils/prisma.js";
 
 //Questions
 const createQuestion = async(req, res)=>{
-    const {id, questionShortDesc, questionLongDesc, aptitudeId, optionsText} = req.body;
-    //optionsText will be an array of all the texts like ["a", "b"]
+    const {questionShortDesc, questionLongDesc, aptitudeId, options} = req.body;
   
-    if (!id || !questionShortDesc || !questionLongDesc || !aptitudeId || !optionsText || !Array.isArray(optionsText)) {
-      return res.status(400).json({error: "All fields are required and optionsText must be an array." });
+    if (!questionShortDesc || !questionLongDesc || !aptitudeId) {
+      return res.status(400).json({error: "All fields are required" });
     }
   
     try {
-      const findQuestion = await prisma.question.findUnique({
-        where: {
-          id: id
-        }
-      })
-    
-      if(findQuestion){
-        return res.status(400).json({error: "question already exists"})
-      }
-    
+     
       const newQuestion = await prisma.question.create({
         data: {
-          id,
           questionShortDesc: questionShortDesc,
           questionLongDesc,
           aptitudeId: aptitudeId,
            options: {
-              create: optionsText.map(option => ({ text: option })),
+              create: options
             },
         },
         include:{
-          options: true
+          options: true,
+          aptitude:true
         }
       })
-    
-      return res.status(201).json({data:newQuestion, message: "question created successfully"})
+      return res.status(201).json({data:newQuestion, message: "Question created successfully"})
 
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({error: "An error occurred while creating the question" });
-      
+    } catch (error) {  
+      return res.status(500).json({message: "An error occurred while creating the question",error:error.message });
     }
   }
   
@@ -61,23 +48,20 @@ const getQuestionById = async(req, res)=>{
       })
     
       if(!question){
-        return res.status(400).json({error: "unable to get question"
-        })
+        return res.status(400).json({error: "Unable to get question"})
       }
-      return res.status(200).json({message: "question retrieved successfully", data: question
-      })
+      return res.status(200).json({message: "Question retrieved successfully", data: question })
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({error: "An error occurred while retrieving the question" });
+      return res.status(500).json({message: "An error occurred while retrieving the question" ,error:error.message});
     }
   }
   
 const getQuestionsByAptitude = async(req, res) =>{
-    const {aptitudeId} = req.body;
+    const {aptitudeId} = req.params;
     if(!aptitudeId){
-      return res.status(400).json({error: "aptitude id is required"
-      })
+      return res.status(400).json({error: "Aptitude id is required"})
     }
+    
     try {
       const questions = await prisma.question.findMany({
         where: {
@@ -88,17 +72,13 @@ const getQuestionsByAptitude = async(req, res) =>{
         }
       })
       if(questions.length === 0){
-        return res.status(400).json({error: "unable to get question"
-        })
+        return res.status(400).json({message: "Unable to get question",error:error.message})
       }
-      return res.status(200).json({message: "questions retrieved successfully", data: questions
-      })
+      return res.status(200).json({message: "Questions retrieved successfully", data: questions})
     } catch (error) {
-      console.error(error);
       
       return res.status(500).json({
-        error: "An error occurred while retrieving questions",
-      });
+        message: "An error occurred while retrieving questions",error:error.message});
     }
   }
   
@@ -107,19 +87,13 @@ const getAllQuestions = async (req, res)=>{
       const questions = await prisma.question.findMany({
         include: {options: true}
       })
-      // include: {options: {select:{
-      // optionText: true, isCorrect: true}}}
       if(questions.length === 0){
-        return res.status(400).json({error: "unable to get question"
-        })
+        return res.status(400).json({error: "Unable to get question"})
       }
-      return res.status(200).json({message: "questions retrieved successfully", data: questions
-      })
-    } catch (error) {
-      console.error(error);    
+      return res.status(200).json({message: "Questions retrieved successfully", data: questions})
+    } catch (error) {    
       return res.status(500).json({
-        error: "An error occurred while retrieving questions",
-      });
+        message: "An error occurred while retrieving questions",error:error.message});
     }
   }
   
@@ -136,8 +110,7 @@ const deleteQuestion = async(req, res)=>{
       })
     
       if(!question){
-        return res.status(400).json({error: "question does not exist"
-        })
+        return res.status(400).json({error: "Question does not exist"})
       }
       const deletedQuestion = await prisma.question.delete({
         where :{
@@ -145,21 +118,18 @@ const deleteQuestion = async(req, res)=>{
         }
       })
       if(!deletedQuestion){
-        return res.status(400).json({error: "unable to delete question"
-        })
+        return res.status(400).json({error: "Unable to delete question"})
       }
-      return res.status(200).json({message: "successfully  deleted question"
-      })
+      return res.status(200).json({message: "Successfully  deleted question"})
     } catch (error) {
-      console.error(error);    
       return res.status(500).json({
-       error: "An error occurred while deleting questions",
-      });
+      message: "An error occurred while deleting questions",error:error.message});
     }
   }
   
 const updateQuestion = async(req, res)=>{
     const {id} = req.params;
+    const {questionLongDesc, questionShortDesc, aptitudeId} = req.body;
     if (!id) {
       return res.status(400).json({ error: 'ID is required' });
     }
@@ -171,29 +141,26 @@ const updateQuestion = async(req, res)=>{
       })
     
       if(!question){
-        return res.status(400).json({error: "question does not exist"
-        })
+        return res.status(400).json({error: "Question does not exist"})
       }
-      const {questionLongDesc, questionShortDesc, aptitudeId, options} = req.body;
+     
     
       const updatedQuestion = await prisma.question.update({
         where: {id},
         data:{
           questionLongDesc,
-          questionShortDesc, aptitudeId, options
+          questionShortDesc,
+           aptitudeId
         }
       })
     
       if(!updatedQuestion){
-        return res.status(400).json({error:"unable to update question", data: updatedQuestion
-        })
+        return res.status(400).json({error:"Unable to update question", data: updatedQuestion})
       }
-      return res.status(201).json({message:"updated successfully"
-      }) 
-    } catch (error) {
-      console.error(error);    
+      return res.status(201).json({message:"Updated successfully"}) 
+    } catch (error) {  
       return res.status(500).json({
-        error: "An error occurred while updating questions",})
+      message: "An error occurred while updating questions",error:error.message})
     }
   }
   
