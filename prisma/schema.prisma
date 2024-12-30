@@ -13,8 +13,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
 model SocialLink {
-  id     String    @id @default(uuid())
+  id     String @id @default(uuid())
   name   String
   link   String
   isDeleted Boolean @default(false)
@@ -23,9 +32,9 @@ model SocialLink {
 }
 
 model UserAptitudeDetails {
-  id            String  @id @default(uuid())
-  userId        String  @unique
-  user          User @relation(fields: [userId], references: [id])
+  id            String @id @default(uuid())
+  userId        String @unique
+  user          User   @relation(fields: [userId], references: [id])
   aptitudeScore Int
 }
 
@@ -51,6 +60,7 @@ model User {
   reviewStatus    Boolean              @default(false)
   shortlistStatus Boolean              @default(false)
   interviewStatus Boolean              @default(false)
+  RefreshToken    RefreshToken[]
 }
 
 model Question {
@@ -79,4 +89,10 @@ model Aptitude {
   aptitudeYear      Int
   aptitudeQuestions Question[] @relation
   aptitudeDuration  Int
+}
+
+model BlackListToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  createdAt DateTime @default(now())
 }
