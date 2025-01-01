@@ -5,7 +5,6 @@ import userRoutes from "./userRoutes.js";
 import aptitudeRoutes from "./aptitudeRoutes.js";
 import userAptitudeDetailsRoutes from "./userAptitudeDetailsRoutes.js";
 import authRoutes from "./authRoutes.js";
-import express from "express";
 import socialRoutes from "./socialRoutes.js";
 
 const router = express.Router();
