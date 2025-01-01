@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import prisma from "../utils/prisma";
+import prisma from "../utils/prisma.js";
 
 //reminder:-use this middleware later for protected routes for all GDG members and the users after they login
 const authMiddleware = async (req, res, next) => {

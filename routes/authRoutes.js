@@ -1,9 +1,30 @@
 import { Router } from "express";
-import { loginUser, logoutUser, refreshAccessToken } from "../controllers/authController.js";
+import {
+  passwordResetLimiter,
+  authLimiter,
+} from "../middlewares/rateLimiter.js";
+import {
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  registerUser,
+  requestPasswordReset,
+  resetPassword,
+  verifyUser,
+} from "../controllers/authController.js";
+
 const router = Router();
 
-router.route("/login").post(loginUser);
+router.post("/register", authLimiter, registerUser);
+router.post(
+  "/request-password-reset",
+  passwordResetLimiter,
+  requestPasswordReset,
+);
+router.get("/verify/:token", verifyUser);
+router.post("/reset-password", passwordResetLimiter, resetPassword);
+router.post("/login", authLimiter, loginUser);
 router.route("/logout").post(logoutUser);
 router.route("/refresh-token").post(refreshAccessToken);
 
-export default router
+export default router;
