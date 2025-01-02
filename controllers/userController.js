@@ -1,7 +1,8 @@
 import prisma from "../utils/prisma.js";
 import bcrypt from "bcrypt";
+import { asyncHandler } from "../utils/asyncHandler.js";
 //~ Create a user
-const createUser = async (req, res) => {
+const createUser = asyncHandler(async (req, res) => {
   const {
     name,
     email,
@@ -19,6 +20,7 @@ const createUser = async (req, res) => {
   const existingUser = await prisma.user.findUnique({
     where: {
       email,
+      isDeleted: false,
     },
   });
 
@@ -26,82 +28,82 @@ const createUser = async (req, res) => {
     return res.status(400).json({ message: "User already exists! " });
   }
 
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password:hashedPassword,
-        admissionNumber: admissionNumber ?? null,
-        domain: domain ?? null,
-        year: year ?? null,
-        photo: photo ?? null,
-        resume: resume ?? null,
-        aptitudeScore: aptitudeScore ?? null,
-        socialLinks: {
-          create: socialLinks,
-        },
-        aptitude: {
-          create: aptitudeDetails,
-        },
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = await prisma.user.create({
+    data: {
+      name,
+      email,
+      password: hashedPassword,
+      admissionNumber: admissionNumber ?? null,
+      domain: domain ?? null,
+      year: year ?? null,
+      photo: photo ?? null,
+      resume: resume ?? null,
+      aptitudeScore: aptitudeScore ?? null,
+      socialLinks: {
+        create: socialLinks,
       },
-      include: {
-        socialLinks: true,
-        aptitude: true,
+      aptitude: {
+        create: aptitudeDetails,
       },
-    });
+    },
+    include: {
+      socialLinks: true,
+      aptitude: true,
+    },
+  });
 
-    res.status(201).json({ message: "User created!", user });
-  } catch (error) {
-    res.status(500).json({ message: "Internal Server Error!",error:error.message });
-  }
-};
+  return res.status(201).json({ message: "User created!", user });
+});
 
 //~ Get all users
-const getUsers = async (req, res) => {
-  try {
-    const users = await prisma.user.findMany({
-      include: {
-        socialLinks: true,
-        aptitude: true,
-      },
-    });
+const getUsers = asyncHandler(async (req, res) => {
+  const { skip, take, page, perPage } = req.pagination;
 
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ message: "Internal Server Error!" });
-  }
-};
+  const users = await prisma.user.findMany({
+    where: { isDeleted: false },
+    include: {
+      socialLinks: true,
+      aptitude: true,
+    },
+    skip,
+    take,
+  });
+  const totalUsers = await prisma.user.count({ where: { isDeleted: false } });
+
+  return res.status(200).json({
+    data: users,
+    meta: {
+      page: page,
+      total: totalUsers,
+      pages: Math.ceil(totalUsers / perPage),
+    },
+  });
+});
 
 //~ get user by Id
-const getUserById = async (req, res) => {
+const getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id },
-      include: { socialLinks: true, aptitude: true },
-    });
+  const user = await prisma.user.findUnique({
+    where: { id, isDeleted: false },
+    include: { socialLinks: true, aptitude: true },
+  });
 
-    if (!user) {
-      res.status(404).json({ msg: "User not found!" });
-    }
-    
-    res.status(200).json({ "Fetched user": user });
-  } catch (err) {
-    res.status(500).json({ message: "Internal Server Error!" });
+  if (!user) {
+    return res.status(404).json({ msg: "User not found!" });
   }
-};
+
+  return res.status(200).json({ "Fetched user": user });
+});
 
 //~ Update a user
-const updateUser = async (req, res) => {
+const updateUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  
+
   const {
     name,
     email,
-    password,
     admissionNumber,
     domain,
     year,
@@ -112,82 +114,110 @@ const updateUser = async (req, res) => {
     socialLinks,
   } = req.body;
 
-  const hashedPassword =password? await bcrypt.hash(password, 10) : null;
-
   if (!name && !email && !domain && !year && !photo && !resume) {
     return res.status(400).json({ message: "No fields provided!" });
   }
 
-  try {
-    const existingUser = await prisma.user.findUnique({ where: { id } });
+  const existingUser = await prisma.user.findUnique({ where: { id } });
 
-    if (!existingUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const user = await prisma.user.update({
-      where: { id },
-      data: {
-        ...(name && { name }),
-        ...(email && { email }),
-        ...(hashedPassword && { password:hashedPassword }),
-        ...(admissionNumber && { admissionNumber }),
-        ...(domain && { domain }),
-        ...(year && { year }),
-        ...(photo && { photo }),
-        ...(resume && { resume }),
-        ...(aptitudeScore && { aptitudeScore }),
-        socialLinks: socialLinks
-          ? {
-              create: socialLinks,
-            }
-          : undefined,
-        aptitude: aptitudeDetails
-          ? {
-              upsert: {
-                create: aptitudeDetails,
-                update: aptitudeDetails,
-              },
-            }
-          : undefined,
-      },
-    });
-
-    res.status(200).json({ message: "User updated!", user });
-  } catch (error) {
-    if (error.code === "P2002") {
-      return res
-        .status(400)
-        .json({ message: "Email or admission number already in use" });
-    }
-
-    res.status(500).json({ message: "Internal server error!",error:error.message });
+  if (!existingUser) {
+    return res.status(404).json({ message: "User not found" });
   }
-};
+
+  const user = await prisma.user.update({
+    where: { id },
+    data: {
+      ...(name && { name }),
+      ...(email && { email }),
+      ...(admissionNumber && { admissionNumber }),
+      ...(domain && { domain }),
+      ...(year && { year }),
+      ...(photo && { photo }),
+      ...(resume && { resume }),
+      ...(aptitudeScore && { aptitudeScore }),
+      socialLinks: socialLinks
+        ? {
+            create: socialLinks,
+          }
+        : undefined,
+      aptitude: aptitudeDetails
+        ? {
+            upsert: {
+              create: aptitudeDetails,
+              update: aptitudeDetails,
+            },
+          }
+        : undefined,
+    },
+  });
+
+  return res.status(200).json({ message: "User updated!", user });
+});
 
 //~ Delete user by id
-const deleteUser = async (req, res) => {
+const deleteUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
     return res.status(400).json({ msg: "User ID is required!" });
   }
 
-  try {
-    const existingUser = await prisma.user.findUnique({ where: { id } });
+  const existingUser = await prisma.user.findUnique({
+    where: { id, isDeleted: false },
+  });
 
-    if (!existingUser) {
-      return res.status(404).json({ msg: "User not found!" });
-    }
-
-    const user = await prisma.user.delete({
-      where: { id },
-    });
-
-    return res.status(200).json({ msg: "User deleted!", user });
-  } catch (error) {
-    return res.status(500).json({ msg: "Internal server error!" });
+  if (!existingUser) {
+    return res.status(404).json({ msg: "User not found!" });
   }
-};
 
-export { createUser, getUsers, getUserById, updateUser, deleteUser };
+  const updatedUser = await prisma.user.update({
+    where: { id },
+    data: {
+      isDeleted: true,
+    },
+  });
+
+  return res.status(200).json({ msg: "User deleted!", updatedUser });
+});
+
+const checkUserShortlistStatus = asyncHandler(async (req, res, next) => {
+  const { skip, take, page, perPage } = req.pagination;
+  const users = await prisma.user.findMany({
+    where: { isDeleted: false },
+    skip,
+    take,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      shortlistStatus: true,
+    },
+  });
+
+  const userData = users.map((user) => ({
+    user_id: user.id,
+    user_name: user.name,
+    user_email: user.email,
+    shortlist_status: user.shortlistStatus,
+  }));
+
+  const totalUsers = await prisma.user.count({ where: { isDeleted: false } });
+
+  return res.status(200).json({
+    data: userData,
+    meta: {
+      page: page,
+      total: totalUsers,
+      pages: Math.ceil(totalUsers / perPage),
+    },
+  });
+});
+
+export {
+  createUser,
+  getUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+  checkUserShortlistStatus,
+};
