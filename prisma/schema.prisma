@@ -39,28 +39,40 @@ model UserAptitudeDetails {
 }
 
 model User {
-  id              String               @id @default(uuid()) // Primary key
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime?
-  email           String               @unique
-  name            String
-  password        String //hashed password
-  admissionNumber String
-  photo           String?
-  year            Int?
-  resume          String?
-  aptitudeScore   Int?
-  aptitudeId      String?
-  aptitude        UserAptitudeDetails? @relation
-  domain          String?
-  socialLinkId    String?
-  socialLinks     SocialLink[]
-  aptitudeStatus  Boolean              @default(false)
-  projectStatus   Boolean              @default(false)
-  reviewStatus    Boolean              @default(false)
-  shortlistStatus Boolean              @default(false)
-  interviewStatus Boolean              @default(false)
-  RefreshToken    RefreshToken[]
+  id                 String               @id @default(uuid()) // Primary key
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime?
+  email              String               @unique
+  name               String
+  password           String //hashed password
+  admissionNumber    String
+  photo              String?
+  year               Int?
+  resume             String?
+  aptitudeScore      Int?
+  aptitudeId         String?
+  aptitude           UserAptitudeDetails? @relation
+  domain             String?
+  socialLinkId       String?
+  socialLinks        SocialLink[]
+  aptitudeStatus     Boolean              @default(false)
+  projectStatus      Boolean              @default(false)
+  reviewStatus       Boolean              @default(false)
+  shortlistStatus    Boolean              @default(false)
+  interviewStatus    Boolean              @default(false)
+  RefreshToken       RefreshToken[]
+  verificationTokens VerificationToken[]
+  emailVerified      Boolean              @default(false)
+}
+
+model VerificationToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String   // "EMAIL_VERIFICATION" or "PASSWORD_RESET"
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }
 
 model Question {
