@@ -25,6 +25,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  return res.status(err.status || 500).json({
+    message: err.message || "Internal Server Error",
+  });
+});
+
 app.use("/users", userRoutes);
 app.use("/questions", questionRoutes);
 app.use("/options", optionsRoutes);
