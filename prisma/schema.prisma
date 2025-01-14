@@ -45,8 +45,8 @@ model User {
   updatedAt          DateTime?
   email              String               @unique
   name               String
-  password           String //hashed password
-  admissionNumber    String
+  password           String? //hashed password
+  admissionNumber    String?
   photo              String?
   year               Int?
   resume             String?
@@ -65,6 +65,7 @@ model User {
   isDeleted          Boolean              @default(false)
   verificationTokens VerificationToken[]
   emailVerified      Boolean              @default(false)
+  googleId           String?              @unique
 }
 
 model VerificationToken {
