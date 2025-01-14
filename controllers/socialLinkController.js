@@ -2,6 +2,27 @@ import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 //~ Create a social link
+/**
+ * @swagger
+ * /social:
+ *   get:
+ *     summary: Get social media links
+ *     description: Retrieve a list of social media links available for the user.
+ *     responses:
+ *       200:
+ *         description: A list of social media links
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   platform:
+ *                     type: string
+ *                   url:
+ *                     type: string
+ */
 const createSocialLink = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   const { name, link } = req.body;
@@ -32,6 +53,27 @@ const createSocialLink = asyncHandler(async (req, res) => {
 });
 
 //~ Get social links by userId
+/**
+ * @swagger
+ * /social:
+ *   get:
+ *     summary: Get social media links
+ *     description: Retrieve a list of social media links available for the user.
+ *     responses:
+ *       200:
+ *         description: A list of social media links
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   platform:
+ *                     type: string
+ *                   url:
+ *                     type: string
+ */
 const getSocialLinksByUserId = asyncHandler(async (req, res) => {
   const { userId } = req.params;
 
@@ -51,6 +93,27 @@ const getSocialLinksByUserId = asyncHandler(async (req, res) => {
 });
 
 //~ Update a social link
+/**
+ * @swagger
+ * /social:
+ *   get:
+ *     summary: Get social media links
+ *     description: Retrieve a list of social media links available for the user.
+ *     responses:
+ *       200:
+ *         description: A list of social media links
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   platform:
+ *                     type: string
+ *                   url:
+ *                     type: string
+ */
 const updateSocialLink = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { link } = req.body;
@@ -88,6 +151,27 @@ const updateSocialLink = asyncHandler(async (req, res) => {
 });
 
 //~ Delete a social link
+/**
+ * @swagger
+ * /social:
+ *   get:
+ *     summary: Get social media links
+ *     description: Retrieve a list of social media links available for the user.
+ *     responses:
+ *       200:
+ *         description: A list of social media links
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   platform:
+ *                     type: string
+ *                   url:
+ *                     type: string
+ */
 const deleteSocialLink = asyncHandler(async (req, res) => {
   const { id } = req.params;
 

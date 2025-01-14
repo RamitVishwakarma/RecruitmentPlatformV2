@@ -2,6 +2,34 @@ import prisma from "../utils/prisma.js";
 import bcrypt from "bcrypt";
 import { asyncHandler } from "../utils/asyncHandler.js";
 //~ Create a user
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Get user details
+ *     description: Retrieve details of a specific user.
+ *     parameters:
+ *       - name: userId
+ *         in: query
+ *         description: The ID of the user to retrieve.
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: User details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 userId:
+ *                   type: integer
+ *                 userName:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ */
 const createUser = asyncHandler(async (req, res) => {
   const {
     name,
@@ -57,6 +85,34 @@ const createUser = asyncHandler(async (req, res) => {
 });
 
 //~ Get all users
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Get user details
+ *     description: Retrieve details of a specific user.
+ *     parameters:
+ *       - name: userId
+ *         in: query
+ *         description: The ID of the user to retrieve.
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: User details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 userId:
+ *                   type: integer
+ *                 userName:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ */
 const getUsers = asyncHandler(async (req, res) => {
   const { skip, take, page, perPage } = req.pagination;
 
@@ -82,6 +138,34 @@ const getUsers = asyncHandler(async (req, res) => {
 });
 
 //~ get user by Id
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Get user details
+ *     description: Retrieve details of a specific user.
+ *     parameters:
+ *       - name: userId
+ *         in: query
+ *         description: The ID of the user to retrieve.
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: User details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 userId:
+ *                   type: integer
+ *                 userName:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ */
 const getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -98,6 +182,34 @@ const getUserById = asyncHandler(async (req, res) => {
 });
 
 //~ Update a user
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Get user details
+ *     description: Retrieve details of a specific user.
+ *     parameters:
+ *       - name: userId
+ *         in: query
+ *         description: The ID of the user to retrieve.
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: User details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 userId:
+ *                   type: integer
+ *                 userName:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ */
 const updateUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -155,6 +267,34 @@ const updateUser = asyncHandler(async (req, res) => {
 });
 
 //~ Delete user by id
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Get user details
+ *     description: Retrieve details of a specific user.
+ *     parameters:
+ *       - name: userId
+ *         in: query
+ *         description: The ID of the user to retrieve.
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: User details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 userId:
+ *                   type: integer
+ *                 userName:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ */
 const deleteUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -180,6 +320,34 @@ const deleteUser = asyncHandler(async (req, res) => {
   return res.status(200).json({ msg: "User deleted!", updatedUser });
 });
 
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Get user details
+ *     description: Retrieve details of a specific user.
+ *     parameters:
+ *       - name: userId
+ *         in: query
+ *         description: The ID of the user to retrieve.
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: User details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 userId:
+ *                   type: integer
+ *                 userName:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ */
 const checkUserShortlistStatus = asyncHandler(async (req, res, next) => {
   const { skip, take, page, perPage } = req.pagination;
   const users = await prisma.user.findMany({

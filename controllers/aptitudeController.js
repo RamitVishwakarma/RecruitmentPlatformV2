@@ -1,6 +1,27 @@
 import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
+/**
+ * @swagger
+ * /aptitude:
+ *   get:
+ *     summary: Get all aptitude tests
+ *     description: Retrieve all available aptitude tests.
+ *     responses:
+ *       200:
+ *         description: A list of aptitude tests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   testId:
+ *                     type: integer
+ *                   testName:
+ *                     type: string
+ */
 const createAptitude = asyncHandler(async (req, res) => {
   const {
     title,
@@ -35,6 +56,27 @@ const createAptitude = asyncHandler(async (req, res) => {
   res.status(201).json({ message: "Aptitude created successfully", aptitude });
 });
 
+/**
+ * @swagger
+ * /aptitude:
+ *   get:
+ *     summary: Get all aptitude tests
+ *     description: Retrieve all available aptitude tests.
+ *     responses:
+ *       200:
+ *         description: A list of aptitude tests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   testId:
+ *                     type: integer
+ *                   testName:
+ *                     type: string
+ */
 const getAllAptitudes = asyncHandler(async (req, res) => {
   const aptitudes = await prisma.aptitude.findMany({
     where: { isDeleted: false },
@@ -42,6 +84,27 @@ const getAllAptitudes = asyncHandler(async (req, res) => {
   res.status(201).json(aptitudes);
 });
 
+/**
+ * @swagger
+ * /aptitude:
+ *   get:
+ *     summary: Get all aptitude tests
+ *     description: Retrieve all available aptitude tests.
+ *     responses:
+ *       200:
+ *         description: A list of aptitude tests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   testId:
+ *                     type: integer
+ *                   testName:
+ *                     type: string
+ */
 const getAptitudesById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -57,6 +120,27 @@ const getAptitudesById = asyncHandler(async (req, res) => {
   res.status(201).json(aptitude);
 });
 
+/**
+ * @swagger
+ * /aptitude:
+ *   get:
+ *     summary: Get all aptitude tests
+ *     description: Retrieve all available aptitude tests.
+ *     responses:
+ *       200:
+ *         description: A list of aptitude tests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   testId:
+ *                     type: integer
+ *                   testName:
+ *                     type: string
+ */
 const updateAptitude = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { title, shortDescription, longDescription, domain, year, duration } =
@@ -78,6 +162,27 @@ const updateAptitude = asyncHandler(async (req, res) => {
     .json({ message: "Aptitude updated successfully", updatedAptitude });
 });
 
+/**
+ * @swagger
+ * /aptitude:
+ *   get:
+ *     summary: Get all aptitude tests
+ *     description: Retrieve all available aptitude tests.
+ *     responses:
+ *       200:
+ *         description: A list of aptitude tests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   testId:
+ *                     type: integer
+ *                   testName:
+ *                     type: string
+ */
 const deleteAptitude = asyncHandler(async (req, res) => {
   const { id } = req.params;
 

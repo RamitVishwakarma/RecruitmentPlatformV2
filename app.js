@@ -10,6 +10,8 @@ import {
   authRoutes,
   socialRoutes,
 } from "./routes/index.js";
+import swaggerSpecs from "./utils/swaggerconfig.js";
+import swaggerUi from "swagger-ui-express";
 
 const app = express();
 
@@ -31,6 +33,8 @@ app.use((err, req, res, next) => {
     message: err.message || "Internal Server Error",
   });
 });
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 app.use("/users", userRoutes);
 app.use("/questions", questionRoutes);

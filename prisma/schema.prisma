@@ -65,6 +65,7 @@ model User {
   isDeleted          Boolean              @default(false)
   verificationTokens VerificationToken[]
   emailVerified      Boolean              @default(false)
+  googleId           String?              @unique
 }
 
 model VerificationToken {
