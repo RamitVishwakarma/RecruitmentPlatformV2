@@ -6,6 +6,7 @@ import aptitudeRoutes from "./aptitudeRoutes.js";
 import userAptitudeDetailsRoutes from "./userAptitudeDetailsRoutes.js";
 import authRoutes from "./authRoutes.js";
 import socialRoutes from "./socialRoutes.js";
+import oauthRoutes from "./oauthRoutes.js";
 
 const router = express.Router();
 
@@ -15,6 +16,7 @@ router.use("/", aptitudeRoutes);
 router.use("/", userRoutes);
 router.use("/", userAptitudeDetailsRoutes);
 router.use("/", authRoutes);
+router.use("/", oauthRoutes);
 router.use("/", socialRoutes);
 
 export {
@@ -25,4 +27,5 @@ export {
   questionRoutes,
   authRoutes,
   socialRoutes,
+  oauthRoutes,
 };

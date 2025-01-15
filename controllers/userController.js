@@ -1,60 +1,6 @@
 import prisma from "../utils/prisma.js";
 import bcrypt from "bcrypt";
 import { asyncHandler } from "../utils/asyncHandler.js";
-//~ Create a user
-const createUser = asyncHandler(async (req, res) => {
-  const {
-    name,
-    email,
-    password,
-    admissionNumber,
-    domain,
-    year,
-    photo,
-    resume,
-    aptitudeScore,
-    aptitudeDetails,
-    socialLinks,
-  } = req.body;
-
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      email,
-      isDeleted: false,
-    },
-  });
-
-  if (existingUser) {
-    return res.status(400).json({ message: "User already exists! " });
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-      admissionNumber: admissionNumber ?? null,
-      domain: domain ?? null,
-      year: year ?? null,
-      photo: photo ?? null,
-      resume: resume ?? null,
-      aptitudeScore: aptitudeScore ?? null,
-      socialLinks: {
-        create: socialLinks,
-      },
-      aptitude: {
-        create: aptitudeDetails,
-      },
-    },
-    include: {
-      socialLinks: true,
-      aptitude: true,
-    },
-  });
-
-  return res.status(201).json({ message: "User created!", user });
-});
 
 //~ Get all users
 const getUsers = asyncHandler(async (req, res) => {
@@ -214,7 +160,6 @@ const checkUserShortlistStatus = asyncHandler(async (req, res, next) => {
 });
 
 export {
-  createUser,
   getUsers,
   getUserById,
   updateUser,

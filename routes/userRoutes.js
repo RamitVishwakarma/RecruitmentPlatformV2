@@ -1,6 +1,5 @@
 import { Router } from "express";
 import {
-  createUser,
   getUsers,
   getUserById,
   updateUser,
@@ -11,7 +10,6 @@ import { paginationMiddleware } from "../middlewares/paginationMiddleware.js";
 
 const router = Router();
 
-router.route("/").post(createUser);
 router.route("/").get(paginationMiddleware, getUsers);
 router.route("/shortlist").get(paginationMiddleware, checkUserShortlistStatus);
 router.route("/:id").get(getUserById);
