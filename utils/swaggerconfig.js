@@ -10,14 +10,12 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:${process.env.PORT}`,
+        url: `http://localhost:${process.env.PORT}/`,
       },
     ],
   },
-  apis: ["../controllers/**/*.js"],
-  // apis: ['../routes/index,js', '../routes/**/*.js'],
+  apis: ["./routes/*.js"],
 };
 const swaggerSpecs = swaggerJsdoc(swaggerOptions);
-console.log(swaggerSpecs); // Add this line to inspect the specs
 
 export default swaggerSpecs;

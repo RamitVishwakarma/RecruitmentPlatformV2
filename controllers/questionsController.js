@@ -2,27 +2,7 @@ import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 //Questions
-/**
- * @swagger
- * /questions:
- *   get:
- *     summary: Get all questions
- *     description: Retrieve all the questions available in the system.
- *     responses:
- *       200:
- *         description: A list of questions
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   questionId:
- *                     type: integer
- *                   questionText:
- *                     type: string
- */
+
 const createQuestion = asyncHandler(async (req, res) => {
   const { questionShortDesc, questionLongDesc, aptitudeId, options } = req.body;
 
@@ -49,27 +29,6 @@ const createQuestion = asyncHandler(async (req, res) => {
     .json({ data: newQuestion, message: "Question created successfully" });
 });
 
-/**
- * @swagger
- * /questions:
- *   get:
- *     summary: Get all questions
- *     description: Retrieve all the questions available in the system.
- *     responses:
- *       200:
- *         description: A list of questions
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   questionId:
- *                     type: integer
- *                   questionText:
- *                     type: string
- */
 const getQuestionById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) {
@@ -94,27 +53,6 @@ const getQuestionById = asyncHandler(async (req, res) => {
     .json({ message: "Question retrieved successfully", data: question });
 });
 
-/**
- * @swagger
- * /questions:
- *   get:
- *     summary: Get all questions
- *     description: Retrieve all the questions available in the system.
- *     responses:
- *       200:
- *         description: A list of questions
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   questionId:
- *                     type: integer
- *                   questionText:
- *                     type: string
- */
 const getQuestionsByAptitude = asyncHandler(async (req, res) => {
   const { aptitudeId } = req.params;
   if (!aptitudeId) {
@@ -140,27 +78,6 @@ const getQuestionsByAptitude = asyncHandler(async (req, res) => {
     .json({ message: "Questions retrieved successfully", data: questions });
 });
 
-/**
- * @swagger
- * /questions:
- *   get:
- *     summary: Get all questions
- *     description: Retrieve all the questions available in the system.
- *     responses:
- *       200:
- *         description: A list of questions
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   questionId:
- *                     type: integer
- *                   questionText:
- *                     type: string
- */
 const deleteQuestion = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) {
@@ -188,27 +105,6 @@ const deleteQuestion = asyncHandler(async (req, res) => {
   return res.status(200).json({ message: "Successfully  deleted question" });
 });
 
-/**
- * @swagger
- * /questions:
- *   get:
- *     summary: Get all questions
- *     description: Retrieve all the questions available in the system.
- *     responses:
- *       200:
- *         description: A list of questions
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   questionId:
- *                     type: integer
- *                   questionText:
- *                     type: string
- */
 const updateQuestion = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { questionLongDesc, questionShortDesc, aptitudeId } = req.body;
@@ -243,27 +139,6 @@ const updateQuestion = asyncHandler(async (req, res) => {
   return res.status(201).json({ message: "Updated successfully" });
 });
 
-/**
- * @swagger
- * /questions:
- *   get:
- *     summary: Get all questions
- *     description: Retrieve all the questions available in the system.
- *     responses:
- *       200:
- *         description: A list of questions
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   questionId:
- *                     type: integer
- *                   questionText:
- *                     type: string
- */
 const getPaginatedQuestions = asyncHandler(async (req, res, next) => {
   const { skip, take, page, perPage } = req.pagination;
 

@@ -7,36 +7,6 @@ import {
 } from "../utils/emailService.js";
 import { validatePassword } from "../utils/validators.js";
 
-/**
- * @swagger
- * /auth/login:
- *   post:
- *     summary: User login
- *     description: Authenticate a user and generate an access token.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       200:
- *         description: Login successful
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *       401:
- *         description: Invalid credentials
- */
 const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password)
@@ -92,36 +62,6 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-/**
- * @swagger
- * /auth/login:
- *   post:
- *     summary: User login
- *     description: Authenticate a user and generate an access token.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       200:
- *         description: Login successful
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *       401:
- *         description: Invalid credentials
- */
 const logoutUser = async (req, res, next) => {
   try {
     const token = req.cookies?.accessToken;
@@ -147,36 +87,6 @@ const logoutUser = async (req, res, next) => {
   }
 };
 
-/**
- * @swagger
- * /auth/login:
- *   post:
- *     summary: User login
- *     description: Authenticate a user and generate an access token.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       200:
- *         description: Login successful
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *       401:
- *         description: Invalid credentials
- */
 const refreshAccessToken = async (req, res, next) => {
   const { refresh_Token } = req.body;
   if (!refresh_Token) {
@@ -229,36 +139,6 @@ const refreshAccessToken = async (req, res, next) => {
 
 // register user
 
-/**
- * @swagger
- * /auth/login:
- *   post:
- *     summary: User login
- *     description: Authenticate a user and generate an access token.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       200:
- *         description: Login successful
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *       401:
- *         description: Invalid credentials
- */
 const registerUser = async (req, res) => {
   const { name, email, password, admissionNumber } = req.body;
 
@@ -331,15 +211,6 @@ const registerUser = async (req, res) => {
 
 // request password reset
 
-/**
- * @swagger
- * ${1:Description placeholder}
- *
- * @async
- * @param {${2:*}} req ${3:}
- * @param {${4:*}} res ${5:}
- * @returns {unknown} ${6:}
- */
 const requestPasswordReset = async (req, res) => {
   const { email } = req.body;
 
@@ -376,15 +247,6 @@ const requestPasswordReset = async (req, res) => {
 
 // reset password
 
-/**
- * @swagger
- * ${1:Description placeholder}
- *
- * @async
- * @param {${2:*}} req ${3:}
- * @param {${4:*}} res ${5:}
- * @returns {unknown} ${6:}
- */
 const resetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
 
@@ -432,15 +294,6 @@ const resetPassword = async (req, res) => {
 
 // verify user
 
-/**
- * @swagger
- * ${1:Description placeholder}
- *
- * @async
- * @param {${2:*}} req ${3:}
- * @param {${4:*}} res ${5:}
- * @returns {unknown} ${6:}
- */
 const verifyUser = async (req, res) => {
   const { token } = req.params;
 

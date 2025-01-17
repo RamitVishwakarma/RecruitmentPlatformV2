@@ -2,36 +2,7 @@ import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 //Options
-/**
- * @swagger
- * /options:
- *   get:
- *     summary: Get options for a question
- *     description: Retrieve all options for a specific question.
- *     parameters:
- *       - name: questionId
- *         in: query
- *         description: The ID of the question for which options are to be fetched.
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: A list of options
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   optionId:
- *                     type: integer
- *                   optionText:
- *                     type: string
- *                   isCorrect:
- *                     type: boolean
- */
+
 const createOption = asyncHandler(async (req, res) => {
   const { optionText, isCorrect, questionId } = req.body;
   if (!optionText || isCorrect.length === 0 || !questionId) {
@@ -57,36 +28,6 @@ const createOption = asyncHandler(async (req, res) => {
   res.status(201).json({ message: "Option created", data: newOption });
 });
 
-/**
- * @swagger
- * /options:
- *   get:
- *     summary: Get options for a question
- *     description: Retrieve all options for a specific question.
- *     parameters:
- *       - name: questionId
- *         in: query
- *         description: The ID of the question for which options are to be fetched.
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: A list of options
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   optionId:
- *                     type: integer
- *                   optionText:
- *                     type: string
- *                   isCorrect:
- *                     type: boolean
- */
 const getOptionById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) {
@@ -108,36 +49,6 @@ const getOptionById = asyncHandler(async (req, res) => {
     .json({ data: option, message: "option retrieved successfully" });
 });
 
-/**
- * @swagger
- * /options:
- *   get:
- *     summary: Get options for a question
- *     description: Retrieve all options for a specific question.
- *     parameters:
- *       - name: questionId
- *         in: query
- *         description: The ID of the question for which options are to be fetched.
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: A list of options
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   optionId:
- *                     type: integer
- *                   optionText:
- *                     type: string
- *                   isCorrect:
- *                     type: boolean
- */
 const getOptionsByQuestion = asyncHandler(async (req, res) => {
   const { questionId } = req.params;
   if (!questionId) {
@@ -158,36 +69,6 @@ const getOptionsByQuestion = asyncHandler(async (req, res) => {
     .json({ data: options, message: "options fetched successfully" });
 });
 
-/**
- * @swagger
- * /options:
- *   get:
- *     summary: Get options for a question
- *     description: Retrieve all options for a specific question.
- *     parameters:
- *       - name: questionId
- *         in: query
- *         description: The ID of the question for which options are to be fetched.
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: A list of options
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   optionId:
- *                     type: integer
- *                   optionText:
- *                     type: string
- *                   isCorrect:
- *                     type: boolean
- */
 const updateOption = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { optionText, isCorrect } = req.body;
@@ -223,36 +104,6 @@ const updateOption = asyncHandler(async (req, res) => {
     .json({ data: updatedOption, message: "option updated" });
 });
 
-/**
- * @swagger
- * /options:
- *   get:
- *     summary: Get options for a question
- *     description: Retrieve all options for a specific question.
- *     parameters:
- *       - name: questionId
- *         in: query
- *         description: The ID of the question for which options are to be fetched.
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: A list of options
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   optionId:
- *                     type: integer
- *                   optionText:
- *                     type: string
- *                   isCorrect:
- *                     type: boolean
- */
 const deleteOption = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) {

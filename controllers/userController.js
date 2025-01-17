@@ -1,118 +1,8 @@
 import prisma from "../utils/prisma.js";
-import bcrypt from "bcrypt";
 import { asyncHandler } from "../utils/asyncHandler.js";
-//~ Create a user
-/**
- * @swagger
- * /users:
- *   get:
- *     summary: Get user details
- *     description: Retrieve details of a specific user.
- *     parameters:
- *       - name: userId
- *         in: query
- *         description: The ID of the user to retrieve.
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: User details
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 userId:
- *                   type: integer
- *                 userName:
- *                   type: string
- *                 email:
- *                   type: string
- */
-const createUser = asyncHandler(async (req, res) => {
-  const {
-    name,
-    email,
-    password,
-    admissionNumber,
-    domain,
-    year,
-    photo,
-    resume,
-    aptitudeScore,
-    aptitudeDetails,
-    socialLinks,
-  } = req.body;
-
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      email,
-      isDeleted: false,
-    },
-  });
-
-  if (existingUser) {
-    return res.status(400).json({ message: "User already exists! " });
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-      admissionNumber: admissionNumber ?? null,
-      domain: domain ?? null,
-      year: year ?? null,
-      photo: photo ?? null,
-      resume: resume ?? null,
-      aptitudeScore: aptitudeScore ?? null,
-      socialLinks: {
-        create: socialLinks,
-      },
-      aptitude: {
-        create: aptitudeDetails,
-      },
-    },
-    include: {
-      socialLinks: true,
-      aptitude: true,
-    },
-  });
-
-  return res.status(201).json({ message: "User created!", user });
-});
 
 //~ Get all users
-/**
- * @swagger
- * /users:
- *   get:
- *     summary: Get user details
- *     description: Retrieve details of a specific user.
- *     parameters:
- *       - name: userId
- *         in: query
- *         description: The ID of the user to retrieve.
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: User details
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 userId:
- *                   type: integer
- *                 userName:
- *                   type: string
- *                 email:
- *                   type: string
- */
+
 const getUsers = asyncHandler(async (req, res) => {
   const { skip, take, page, perPage } = req.pagination;
 
@@ -138,34 +28,7 @@ const getUsers = asyncHandler(async (req, res) => {
 });
 
 //~ get user by Id
-/**
- * @swagger
- * /users:
- *   get:
- *     summary: Get user details
- *     description: Retrieve details of a specific user.
- *     parameters:
- *       - name: userId
- *         in: query
- *         description: The ID of the user to retrieve.
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: User details
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 userId:
- *                   type: integer
- *                 userName:
- *                   type: string
- *                 email:
- *                   type: string
- */
+
 const getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -182,34 +45,7 @@ const getUserById = asyncHandler(async (req, res) => {
 });
 
 //~ Update a user
-/**
- * @swagger
- * /users:
- *   get:
- *     summary: Get user details
- *     description: Retrieve details of a specific user.
- *     parameters:
- *       - name: userId
- *         in: query
- *         description: The ID of the user to retrieve.
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: User details
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 userId:
- *                   type: integer
- *                 userName:
- *                   type: string
- *                 email:
- *                   type: string
- */
+
 const updateUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -226,7 +62,15 @@ const updateUser = asyncHandler(async (req, res) => {
     socialLinks,
   } = req.body;
 
-  if (!name && !email && !domain && !year && !photo && !resume) {
+  if (
+    !name &&
+    !email &&
+    !domain &&
+    !year &&
+    !photo &&
+    !resume &&
+    !admissionNumber
+  ) {
     return res.status(400).json({ message: "No fields provided!" });
   }
 
@@ -267,34 +111,7 @@ const updateUser = asyncHandler(async (req, res) => {
 });
 
 //~ Delete user by id
-/**
- * @swagger
- * /users:
- *   get:
- *     summary: Get user details
- *     description: Retrieve details of a specific user.
- *     parameters:
- *       - name: userId
- *         in: query
- *         description: The ID of the user to retrieve.
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: User details
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 userId:
- *                   type: integer
- *                 userName:
- *                   type: string
- *                 email:
- *                   type: string
- */
+
 const deleteUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -310,44 +127,16 @@ const deleteUser = asyncHandler(async (req, res) => {
     return res.status(404).json({ msg: "User not found!" });
   }
 
-  const updatedUser = await prisma.user.update({
+  const deletedUser = await prisma.user.update({
     where: { id },
     data: {
       isDeleted: true,
     },
   });
 
-  return res.status(200).json({ msg: "User deleted!", updatedUser });
+  return res.status(200).json({ msg: "User deleted!", deletedUser });
 });
 
-/**
- * @swagger
- * /users:
- *   get:
- *     summary: Get user details
- *     description: Retrieve details of a specific user.
- *     parameters:
- *       - name: userId
- *         in: query
- *         description: The ID of the user to retrieve.
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: User details
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 userId:
- *                   type: integer
- *                 userName:
- *                   type: string
- *                 email:
- *                   type: string
- */
 const checkUserShortlistStatus = asyncHandler(async (req, res, next) => {
   const { skip, take, page, perPage } = req.pagination;
   const users = await prisma.user.findMany({
@@ -382,7 +171,6 @@ const checkUserShortlistStatus = asyncHandler(async (req, res, next) => {
 });
 
 export {
-  createUser,
   getUsers,
   getUserById,
   updateUser,

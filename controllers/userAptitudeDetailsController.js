@@ -1,35 +1,6 @@
 import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
-/**
- * @swagger
- * /user-aptitude-details:
- *   get:
- *     summary: Get user aptitude details
- *     description: Retrieve a user's aptitude test results.
- *     parameters:
- *       - name: userId
- *         in: query
- *         description: The ID of the user to retrieve aptitude details for.
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: User's aptitude test results
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 userId:
- *                   type: integer
- *                 aptitudeScore:
- *                   type: integer
- *                 testDate:
- *                   type: string
- *                   format: date
- */
 const createUserAptitudeDetails = asyncHandler(async (req, res) => {
   const { userId, aptitudeScore } = req.body;
 
@@ -43,35 +14,6 @@ const createUserAptitudeDetails = asyncHandler(async (req, res) => {
   });
 });
 
-/**
- * @swagger
- * /user-aptitude-details:
- *   get:
- *     summary: Get user aptitude details
- *     description: Retrieve a user's aptitude test results.
- *     parameters:
- *       - name: userId
- *         in: query
- *         description: The ID of the user to retrieve aptitude details for.
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: User's aptitude test results
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 userId:
- *                   type: integer
- *                 aptitudeScore:
- *                   type: integer
- *                 testDate:
- *                   type: string
- *                   format: date
- */
 const getUserAptitudeDetails = asyncHandler(async (req, res) => {
   const { userId } = req.params;
 
@@ -87,35 +29,6 @@ const getUserAptitudeDetails = asyncHandler(async (req, res) => {
   });
 });
 
-/**
- * @swagger
- * /user-aptitude-details:
- *   get:
- *     summary: Get user aptitude details
- *     description: Retrieve a user's aptitude test results.
- *     parameters:
- *       - name: userId
- *         in: query
- *         description: The ID of the user to retrieve aptitude details for.
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: User's aptitude test results
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 userId:
- *                   type: integer
- *                 aptitudeScore:
- *                   type: integer
- *                 testDate:
- *                   type: string
- *                   format: date
- */
 const updateUserAptitudeDetails = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   const { aptitudeScore } = req.body;
@@ -130,35 +43,6 @@ const updateUserAptitudeDetails = asyncHandler(async (req, res) => {
   });
 });
 
-/**
- * @swagger
- * /user-aptitude-details:
- *   get:
- *     summary: Get user aptitude details
- *     description: Retrieve a user's aptitude test results.
- *     parameters:
- *       - name: userId
- *         in: query
- *         description: The ID of the user to retrieve aptitude details for.
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: User's aptitude test results
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 userId:
- *                   type: integer
- *                 aptitudeScore:
- *                   type: integer
- *                 testDate:
- *                   type: string
- *                   format: date
- */
 const deleteUserAptitudeDetails = asyncHandler(async (req, res) => {
   const { userId } = req.params;
 
