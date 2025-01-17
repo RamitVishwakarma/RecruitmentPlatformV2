@@ -39,7 +39,7 @@ model User {
   updatedAt          DateTime?
   email              String               @unique
   name               String
-  password           String
+  password           String //hashed password
   admissionNumber    String?
   photo              String?
   year               Int?

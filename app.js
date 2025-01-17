@@ -9,9 +9,12 @@ import {
   optionsRoutes,
   authRoutes,
   socialRoutes,
+  oauthRoutes,
 } from "./routes/index.js";
 import swaggerSpecs from "./utils/swaggerconfig.js";
 import swaggerUi from "swagger-ui-express";
+import session from "express-session";
+import passport from "passport";
 
 const app = express();
 app.use(
@@ -20,6 +23,22 @@ app.use(
     credentials: true,
   }),
 );
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get("/", (req, res) => {
+  res.send(
+    '<h1>Welcome to Recruitment Platform</h1><a href="/auth/google">Login with Google</a>',
+  );
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -41,5 +60,6 @@ app.use("/options", optionsRoutes);
 app.use("/aptitude", aptitudeRoutes);
 app.use("/users", userAptitudeDetailsRoutes);
 app.use("/users", authRoutes);
+app.use("/auth", oauthRoutes);
 app.use("/social", socialRoutes);
 export default app;
