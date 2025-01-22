@@ -11,11 +11,12 @@ import {
   socialRoutes,
   oauthRoutes,
 } from "./routes/index.js";
+import swaggerSpecs from "./utils/swaggerconfig.js";
+import swaggerUi from "swagger-ui-express";
 import session from "express-session";
 import passport from "passport";
 
 const app = express();
-
 app.use(
   cors({
     origin: "*",
@@ -43,6 +44,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cookieParser());
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

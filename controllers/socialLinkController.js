@@ -2,6 +2,7 @@ import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 //~ Create a social link
+
 const createSocialLink = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   const { name, link } = req.body;
@@ -32,6 +33,7 @@ const createSocialLink = asyncHandler(async (req, res) => {
 });
 
 //~ Get social links by userId
+
 const getSocialLinksByUserId = asyncHandler(async (req, res) => {
   const { userId } = req.params;
 
@@ -51,6 +53,7 @@ const getSocialLinksByUserId = asyncHandler(async (req, res) => {
 });
 
 //~ Update a social link
+
 const updateSocialLink = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { link } = req.body;
@@ -88,6 +91,7 @@ const updateSocialLink = asyncHandler(async (req, res) => {
 });
 
 //~ Delete a social link
+
 const deleteSocialLink = asyncHandler(async (req, res) => {
   const { id } = req.params;
 

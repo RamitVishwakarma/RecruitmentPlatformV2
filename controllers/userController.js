@@ -1,8 +1,8 @@
 import prisma from "../utils/prisma.js";
-import bcrypt from "bcrypt";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 //~ Get all users
+
 const getUsers = asyncHandler(async (req, res) => {
   const { skip, take, page, perPage } = req.pagination;
 
@@ -28,6 +28,7 @@ const getUsers = asyncHandler(async (req, res) => {
 });
 
 //~ get user by Id
+
 const getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -44,6 +45,7 @@ const getUserById = asyncHandler(async (req, res) => {
 });
 
 //~ Update a user
+
 const updateUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -60,7 +62,15 @@ const updateUser = asyncHandler(async (req, res) => {
     socialLinks,
   } = req.body;
 
-  if (!name && !email && !domain && !year && !photo && !resume) {
+  if (
+    !name &&
+    !email &&
+    !domain &&
+    !year &&
+    !photo &&
+    !resume &&
+    !admissionNumber
+  ) {
     return res.status(400).json({ message: "No fields provided!" });
   }
 
@@ -101,6 +111,7 @@ const updateUser = asyncHandler(async (req, res) => {
 });
 
 //~ Delete user by id
+
 const deleteUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -116,14 +127,14 @@ const deleteUser = asyncHandler(async (req, res) => {
     return res.status(404).json({ msg: "User not found!" });
   }
 
-  const updatedUser = await prisma.user.update({
+  const deletedUser = await prisma.user.update({
     where: { id },
     data: {
       isDeleted: true,
     },
   });
 
-  return res.status(200).json({ msg: "User deleted!", updatedUser });
+  return res.status(200).json({ msg: "User deleted!", deletedUser });
 });
 
 const checkUserShortlistStatus = asyncHandler(async (req, res, next) => {

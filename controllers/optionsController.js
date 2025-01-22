@@ -2,6 +2,7 @@ import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 //Options
+
 const createOption = asyncHandler(async (req, res) => {
   const { optionText, isCorrect, questionId } = req.body;
   if (!optionText || isCorrect.length === 0 || !questionId) {

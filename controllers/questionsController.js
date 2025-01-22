@@ -2,6 +2,7 @@ import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 //Questions
+
 const createQuestion = asyncHandler(async (req, res) => {
   const { questionShortDesc, questionLongDesc, aptitudeId, options } = req.body;
 
