@@ -11,6 +11,8 @@ import {
   requestPasswordReset,
   resetPassword,
   verifyUser,
+  verifyPhone,
+  verifyOTP,
 } from "../controllers/authController.js";
 
 const router = Router();
@@ -179,6 +181,8 @@ router.post("/login", authLimiter, loginUser);
  *       500:
  *         description: Error occurred during logout
  */
+router.post("/verify-phone", authLimiter, verifyPhone);
+router.post("/verify-otp", authLimiter, verifyOTP);
 router.route("/logout").post(logoutUser);
 
 /**

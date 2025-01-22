@@ -6,6 +6,8 @@ import {
   sendPasswordResetEmail,
 } from "../utils/emailService.js";
 import { validatePassword } from "../utils/validators.js";
+import { sendOTP } from "../utils/twilioService.js";
+import twilio from "twilio";
 
 const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
@@ -140,7 +142,7 @@ const refreshAccessToken = async (req, res, next) => {
 // register user
 
 const registerUser = async (req, res) => {
-  const { name, email, password, admissionNumber } = req.body;
+  const { name, email, password, admissionNumber, phone } = req.body;
 
   const errors = [];
 
@@ -151,6 +153,11 @@ const registerUser = async (req, res) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!email || !emailRegex.test(email)) {
     errors.push("Invalid email address.");
+  }
+
+  const phoneRegex = /^\+[1-9]\d{1,14}$/;
+  if (!phone || !phoneRegex.test(phone)) {
+    errors.push("Invalid phone number format");
   }
 
   if (!admissionNumber || admissionNumber.trim().length < 3) {
@@ -175,6 +182,16 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    const existingUserWithPhone = await prisma.user.findFirst({
+      where: { phone },
+    });
+
+    if (existingUserWithPhone) {
+      return res
+        .status(400)
+        .json({ message: "Phone number already registered" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
@@ -183,6 +200,8 @@ const registerUser = async (req, res) => {
         email,
         password: hashedPassword,
         admissionNumber,
+        phone,
+        phoneVerified: true,
       },
     });
 
@@ -338,6 +357,73 @@ const verifyUser = async (req, res) => {
   }
 };
 
+// verify phone
+const verifyPhone = async (req, res) => {
+  const { phone } = req.body;
+
+  try {
+    const phoneRegex = /^\+[1-9]\d{1,14}$/;
+    if (!phoneRegex.test(phone)) {
+      return res.status(400).json({
+        message: "Invalid phone number format. Use format: +919876543210",
+      });
+    }
+
+    const existingUser = await prisma.user.findFirst({
+      where: { phone },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Phone number already registered",
+      });
+    }
+
+    await sendOTP(phone);
+
+    res.status(200).json({
+      message: "OTP sent successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error sending OTP",
+      error: error.message,
+    });
+  }
+};
+
+// verify OTP
+const verifyOTP = async (req, res) => {
+  const { phone, otp } = req.body;
+
+  try {
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
+    const serviceSid = process.env.TWILIO_SERVICE_SID;
+
+    const client = twilio(accountSid, authToken);
+
+    const verification_check = await client.verify.v2
+      .services(serviceSid)
+      .verificationChecks.create({ to: phone, code: otp });
+
+    if (verification_check.status === "approved") {
+      return res.status(200).json({
+        message: "Phone number verified successfully",
+      });
+    } else {
+      return res.status(400).json({
+        message: "Invalid OTP",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: "Error verifying OTP",
+      error: error.message,
+    });
+  }
+};
+
 export {
   loginUser,
   logoutUser,
@@ -346,4 +432,6 @@ export {
   requestPasswordReset,
   resetPassword,
   verifyUser,
+  verifyPhone,
+  verifyOTP,
 };
