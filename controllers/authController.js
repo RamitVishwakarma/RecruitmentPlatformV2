@@ -83,7 +83,7 @@ const logoutUser = async (req, res, next) => {
     return res.status(201).json({ message: "User logged out successfully" });
   } catch (error) {
     return res.status(500).json({
-      message: "Error occured while logging out user",
+      message: "Error occurred while logging out user",
       error: error.message,
     });
   }
@@ -173,6 +173,19 @@ const registerUser = async (req, res) => {
     return res.status(400).json({ errors });
   }
 
+  if(!req.files || !req.files.photo || req.files.photo.length <= 0){
+    res.status(400).json({message: 'no file uploaded'})
+  }
+  const photoUrl = await uploadFileOnS3(req.file.photo[0])
+  if(!photoUrl){
+   return res.status(400).json({ message: 'Could not upload image.' });
+  }
+  let resumeUrl = null;
+  if(req.files.resume){
+    resumeUrl = await uploadFileOnS3(req.files.resume[0])
+  }
+
+
   try {
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -202,6 +215,9 @@ const registerUser = async (req, res) => {
         admissionNumber,
         phone,
         phoneVerified: true,
+        photo: photoUrl ?? null,
+        resume: resumeUrl ?? null,
+
       },
     });
 
