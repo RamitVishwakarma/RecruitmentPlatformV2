@@ -23,7 +23,7 @@ const router = Router();
  * /users/register:
  *   post:
  *     summary: Register a new user
- *     tags: [Auth]
+ *     tags: [User]
  *     requestBody:
  *       required: true
  *       content:
@@ -52,18 +52,22 @@ const router = Router();
  *       500:
  *         description: Server error during registration
  */
-router.post("/register", authLimiter,
+router.post(
+  "/register",
+  authLimiter,
   upload.fields([
-  { name: 'photo', maxCount: 1 },  
-  { name: 'resume', maxCount: 1 },   
-]), registerUser);
+    { name: "photo", maxCount: 1 },
+    { name: "resume", maxCount: 1 },
+  ]),
+  registerUser,
+);
 
 /**
  * @swagger
  * /users/request-password-reset:
  *   post:
  *     summary: Request password reset for user
- *     tags: [Auth]
+ *     tags: [User]
  *     requestBody:
  *       required: true
  *       content:
@@ -94,7 +98,7 @@ router.post(
  * /users/verify/{token}:
  *   get:
  *     summary: Verify user's email address
- *     tags: [Auth]
+ *     tags: [User]
  *     parameters:
  *       - in: path
  *         name: token
@@ -117,7 +121,7 @@ router.get("/verify/:token", verifyUser);
  * /users/reset-password:
  *   post:
  *     summary: Reset user password
- *     tags: [Auth]
+ *     tags: [User]
  *     requestBody:
  *       required: true
  *       content:
@@ -147,7 +151,7 @@ router.post("/reset-password", passwordResetLimiter, resetPassword);
  * /users/login:
  *   post:
  *     summary: Login user and get access and refresh tokens
- *     tags: [Auth]
+ *     tags: [User]
  *     requestBody:
  *       required: true
  *       content:
@@ -177,7 +181,7 @@ router.post("/login", authLimiter, loginUser);
  * /users/logout:
  *   post:
  *     summary: Logout user by invalidating their refresh token
- *     tags: [Auth]
+ *     tags: [User]
  *     responses:
  *       200:
  *         description: User logged out successfully
@@ -195,7 +199,7 @@ router.route("/logout").post(logoutUser);
  * /users/refresh-token:
  *   post:
  *     summary: Refresh the access token using the refresh token
- *     tags: [Auth]
+ *     tags: [User]
  *     requestBody:
  *       required: true
  *       content:

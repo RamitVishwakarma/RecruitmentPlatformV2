@@ -44,6 +44,48 @@ const getUserById = asyncHandler(async (req, res) => {
   return res.status(200).json({ "Fetched user": user });
 });
 
+//~get users by domain
+
+const getUsersByDomain = asyncHandler(async (req, res) => {
+  const { domain } = req.query;
+  const { skip, take, page, perPage } = req.pagination;
+
+  if (!domain) {
+    return res.status(400).json({ error: "Domain parameter is required." });
+  }
+
+  const users = await prisma.user.findMany({
+    where: {
+      domain,
+      isDeleted: false,
+    },
+    include: {
+      socialLinks: true,
+      aptitude: true,
+    },
+    skip,
+    take,
+  });
+  const totalUsers = await prisma.user.count({
+    where: { domain, isDeleted: false },
+  });
+
+  if (users.length === 0) {
+    return res
+      .status(404)
+      .json({ error: `No users found in the ${domain} domain.` });
+  }
+
+  return res.status(200).json({
+    data: users,
+    meta: {
+      page: page,
+      total: totalUsers,
+      pages: Math.ceil(totalUsers / perPage),
+    },
+  });
+});
+
 //~ Update a user
 
 const updateUser = asyncHandler(async (req, res) => {
@@ -173,6 +215,7 @@ const checkUserShortlistStatus = asyncHandler(async (req, res, next) => {
 export {
   getUsers,
   getUserById,
+  getUsersByDomain,
   updateUser,
   deleteUser,
   checkUserShortlistStatus,

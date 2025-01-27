@@ -10,6 +10,10 @@ import {
   authRoutes,
   socialRoutes,
   oauthRoutes,
+  contestRoutes,
+  contestProblemRoutes,
+  codingQuestionsRoutes,
+  testcaseRoutes,
 } from "./routes/index.js";
 import swaggerSpecs from "./utils/swaggerconfig.js";
 import swaggerUi from "swagger-ui-express";
@@ -62,4 +66,9 @@ app.use("/users", userAptitudeDetailsRoutes);
 app.use("/users", authRoutes);
 app.use("/auth", oauthRoutes);
 app.use("/social", socialRoutes);
+app.use("/contest", contestProblemRoutes);
+app.use("/contest", contestRoutes);
+app.use("/contest", testcaseRoutes);
+app.use("/problems", codingQuestionsRoutes);
+
 export default app;

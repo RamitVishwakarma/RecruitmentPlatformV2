@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getUsers,
   getUserById,
+  getUsersByDomain,
   updateUser,
   deleteUser,
   checkUserShortlistStatus,
@@ -59,6 +60,101 @@ router.route("/").get(paginationMiddleware, getUsers);
  *         description: Users and shortlist statuses fetched successfully.
  */
 router.route("/shortlist").get(paginationMiddleware, checkUserShortlistStatus);
+
+/**
+ * @swagger
+ * /users/domain:
+ *   get:
+ *     summary: Get users by domain
+ *     tags: [User]
+ *     description: Retrieve a paginated list of users filtered by their domain (e.g., programming, development, etc.).
+ *     parameters:
+ *       - in: query
+ *         name: domain
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The domain to filter users by (e.g., "Programming").
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: The page number for pagination.
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of items per page for pagination.
+ *     responses:
+ *       200:
+ *         description: List of users successfully retrieved.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                         description: Unique user ID.
+ *                       name:
+ *                         type: string
+ *                         description: Name of the user.
+ *                       domain:
+ *                         type: string
+ *                         description: User's domain (e.g., programming, development).
+ *                       socialLinks:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             platform:
+ *                               type: string
+ *                               description: Social media platform (e.g., LinkedIn).
+ *                             link:
+ *                               type: string
+ *                               description: Link to the user's profile.
+ *                       aptitude:
+ *                         type: object
+ *                         description: Aptitude-related details.
+ *                 meta:
+ *                   type: object
+ *                   properties:
+ *                     page:
+ *                       type: integer
+ *                       description: Current page number.
+ *                     total:
+ *                       type: integer
+ *                       description: Total number of users in the domain.
+ *                     pages:
+ *                       type: integer
+ *                       description: Total number of pages.
+ *       400:
+ *         description: Domain parameter is missing.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Domain parameter is required.
+ *       404:
+ *         description: No users found in the specified domain.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: No users found in the programming domain.
+ */
+router.route("/domain").get(paginationMiddleware, getUsersByDomain);
 
 /**
  * @swagger
