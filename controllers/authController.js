@@ -142,7 +142,17 @@ const refreshAccessToken = async (req, res, next) => {
 // register user
 
 const registerUser = async (req, res) => {
-  const { name, email, password, admissionNumber, phone } = req.body;
+  const {
+    name,
+    email,
+    password,
+    admissionNumber,
+    phone,
+    domain,
+    year,
+    aptitudeDetails,
+    socialLinks,
+  } = req.body;
 
   const errors = [];
 
@@ -173,18 +183,17 @@ const registerUser = async (req, res) => {
     return res.status(400).json({ errors });
   }
 
-  if(!req.files || !req.files.photo || req.files.photo.length <= 0){
-    res.status(400).json({message: 'no file uploaded'})
+  if (!req.files || !req.files.photo || req.files.photo.length <= 0) {
+    res.status(400).json({ message: "no file uploaded" });
   }
-  const photoUrl = await uploadFileOnS3(req.file.photo[0])
-  if(!photoUrl){
-   return res.status(400).json({ message: 'Could not upload image.' });
+  const photoUrl = await uploadFileOnS3(req.file.photo[0]);
+  if (!photoUrl) {
+    return res.status(400).json({ message: "Could not upload image." });
   }
   let resumeUrl = null;
-  if(req.files.resume){
-    resumeUrl = await uploadFileOnS3(req.files.resume[0])
+  if (req.files.resume) {
+    resumeUrl = await uploadFileOnS3(req.files.resume[0]);
   }
-
 
   try {
     const existingUser = await prisma.user.findUnique({
@@ -217,7 +226,18 @@ const registerUser = async (req, res) => {
         phoneVerified: true,
         photo: photoUrl ?? null,
         resume: resumeUrl ?? null,
-
+        domain: domain ?? null,
+        year: year ?? null,
+        socialLinks: {
+          create: socialLinks,
+        },
+        aptitude: {
+          create: aptitudeDetails,
+        },
+      },
+      include: {
+        socialLinks: true,
+        aptitude: true,
       },
     });
 
