@@ -10,6 +10,7 @@ import { sendOTP } from "../utils/twilioService.js";
 import twilio from "twilio";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
+import upload from "../utils/upload.js";
 
 const loginUser = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
@@ -189,7 +190,7 @@ const registerUser = asyncHandler(async (req, res) => {
   if (!req.files || !req.files.photo || req.files.photo.length <= 0) {
     res.status(statusCode.BadRequest400).json({ message: "no file uploaded" });
   }
-  const photoUrl = await uploadFileOnS3(req.file.photo[0]);
+  const photoUrl = await upload(req.file.photo[0]);
   if (!photoUrl) {
     return res
       .status(statusCode.BadRequest400)
@@ -197,7 +198,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
   let resumeUrl = null;
   if (req.files.resume) {
-    resumeUrl = await uploadFileOnS3(req.files.resume[0]);
+    resumeUrl = await upload(req.files.resume[0]);
   }
 
   const existingUser = await prisma.user.findUnique({
