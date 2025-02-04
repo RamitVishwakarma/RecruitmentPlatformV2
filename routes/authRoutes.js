@@ -14,6 +14,8 @@ import {
   verifyUser,
   verifyPhone,
   verifyOTP,
+  sendOtpToEmail,
+  verifyEmailOtp,
 } from "../controllers/authController.js";
 
 const router = Router();
@@ -61,6 +63,9 @@ router.post(
   ]),
   registerUser,
 );
+
+router.post("/send-otp-email", sendOtpToEmail);
+router.post("/verify-otp-email", verifyEmailOtp);
 
 /**
  * @swagger
