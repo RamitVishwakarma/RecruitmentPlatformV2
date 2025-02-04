@@ -8,6 +8,7 @@ import {
 import { validatePassword } from "../utils/validators.js";
 import { sendOTP } from "../utils/twilioService.js";
 import twilio from "twilio";
+import upload from "../utils/upload.js";
 
 const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
@@ -186,13 +187,13 @@ const registerUser = async (req, res) => {
   if (!req.files || !req.files.photo || req.files.photo.length <= 0) {
     res.status(400).json({ message: "no file uploaded" });
   }
-  const photoUrl = await uploadFileOnS3(req.file.photo[0]);
+  const photoUrl = await upload(req.file.photo[0]);
   if (!photoUrl) {
     return res.status(400).json({ message: "Could not upload image." });
   }
   let resumeUrl = null;
   if (req.files.resume) {
-    resumeUrl = await uploadFileOnS3(req.files.resume[0]);
+    resumeUrl = await upload(req.files.resume[0]);
   }
 
   try {
