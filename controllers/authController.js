@@ -187,18 +187,24 @@ const registerUser = asyncHandler(async (req, res) => {
     return res.status(statusCode.BadRequest400).json({ errors });
   }
 
-  if (!req.files || !req.files.photo || req.files.photo.length <= 0) {
-    res.status(statusCode.BadRequest400).json({ message: "no file uploaded" });
+  let photoUrl = null;
+  if (req.files && req.files.photo && req.files.photo.length > 0) {
+    photoUrl = await upload(req.files.photo[0]);
+    if (!photoUrl) {
+      return res
+        .status(statusCode.BadRequest400)
+        .json({ message: "Could not upload image." });
+    }
   }
-  const photoUrl = await upload(req.file.photo[0]);
-  if (!photoUrl) {
-    return res
-      .status(statusCode.BadRequest400)
-      .json({ message: "Could not upload image." });
-  }
+
   let resumeUrl = null;
-  if (req.files.resume) {
+  if (req.files && req.files.resume && req.files.resume.length > 0) {
     resumeUrl = await upload(req.files.resume[0]);
+    if (!resumeUrl) {
+      return res
+        .status(statusCode.BadRequest400)
+        .json({ message: "Could not upload resume." });
+    }
   }
 
   const existingUser = await prisma.user.findUnique({
