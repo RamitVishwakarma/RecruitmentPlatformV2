@@ -4,9 +4,9 @@ const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Slack-like Project API",
+      title: "Recruitment Platform V2 API",
       version: "1.0.0",
-      description: "API documentation for the Slack-like project",
+      description: "API documentation for Recruitment Platform",
     },
     servers: [
       {

@@ -19,7 +19,7 @@ router.get(
 router.get("/login", loginSuccess);
 router.get("/logout", logout);
 router.get("/google-logout-redirect", (req, res) => {
-  res.redirect("http://localhost:5000");
+  res.redirect(process.env.FRONTEND_URL);
 });
 
 export default router;

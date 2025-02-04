@@ -170,8 +170,8 @@ const registerUser = async (req, res) => {
     errors.push("Invalid phone number format");
   }
 
-  if (!admissionNumber || admissionNumber.trim().length < 3) {
-    errors.push("Admission number must be at least 3 characters long.");
+  if (!admissionNumber || admissionNumber.trim().length < 6) {
+    errors.push("Admission number must be at least 6 characters long.");
   }
 
   const passwordValidation = validatePassword(password);
@@ -246,7 +246,7 @@ const registerUser = async (req, res) => {
         token: jwt.sign({ userId: user.id }, process.env.PASSWORD_RESET_SECRET),
         userId: user.id,
         type: "EMAIL_VERIFICATION",
-        expiresAt: new Date(Date.now() + 3600000), // 1 hour
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hour
       },
     });
 
@@ -283,7 +283,7 @@ const requestPasswordReset = async (req, res) => {
         token: jwt.sign({ userId: user.id }, process.env.PASSWORD_RESET_SECRET),
         userId: user.id,
         type: "PASSWORD_RESET",
-        expiresAt: new Date(Date.now() + 3600000),
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
       },
     });
 

@@ -23,7 +23,7 @@ import passport from "passport";
 const app = express();
 app.use(
   cors({
-    origin: "*",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   }),
 );
@@ -38,18 +38,18 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get("/", (req, res) => {
-  res.send(
-    '<h1>Welcome to Recruitment Platform</h1><a href="/auth/google">Login with Google</a>',
-  );
-});
+// app.get("/", (req, res) => {
+//   res.send(
+//     '<h1>Welcome to Recruitment Platform</h1><a href="/auth/google">Login with Google</a>'
+//   );
+// });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
