@@ -265,6 +265,99 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 });
 
+//send otp to email
+
+const sendOtpToEmail = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const existingUser = await prisma.user.findFirst({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Email already registered",
+      });
+    }
+
+    const existingOtp = await prisma.otp.findFirst({
+      where: { email },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (existingOtp) {
+      const timeSinceLastOtp = (new Date() - existingOtp.createdAt) / 1000;
+      if (timeSinceLastOtp < 60) {
+        return res.status(429).json({
+          message:
+            "OTP request too frequent. Please wait a minute before retrying.",
+        });
+      }
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    await prisma.otp.upsert({
+      where: { email },
+      update: { otp, expiresAt: new Date(Date.now() + 60 * 10 * 1000) },
+      create: { otp, email, expiresAt: new Date(Date.now() + 60 * 10 * 1000) },
+    });
+
+    await sendVerificationEmail(email, otp);
+
+    res.status(200).json({
+      message: "OTP sent to email",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error sending OTP",
+      error: error.message,
+    });
+  }
+};
+
+// verify email otp
+
+const verifyEmailOtp = async (req, res) => {
+  const { email, otp } = req.body;
+
+  try {
+    const existingOtp = await prisma.otp.findFirst({
+      where: { email, otp },
+    });
+
+    if (!existingOtp) {
+      return res.status(400).json({
+        message: "Invalid OTP",
+      });
+    }
+
+    if (new Date() > existingOtp.expiresAt) {
+      await prisma.otp.deleteMany({
+        where: { email },
+      });
+
+      return res.status(400).json({
+        message: "OTP has expired",
+      });
+    }
+
+    await prisma.otp.deleteMany({
+      where: { email },
+    });
+
+    res.status(200).json({
+      message: "Email verified successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error verifying email",
+      error: error.message,
+    });
+  }
+};
+
 // request password reset
 
 const requestPasswordReset = asyncHandler(async (req, res) => {
@@ -452,4 +545,6 @@ export {
   verifyUser,
   verifyPhone,
   verifyOTP,
+  sendOtpToEmail,
+  verifyEmailOtp,
 };
