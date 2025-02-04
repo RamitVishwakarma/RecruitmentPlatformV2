@@ -22,8 +22,8 @@ const loginUser = async (req, res, next) => {
     });
     if (!user) return res.status(400).json({ message: "Unable to find User" });
 
-    const validatePassword = await bcrypt.compare(password, user.password);
-    if (!validatePassword)
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword)
       return res.status(400).json({ message: "Invalid user credentials" });
 
     const accessToken = jwt.sign(
@@ -69,11 +69,12 @@ const logoutUser = async (req, res, next) => {
   try {
     const token = req.cookies?.accessToken;
     if (!token) {
-      res.status(400).json({ message: "Token is missing" });
+      return res.status(400).json({ message: "Token is missing" });
     }
 
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    if (!decodedToken) res.status(400).json({ message: "Invalid token" });
+    if (!decodedToken)
+      return res.status(400).json({ message: "Invalid token" });
 
     await prisma.blackListToken.create({
       data: {
@@ -93,7 +94,7 @@ const logoutUser = async (req, res, next) => {
 const refreshAccessToken = async (req, res, next) => {
   const { refresh_Token } = req.body;
   if (!refresh_Token) {
-    res.status(400).json({ message: "Refresh token required" });
+    return res.status(400).json({ message: "Refresh token required" });
   }
 
   try {
@@ -111,7 +112,7 @@ const refreshAccessToken = async (req, res, next) => {
     }
 
     const presentTime = new Date();
-    if (presentTime > refresh_Token.expiresAt) {
+    if (presentTime > dbToken.expiresAt) {
       await prisma.refreshToken.delete({
         where: {
           token: refresh_Token,
@@ -242,16 +243,16 @@ const registerUser = async (req, res) => {
       },
     });
 
-    const verificationToken = await prisma.verificationToken.create({
-      data: {
-        token: jwt.sign({ userId: user.id }, process.env.PASSWORD_RESET_SECRET),
-        userId: user.id,
-        type: "EMAIL_VERIFICATION",
-        expiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hour
-      },
-    });
+    // removed verification token
 
-    await sendVerificationEmail(email, verificationToken.token);
+    // const verificationToken = await prisma.verificationToken.create({
+    //   data: {
+    //     token: jwt.sign({ userId: user.id }, process.env.PASSWORD_RESET_SECRET),
+    //     userId: user.id,
+    //     type: "EMAIL_VERIFICATION",
+    //     expiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hour
+    //   },
+    // });
 
     res.status(201).json({
       message:
@@ -260,6 +261,99 @@ const registerUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error during registration",
+      error: error.message,
+    });
+  }
+};
+
+//send otp to email
+
+const sendOtpToEmail = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const existingUser = await prisma.user.findFirst({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Email already registered",
+      });
+    }
+
+    const existingOtp = await prisma.otp.findFirst({
+      where: { email },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (existingOtp) {
+      const timeSinceLastOtp = (new Date() - existingOtp.createdAt) / 1000;
+      if (timeSinceLastOtp < 60) {
+        return res.status(429).json({
+          message:
+            "OTP request too frequent. Please wait a minute before retrying.",
+        });
+      }
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    await prisma.otp.upsert({
+      where: { email },
+      update: { otp, expiresAt: new Date(Date.now() + 60 * 10 * 1000) },
+      create: { otp, email, expiresAt: new Date(Date.now() + 60 * 10 * 1000) },
+    });
+
+    await sendVerificationEmail(email, otp);
+
+    res.status(200).json({
+      message: "OTP sent to email",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error sending OTP",
+      error: error.message,
+    });
+  }
+};
+
+// verify email otp
+
+const verifyEmailOtp = async (req, res) => {
+  const { email, otp } = req.body;
+
+  try {
+    const existingOtp = await prisma.otp.findFirst({
+      where: { email, otp },
+    });
+
+    if (!existingOtp) {
+      return res.status(400).json({
+        message: "Invalid OTP",
+      });
+    }
+
+    if (new Date() > existingOtp.expiresAt) {
+      await prisma.otp.deleteMany({
+        where: { email },
+      });
+
+      return res.status(400).json({
+        message: "OTP has expired",
+      });
+    }
+
+    await prisma.otp.deleteMany({
+      where: { email },
+    });
+
+    res.status(200).json({
+      message: "Email verified successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error verifying email",
       error: error.message,
     });
   }
@@ -333,7 +427,7 @@ const resetPassword = async (req, res) => {
       data: { password: hashedPassword },
     });
 
-    prisma.verificationToken.delete({
+    await prisma.verificationToken.delete({
       where: { token },
     });
 
@@ -471,4 +565,6 @@ export {
   verifyUser,
   verifyPhone,
   verifyOTP,
+  sendOtpToEmail,
+  verifyEmailOtp,
 };

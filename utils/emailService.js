@@ -3,12 +3,12 @@ import { generateEmailTemplate } from "./emailTemplates.js";
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-export const sendVerificationEmail = async (email, token) => {
+export const sendVerificationEmail = async (email, otp) => {
   const msg = {
     to: email,
     from: process.env.EMAIL_FROM,
     subject: "Verify Your Email",
-    html: generateEmailTemplate("verification", token),
+    html: generateEmailTemplate("verification", otp),
   };
 
   try {

@@ -64,6 +64,14 @@ model User {
   phoneVerified      Boolean              @default(false)
 }
 
+model Otp {
+  id        String   @id @default(uuid())  
+  otp       String  
+  email     String  
+  createdAt DateTime @default(now())  
+  expiresAt DateTime  
+}
+
 model VerificationToken {
   id        String   @id @default(uuid())
   token     String   @unique
