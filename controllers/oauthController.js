@@ -1,5 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import dotenv from "dotenv";
+import { statusCode } from "../utils/statusCodes.js";
 
 dotenv.config();
 
@@ -15,7 +16,10 @@ const loginSuccess = asyncHandler((req, res) => {
 
 const logout = asyncHandler((req, res) => {
   req.logout((err) => {
-    if (err) return res.status(500).json({ error: "Logout Failed" });
+    if (err)
+      return res
+        .status(statusCode.ServerError500)
+        .json({ error: "Logout Failed" });
     req.session.destroy(() => {
       res.clearCookie("connect.sid");
       res.redirect(

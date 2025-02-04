@@ -1,5 +1,6 @@
 import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { statusCode } from "../utils/statusCodes.js";
 
 const createContest = asyncHandler(async (req, res) => {
   const { title, description, startDate, endDate, problems } = req.body;
@@ -19,7 +20,7 @@ const createContest = asyncHandler(async (req, res) => {
     },
   });
 
-  res.status(201).json(contest);
+  res.status(statusCode.Created201).json(contest);
 });
 
 const getAllContests = asyncHandler(async (req, res) => {
@@ -37,10 +38,12 @@ const getAllContests = asyncHandler(async (req, res) => {
   });
 
   if (contests.length === 0) {
-    return res.status(404).json({ error: "No contests found" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "No contests found" });
   }
 
-  res.status(200).json(contests);
+  res.status(statusCode.Ok200).json(contests);
 });
 
 const getContestById = asyncHandler(async (req, res) => {
@@ -60,10 +63,12 @@ const getContestById = asyncHandler(async (req, res) => {
   });
 
   if (!contest) {
-    return res.status(404).json({ error: "Contest not found" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "Contest not found" });
   }
 
-  res.status(200).json(contest);
+  res.status(statusCode.Ok200).json(contest);
 });
 
 const updateContest = asyncHandler(async (req, res) => {
@@ -82,13 +87,13 @@ const updateContest = asyncHandler(async (req, res) => {
     data: updateData,
   });
 
-  res.status(200).json(updatedContest);
+  res.status(statusCode.Ok200).json(updatedContest);
 });
 
 const deleteContest = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) {
-    return res.status(400).json({ error: "id is required" });
+    return res.status(statusCode.NotFount404).json({ error: "id is required" });
   }
 
   const contest = await prisma.contest.findUnique({
@@ -99,7 +104,9 @@ const deleteContest = asyncHandler(async (req, res) => {
   });
 
   if (!contest) {
-    return res.status(400).json({ error: "Contest does not exist" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "Contest does not exist" });
   }
   const deletedContest = await prisma.contest.update({
     where: { id },
@@ -107,7 +114,7 @@ const deleteContest = asyncHandler(async (req, res) => {
   });
 
   return res
-    .status(200)
+    .status(statusCode.NoContent204)
     .json({ message: "Contest deleted successfully", data: deletedContest });
 });
 

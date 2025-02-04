@@ -1,5 +1,6 @@
 import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { statusCode } from "../utils/statusCodes.js";
 
 const createTestCase = asyncHandler(async (req, res) => {
   const { problemId, input, expectedOutput } = req.body;
@@ -12,7 +13,7 @@ const createTestCase = asyncHandler(async (req, res) => {
     },
   });
 
-  res.status(201).json(testCase);
+  res.status(statusCode.Created201).json(testCase);
 });
 
 const getAllTestCasesForProblem = asyncHandler(async (req, res) => {
@@ -24,11 +25,11 @@ const getAllTestCasesForProblem = asyncHandler(async (req, res) => {
 
   if (testCases.length === 0) {
     return res
-      .status(404)
+      .status(statusCode.NotFount404)
       .json({ error: "No test cases found for this problem" });
   }
 
-  res.status(200).json(testCases);
+  res.status(statusCode.Ok200).json(testCases);
 });
 
 const updateTestCase = asyncHandler(async (req, res) => {
@@ -45,7 +46,7 @@ const updateTestCase = asyncHandler(async (req, res) => {
   }
   if (Object.keys(updatedData).length === 0) {
     return res
-      .status(400)
+      .status(statusCode.NotFount404)
       .json({ error: "No valid fields provided for update" });
   }
 
@@ -54,14 +55,14 @@ const updateTestCase = asyncHandler(async (req, res) => {
     data: updatedData,
   });
 
-  res.status(200).json(updatedTestCase);
+  res.status(statusCode.Ok200).json(updatedTestCase);
 });
 
 const deleteTestCase = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.status(400).json({ error: "id is required" });
+    return res.status(statusCode.NotFount404).json({ error: "id is required" });
   }
 
   const testcase = await prisma.testCase.findUnique({
@@ -72,7 +73,9 @@ const deleteTestCase = asyncHandler(async (req, res) => {
   });
 
   if (!testcase) {
-    return res.status(400).json({ error: "Testcase does not exist" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "Testcase does not exist" });
   }
   const deletedTestCase = await prisma.testCase.update({
     where: { id },
@@ -80,7 +83,7 @@ const deleteTestCase = asyncHandler(async (req, res) => {
   });
 
   res
-    .status(200)
+    .status(statusCode.NoContent204)
     .json({ message: "Testcase deleted successfully", data: deletedTestCase });
 });
 

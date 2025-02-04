@@ -1,5 +1,6 @@
 import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { statusCode } from "../utils/statusCodes.js";
 
 const createCodingQuestion = asyncHandler(async (req, res) => {
   const {
@@ -30,7 +31,7 @@ const createCodingQuestion = asyncHandler(async (req, res) => {
     },
   });
 
-  return res.status(201).json(question);
+  return res.status(statusCode.Created201).json(question);
 });
 
 const getAllCodingQuestions = asyncHandler(async (req, res) => {
@@ -39,10 +40,12 @@ const getAllCodingQuestions = asyncHandler(async (req, res) => {
   });
 
   if (questions.length === 0) {
-    return res.status(404).json({ error: "No coding questions found" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "No coding questions found" });
   }
 
-  return res.status(200).json(questions);
+  return res.status(statusCode.Ok200).json(questions);
 });
 
 const getCodingQuestionsByContest = asyncHandler(async (req, res) => {
@@ -58,11 +61,11 @@ const getCodingQuestionsByContest = asyncHandler(async (req, res) => {
 
   if (problems.length === 0) {
     return res
-      .status(404)
+      .status(statusCode.NotFount404)
       .json({ error: "No problems found for this contest" });
   }
 
-  return res.status(200).json(problems);
+  return res.status(statusCode.Ok200).json(problems);
 });
 
 const updateCodingQuestion = asyncHandler(async (req, res) => {
@@ -93,7 +96,9 @@ const updateCodingQuestion = asyncHandler(async (req, res) => {
   if (memoryLimit) updateData.memoryLimit = memoryLimit;
 
   if (Object.keys(updateData).length === 0) {
-    return res.status(400).json({ error: "No fields provided for update." });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "No fields provided for update." });
   }
 
   const updatedQuestion = await prisma.codingQuestion.update({
@@ -101,14 +106,14 @@ const updateCodingQuestion = asyncHandler(async (req, res) => {
     data: updateData,
   });
 
-  res.status(200).json(updatedQuestion);
+  res.status(statusCode.Ok200).json(updatedQuestion);
 });
 
 const deleteCodingQuestion = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.status(400).json({ error: "id is required" });
+    return res.status(statusCode.NotFount404).json({ error: "id is required" });
   }
 
   const codingQuestion = await prisma.codingQuestion.findUnique({
@@ -119,14 +124,16 @@ const deleteCodingQuestion = asyncHandler(async (req, res) => {
   });
 
   if (!codingQuestion) {
-    return res.status(400).json({ error: "Coding Question does not exist" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "Coding Question does not exist" });
   }
   const deleteCodingQuestion = await prisma.codingQuestion.update({
     where: { id },
     data: { isDeleted: true },
   });
 
-  return res.status(200).json({
+  return res.status(statusCode.NoContent204).json({
     message: "Coding Question deleted successfully",
     data: deleteCodingQuestion,
   });

@@ -1,5 +1,6 @@
 import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { statusCode } from "../utils/statusCodes.js";
 
 const createAptitude = asyncHandler(async (req, res) => {
   const {
@@ -12,7 +13,9 @@ const createAptitude = asyncHandler(async (req, res) => {
     duration,
   } = req.body;
   if (!title || !shortDescription || !domain || !year || !duration) {
-    res.status(500).json({ error: "All Fields are required" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "All Fields are required" });
   }
 
   const aptitude = await prisma.aptitude.create({
@@ -32,14 +35,16 @@ const createAptitude = asyncHandler(async (req, res) => {
     },
   });
 
-  res.status(201).json({ message: "Aptitude created successfully", aptitude });
+  res
+    .status(statusCode.Created201)
+    .json({ message: "Aptitude created successfully", aptitude });
 });
 
 const getAllAptitudes = asyncHandler(async (req, res) => {
   const aptitudes = await prisma.aptitude.findMany({
     where: { isDeleted: false },
   });
-  res.status(201).json(aptitudes);
+  res.status(statusCode.Ok200).json(aptitudes);
 });
 
 const getAptitudesById = asyncHandler(async (req, res) => {
@@ -51,10 +56,12 @@ const getAptitudesById = asyncHandler(async (req, res) => {
   });
 
   if (!aptitude) {
-    return res.status(404).json({ error: "Aptitude not found" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "Aptitude not found" });
   }
 
-  res.status(201).json(aptitude);
+  res.status(statusCode.Ok200).json(aptitude);
 });
 
 const updateAptitude = asyncHandler(async (req, res) => {
@@ -74,7 +81,7 @@ const updateAptitude = asyncHandler(async (req, res) => {
     },
   });
   res
-    .status(201)
+    .status(statusCode.Ok200)
     .json({ message: "Aptitude updated successfully", updatedAptitude });
 });
 
@@ -85,7 +92,9 @@ const deleteAptitude = asyncHandler(async (req, res) => {
     where: { id: id, isDeleted: false },
     data: { isDeleted: true },
   });
-  res.status(201).json({ message: "Aptitude deleted successfully" });
+  res
+    .status(statusCode.NoContent204)
+    .json({ message: "Aptitude deleted successfully" });
 });
 export {
   createAptitude,
