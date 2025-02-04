@@ -64,7 +64,68 @@ router.post(
   registerUser,
 );
 
+/**
+ * @swagger
+ * /users/send-otp-email:
+ *   post:
+ *     summary: Send OTP to email for verification
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The email to which the OTP will be sent
+ *             required:
+ *               - email
+ *     responses:
+ *       200:
+ *         description: OTP sent to the provided email successfully
+ *       400:
+ *         description: Email already registered
+ *       429:
+ *         description: OTP request too frequent, please wait before retrying
+ *       500:
+ *         description: Internal server error while sending OTP
+ */
 router.post("/send-otp-email", sendOtpToEmail);
+
+/**
+ * @swagger
+ * /users/verify-otp-email:
+ *   post:
+ *     summary: Verify the OTP sent to email
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The email associated with the OTP
+ *               otp:
+ *                 type: string
+ *                 description: The OTP received in email
+ *             required:
+ *               - email
+ *               - otp
+ *     responses:
+ *       200:
+ *         description: Email verified successfully
+ *       400:
+ *         description: Invalid or expired OTP
+ *       500:
+ *         description: Internal server error during OTP verification
+ */
 router.post("/verify-otp-email", verifyEmailOtp);
 
 /**
