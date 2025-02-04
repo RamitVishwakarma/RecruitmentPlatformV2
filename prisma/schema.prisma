@@ -65,11 +65,11 @@ model User {
 }
 
 model Otp {
-  id        String   @id @default(uuid())  
-  otp       String  
-  email     String  
-  createdAt DateTime @default(now())  
-  expiresAt DateTime  
+  id        String   @id @default(uuid())
+  email     String   @unique
+  otp       Int
+  createdAt DateTime @default(now())
+  expiresAt DateTime
 }
 
 model VerificationToken {
