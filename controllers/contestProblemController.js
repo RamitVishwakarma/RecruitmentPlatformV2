@@ -1,11 +1,12 @@
 import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { statusCode } from "../utils/statusCodes.js";
 
 const createContestProblem = asyncHandler(async (req, res) => {
   const { contestId, codingQuestionId, year, testCases } = req.body;
 
   if (!contestId || !codingQuestionId || !year) {
-    return res.status(400).json({
+    return res.status(statusCode.NotFount404).json({
       error: "Contest ID, Coding Question ID, and Year are required.",
     });
   }
@@ -25,7 +26,7 @@ const createContestProblem = asyncHandler(async (req, res) => {
     },
   });
 
-  return res.status(201).json(contestProblem);
+  return res.status(statusCode.Created201).json(contestProblem);
 });
 
 const getAllContestProblems = asyncHandler(async (req, res) => {
@@ -43,11 +44,11 @@ const getAllContestProblems = asyncHandler(async (req, res) => {
 
   if (problems.length === 0) {
     return res
-      .status(404)
+      .status(statusCode.NotFount404)
       .json({ error: "No problems found for this contest" });
   }
 
-  return res.status(200).json(problems);
+  return res.status(statusCode.Ok200).json(problems);
 });
 
 const getContestProblemsByYear = asyncHandler(async (req, res) => {
@@ -57,7 +58,6 @@ const getContestProblemsByYear = asyncHandler(async (req, res) => {
     where: {
       contestId,
       year: parseInt(year),
-      // year: parseInt(year, 10),
       isDeleted: false,
     },
     include: {
@@ -68,11 +68,11 @@ const getContestProblemsByYear = asyncHandler(async (req, res) => {
 
   if (problems.length === 0) {
     return res
-      .status(404)
+      .status(statusCode.NotFount404)
       .json({ error: "No problems found for the specified year" });
   }
 
-  return res.status(200).json(problems);
+  return res.status(statusCode.Ok200).json(problems);
 });
 
 const updateContestProblem = asyncHandler(async (req, res) => {
@@ -84,7 +84,9 @@ const updateContestProblem = asyncHandler(async (req, res) => {
   });
 
   if (!contestProblem) {
-    return res.status(404).json({ error: "Contest problem not found" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "Contest problem not found" });
   }
 
   const updatedData = {};
@@ -94,7 +96,7 @@ const updateContestProblem = asyncHandler(async (req, res) => {
   }
   if (Object.keys(updatedData).length === 0) {
     return res
-      .status(400)
+      .status(statusCode.NotFount404)
       .json({ error: "No valid fields provided for update" });
   }
 
@@ -103,13 +105,13 @@ const updateContestProblem = asyncHandler(async (req, res) => {
     data: updatedData,
   });
 
-  return res.status(200).json(updatedProblem);
+  return res.status(statusCode.Ok200).json(updatedProblem);
 });
 
 const deleteContestProblem = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) {
-    return res.status(400).json({ error: "id is required" });
+    return res.status(statusCode.NotFount404).json({ error: "id is required" });
   }
 
   const contestProblem = await prisma.contestProblem.findUnique({
@@ -120,14 +122,16 @@ const deleteContestProblem = asyncHandler(async (req, res) => {
   });
 
   if (!contestProblem) {
-    return res.status(400).json({ error: "Contest Problem does not exist" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "Contest Problem does not exist" });
   }
   const deletedContestProblem = await prisma.contestProblem.update({
     where: { id },
     data: { isDeleted: true },
   });
 
-  return res.status(200).json({
+  return res.status(statusCode.NoContent204).json({
     message: "Contest Problem deleted successfully",
     data: deletedContestProblem,
   });

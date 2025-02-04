@@ -38,11 +38,11 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.get("/", (req, res) => {
-//   res.send(
-//     '<h1>Welcome to Recruitment Platform</h1><a href="/auth/google">Login with Google</a>'
-//   );
-// });
+app.get("/", (req, res) => {
+  res.send(
+    '<h1>Welcome to Recruitment Platform</h1><a href="/auth/google">Login with Google</a>',
+  );
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

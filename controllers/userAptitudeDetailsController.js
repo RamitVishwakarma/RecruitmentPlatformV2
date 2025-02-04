@@ -1,5 +1,6 @@
 import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { statusCode } from "../utils/statusCodes.js";
 
 const createUserAptitudeDetails = asyncHandler(async (req, res) => {
   const { userId, aptitudeScore } = req.body;
@@ -8,7 +9,7 @@ const createUserAptitudeDetails = asyncHandler(async (req, res) => {
     data: { userId: userId, aptitudeScore: aptitudeScore },
   });
 
-  return res.status(201).json({
+  return res.status(statusCode.Created201).json({
     message: "User Aptitude Details created successfully",
     newDetails,
   });
@@ -21,9 +22,11 @@ const getUserAptitudeDetails = asyncHandler(async (req, res) => {
     where: { userId: userId, isDeleted: false },
   });
   if (!details) {
-    return res.status(404).json({ error: "Details not found" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "Details not found" });
   }
-  return res.status(201).json({
+  return res.status(statusCode.Ok200).json({
     message: "User Aptitude Details obtained successfully",
     details,
   });
@@ -37,7 +40,7 @@ const updateUserAptitudeDetails = asyncHandler(async (req, res) => {
     where: { userId: userId, isDeleted: false },
     data: { aptitudeScore },
   });
-  return res.status(201).json({
+  return res.status(statusCode.Ok200).json({
     message: "User Aptitude Details updated successfully",
     updatedDetails,
   });
@@ -53,7 +56,7 @@ const deleteUserAptitudeDetails = asyncHandler(async (req, res) => {
     },
   });
   return res
-    .status(201)
+    .status(statusCode.NoContent204)
     .json({ message: "User Aptitude Details deleted successfully" });
 });
 export {

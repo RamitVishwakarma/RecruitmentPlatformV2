@@ -195,8 +195,6 @@ router.post("/login", authLimiter, loginUser);
  *       500:
  *         description: Error occurred during logout
  */
-router.post("/verify-phone", authLimiter, verifyPhone);
-router.post("/verify-otp", authLimiter, verifyOTP);
 router.route("/logout").post(logoutUser);
 
 /**
@@ -225,5 +223,8 @@ router.route("/logout").post(logoutUser);
  *         description: Error occurred while refreshing token
  */
 router.route("/refresh-token").post(refreshAccessToken);
+
+router.post("/verify-phone", authLimiter, verifyPhone);
+router.post("/verify-otp", authLimiter, verifyOTP);
 
 export default router;

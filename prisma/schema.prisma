@@ -60,7 +60,7 @@ model User {
   socialLinks        SocialLink[]
   aptitude           UserAptitudeDetails?
   verificationTokens VerificationToken[]
-  phone              String               @unique @default("Not Provided")
+  phone              String?               @unique 
   phoneVerified      Boolean              @default(false)
 }
 

@@ -1,12 +1,13 @@
 import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { statusCode } from "../utils/statusCodes.js";
 
 //Options
 
 const createOption = asyncHandler(async (req, res) => {
   const { optionText, isCorrect, questionId } = req.body;
   if (!optionText || isCorrect.length === 0 || !questionId) {
-    return res.status(400).json({
+    return res.status(statusCode.NotFount404).json({
       error: "OptionText,isCorrect and questionId fields are required",
     });
   }
@@ -23,15 +24,19 @@ const createOption = asyncHandler(async (req, res) => {
   });
 
   if (!newOption) {
-    res.status(400).json({ error: "Could not create option" });
+    return res
+      .status(statusCode.BadRequest400)
+      .json({ error: "Could not create option" });
   }
-  res.status(201).json({ message: "Option created", data: newOption });
+  res
+    .status(statusCode.Created201)
+    .json({ message: "Option created", data: newOption });
 });
 
 const getOptionById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) {
-    return res.status(400).json({ error: "ID is required" });
+    return res.status(statusCode.NotFount404).json({ error: "ID is required" });
   }
 
   const option = await prisma.option.findUnique({
@@ -42,17 +47,21 @@ const getOptionById = asyncHandler(async (req, res) => {
   });
 
   if (!option) {
-    return res.status(400).json({ error: "unable to get option" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "unable to get option" });
   }
   return res
-    .status(200)
+    .status(statusCode.Ok200)
     .json({ data: option, message: "option retrieved successfully" });
 });
 
 const getOptionsByQuestion = asyncHandler(async (req, res) => {
   const { questionId } = req.params;
   if (!questionId) {
-    return res.status(400).json({ error: "question id is required" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "question id is required" });
   }
 
   const options = await prisma.option.findMany({
@@ -62,10 +71,12 @@ const getOptionsByQuestion = asyncHandler(async (req, res) => {
     },
   });
   if (options.length === 0) {
-    return res.status(400).json({ error: "unable to get options" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "unable to get options" });
   }
   return res
-    .status(200)
+    .status(statusCode.Ok200)
     .json({ data: options, message: "options fetched successfully" });
 });
 
@@ -73,7 +84,7 @@ const updateOption = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { optionText, isCorrect } = req.body;
   if (!id) {
-    return res.status(400).json({ error: "id is required" });
+    return res.status(statusCode.NotFount404).json({ error: "id is required" });
   }
 
   const option = await prisma.option.findUnique({
@@ -83,7 +94,9 @@ const updateOption = asyncHandler(async (req, res) => {
     },
   });
   if (!option) {
-    return res.status(400).json({ error: "option not found" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "option not found" });
   }
 
   const updatedOption = await prisma.option.update({
@@ -97,17 +110,19 @@ const updateOption = asyncHandler(async (req, res) => {
     },
   });
   if (!updatedOption) {
-    return res.status(400).json({ error: "unable to update option" });
+    return res
+      .status(statusCode.BadRequest400)
+      .json({ error: "unable to update option" });
   }
   return res
-    .status(201)
+    .status(statusCode.Ok200)
     .json({ data: updatedOption, message: "option updated" });
 });
 
 const deleteOption = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!id) {
-    return res.status(400).json({ error: "id is required" });
+    return res.status(statusCode.NotFount404).json({ error: "id is required" });
   }
 
   const option = await prisma.option.findUnique({
@@ -117,7 +132,9 @@ const deleteOption = asyncHandler(async (req, res) => {
     },
   });
   if (!option) {
-    return res.status(400).json({ error: "option does not exist" });
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "option does not exist" });
   }
   await prisma.option.update({
     where: { id },
@@ -125,7 +142,9 @@ const deleteOption = asyncHandler(async (req, res) => {
       isDeleted: true,
     },
   });
-  return res.status(200).json({ message: "option deleted successfully" });
+  return res
+    .status(statusCode.NoContent204)
+    .json({ message: "option deleted successfully" });
 });
 
 export {
