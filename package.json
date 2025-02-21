@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon server.js",
+    "migrate": "prisma migrate dev",
     "prepare": "husky install"
   },
   "keywords": [],
