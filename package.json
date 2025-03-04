@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "migrate": "prisma migrate dev",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "studio": "prisma studio"
   },
   "keywords": [],
   "author": "",

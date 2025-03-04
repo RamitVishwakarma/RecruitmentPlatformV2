@@ -262,12 +262,11 @@ const registerUser = asyncHandler(async (req, res) => {
       expiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hour
     },
   });
-
+  // ? Remove this verification email step as email is already verified.
   await sendVerificationEmail(email, verificationToken.token);
 
   res.status(statusCode.Created201).json({
-    message:
-      "Registration successful. Please check your email to verify your account.",
+    message: "Registration successful.",
   });
 });
 
