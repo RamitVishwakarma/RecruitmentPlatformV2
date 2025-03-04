@@ -12,8 +12,6 @@ import {
   requestPasswordReset,
   resetPassword,
   verifyUser,
-  verifyPhone,
-  verifyOTP,
   sendOtpToEmail,
   verifyEmailOtp,
 } from "../controllers/authController.js";
@@ -284,8 +282,5 @@ router.route("/logout").post(logoutUser);
  *         description: Error occurred while refreshing token
  */
 router.route("/refresh-token").post(refreshAccessToken);
-
-router.post("/verify-phone", authLimiter, verifyPhone);
-router.post("/verify-otp", authLimiter, verifyOTP);
 
 export default router;
