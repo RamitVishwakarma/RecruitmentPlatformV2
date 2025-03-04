@@ -10,7 +10,7 @@ const router = Router();
 
 /**
  * @swagger
- * /contest/create/problem:
+ * /admin/contest/create/problem:
  *   post:
  *     summary: Create a new contest problem
  *     tags: [Contest]
@@ -41,7 +41,7 @@ router.route("/create/problem").post(createContestProblem);
 
 /**
  * @swagger
- * /contest/problems:
+ * /admin/contest/problems:
  *   get:
  *     summary: Get contest problems by year
  *     tags: [Contest]
@@ -69,7 +69,7 @@ router.route("/problems").get(getContestProblemsByYear);
 
 /**
  * @swagger
- * /contest/get/{contestId}:
+ * /admin/contest/get/{contestId}:
  *   get:
  *     summary: Get all problems for a contest
  *     tags: [Contest]
@@ -92,7 +92,7 @@ router.route("/get/:contestId").get(getAllContestProblems);
 
 /**
  * @swagger
- * /contest/update/{id}:
+ * /admin/contest/update/{id}:
  *   put:
  *     summary: Update a contest problem
  *     tags: [Contest]
@@ -126,7 +126,7 @@ router.route("/update/:id").put(updateContestProblem);
 
 /**
  * @swagger
- * /contest/delete/{id}:
+ * /admin/contest/delete/{id}:
  *   put:
  *     summary: Delete a contest problem
  *     tags: [Contest]

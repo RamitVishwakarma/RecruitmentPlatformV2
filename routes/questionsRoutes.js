@@ -13,7 +13,7 @@ const router = Router();
 
 /**
  * @swagger
- * /questions/create-question:
+ * /admin/questions/create-question:
  *   post:
  *     summary: Create a new question
  *     tags: [Questions]
@@ -44,7 +44,7 @@ router.route("/create-question").post(createQuestion);
 
 /**
  * @swagger
- * /questions/:
+ * /admin/questions/:
  *   get:
  *     summary: Get paginated questions
  *     tags: [Questions]
@@ -69,7 +69,7 @@ router.route("/").get(paginationMiddleware, getPaginatedQuestions);
 
 /**
  * @swagger
- * /questions/{id}:
+ * /admin/questions/{id}:
  *   get:
  *     summary: Get question by ID
  *     tags: [Questions]
@@ -90,7 +90,7 @@ router.route("/:id").get(getQuestionById);
 
 /**
  * @swagger
- * /questions/question-aptitude/{aptitudeId}:
+ * /admin/questions/question-aptitude/{aptitudeId}:
  *   get:
  *     summary: Get questions by aptitude ID
  *     tags: [Questions]
@@ -111,7 +111,7 @@ router.route("/question-aptitude/:aptitudeId").get(getQuestionsByAptitude);
 
 /**
  * @swagger
- * /questions/update-question/{id}:
+ * /admin/questions/update-question/{id}:
  *   patch:
  *     summary: Update a question by ID
  *     tags: [Questions]
@@ -145,7 +145,7 @@ router.route("/update-question/:id").patch(updateQuestion);
 
 /**
  * @swagger
- * /questions/delete-question/{id}:
+ * /admin/questions/delete-question/{id}:
  *   put:
  *     summary: Soft delete a question by ID
  *     tags: [Questions]

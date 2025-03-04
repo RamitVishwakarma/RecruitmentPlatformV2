@@ -10,7 +10,7 @@ const router = Router();
 
 /**
  * @swagger
- * /problems/create/coding-question:
+ * /admin/problems/create/coding-question:
  *   post:
  *     summary: Create a new coding question
  *     tags: [Coding-Problems]
@@ -62,7 +62,7 @@ router.route("/create/coding-question").post(createCodingQuestion);
 
 /**
  * @swagger
- * /problems/:
+ * /admin/problems/:
  *   get:
  *     summary: Get all coding questions
  *     tags: [Coding-Problems]
@@ -78,7 +78,7 @@ router.route("/").get(getAllCodingQuestions);
 
 /**
  * @swagger
- * /problems/{contestId}:
+ * /admin/problems/{contestId}:
  *   get:
  *     summary: Get all coding questions for a specific contest
  *     tags: [Coding-Problems]
@@ -100,7 +100,7 @@ router.route("/:contestId").get(getCodingQuestionsByContest);
 
 /**
  * @swagger
- * /problems/update/coding-question/{id}:
+ * /admin/problems/update/coding-question/{id}:
  *   put:
  *     summary: Update a coding question
  *     tags: [Coding-Problems]
@@ -161,7 +161,7 @@ router.route("/update/coding-question/:id").put(updateCodingQuestion);
 
 /**
  * @swagger
- * /problems/delete/coding-question/{id}:
+ * /admin/problems/delete/coding-question/{id}:
  *   put:
  *     summary: Delete a coding question
  *     tags: [Coding-Problems]
