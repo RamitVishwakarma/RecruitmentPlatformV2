@@ -29,7 +29,7 @@ export const generateEmailTemplate = (type, token) => {
             <h2 style="color: #333;">GDG Recruitments: Reset Password</h2>
             <p style="color: #555;">Hi there,</p>
             <p style="color: #555;">It seems like you've requested a password reset. Click the link below to reset your password. This link will expire in 1h.</p>
-            <a href="${baseUrl}/reset/${token}" 
+            <a href="${baseUrl}/reset-password/${token}" 
                style="display: inline-block; margin: 20px 0; padding: 10px 20px; color: #fff; background-color: #FF5733; text-decoration: none; border-radius: 4px;">Reset Password</a>
             <p style="color: #555;">Or, copy your reset token below:</p>
             <button onclick="navigator.clipboard.writeText('${token}')" 

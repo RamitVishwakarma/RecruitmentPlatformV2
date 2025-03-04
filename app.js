@@ -2,18 +2,10 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import {
-  userRoutes,
-  aptitudeRoutes,
-  userAptitudeDetailsRoutes,
-  questionRoutes,
-  optionsRoutes,
   authRoutes,
   socialRoutes,
   oauthRoutes,
-  contestRoutes,
-  contestProblemRoutes,
-  codingQuestionsRoutes,
-  testcaseRoutes,
+  adminRoutes,
 } from "./routes/index.js";
 import swaggerSpecs from "./utils/swaggerconfig.js";
 import swaggerUi from "swagger-ui-express";
@@ -61,17 +53,9 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.use("/users", userRoutes);
-app.use("/questions", questionRoutes);
-app.use("/options", optionsRoutes);
-app.use("/aptitude", aptitudeRoutes);
-app.use("/users", userAptitudeDetailsRoutes);
 app.use("/users", authRoutes);
 app.use("/auth", oauthRoutes);
 app.use("/social", socialRoutes);
-app.use("/contest", contestProblemRoutes);
-app.use("/contest", contestRoutes);
-app.use("/contest", testcaseRoutes);
-app.use("/problems", codingQuestionsRoutes);
+app.use("/admin", adminRoutes);
 
 export default app;
