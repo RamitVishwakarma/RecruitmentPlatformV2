@@ -12,6 +12,11 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
 import upload from "../utils/upload.js";
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: true,
+};
+
 const loginUser = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password)
@@ -27,13 +32,13 @@ const loginUser = asyncHandler(async (req, res, next) => {
   if (!user)
     return res
       .status(statusCode.NotFount404)
-      .json({ message: "Unable to find User" });
+      .json({ message: "User with the specified email does not exist." });
 
   const validatePassword = await bcrypt.compare(password, user.password);
   if (!validatePassword)
     return res
       .status(statusCode.BadRequest400)
-      .json({ message: "Invalid user credentials" });
+      .json({ message: "Password doesn’t match. Try again." });
 
   const accessToken = jwt.sign(
     { userId: user.id, email: user.email },
@@ -58,14 +63,10 @@ const loginUser = asyncHandler(async (req, res, next) => {
       expiresAt: expiresAt,
     },
   });
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
   return res
     .status(statusCode.Ok200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
     .json({ message: "User logged in successfully" });
 });
 
@@ -86,6 +87,9 @@ const logoutUser = asyncHandler(async (req, res, next) => {
       token,
     },
   });
+
+  res.clearCookie("accessToken", cookieOptions);
+  res.clearCookie("refreshToken", cookieOptions);
 
   return res
     .status(statusCode.Ok200)

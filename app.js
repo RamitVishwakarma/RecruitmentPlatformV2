@@ -11,6 +11,7 @@ import swaggerSpecs from "./utils/swaggerconfig.js";
 import swaggerUi from "swagger-ui-express";
 import session from "express-session";
 import passport from "passport";
+import requestLogger from "./middlewares/requestLogger.js";
 
 const app = express();
 app.use(
@@ -19,6 +20,8 @@ app.use(
     credentials: true,
   }),
 );
+
+app.use(requestLogger);
 
 app.use(
   session({
