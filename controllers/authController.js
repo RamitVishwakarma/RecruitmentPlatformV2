@@ -258,17 +258,6 @@ const registerUser = asyncHandler(async (req, res) => {
     },
   });
 
-  const verificationToken = await prisma.verificationToken.create({
-    data: {
-      token: jwt.sign({ userId: user.id }, process.env.PASSWORD_RESET_SECRET),
-      userId: user.id,
-      type: "EMAIL_VERIFICATION",
-      expiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hour
-    },
-  });
-  // ? Remove this verification email step as email is already verified.
-  await sendVerificationEmail(email, verificationToken.token);
-
   res.status(statusCode.Created201).json({
     message: "Registration successful.",
   });
