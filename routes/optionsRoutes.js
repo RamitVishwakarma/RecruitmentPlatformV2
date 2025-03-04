@@ -10,7 +10,7 @@ const router = Router();
 
 /**
  * @swagger
- * /options/create-option:
+ * /admin/options/create-option:
  *   post:
  *     summary: Create a new option
  *     tags: [Options]
@@ -54,7 +54,7 @@ router.route("/create-option").post(createOption);
 
 /**
  * @swagger
- * /options/option-question/{questionId}:
+ * /admin/options/option-question/{questionId}:
  *   get:
  *     summary: Get all options for a question
  *     tags: [Options]
@@ -87,7 +87,7 @@ router.route("/option-question/:questionId").get(getOptionsByQuestion);
 
 /**
  * @swagger
- * /options/{id}:
+ * /admin/options/{id}:
  *   get:
  *     summary: Get an option by ID
  *     tags: [Options]
@@ -118,7 +118,7 @@ router.route("/:id").get(getOptionById);
 
 /**
  * @swagger
- * /options/update-option/{id}:
+ * /admin/options/update-option/{id}:
  *   patch:
  *     summary: Update an option
  *     tags: [Options]
@@ -165,7 +165,7 @@ router.route("/update-option/:id").patch(updateOption);
 
 /**
  * @swagger
- * /options/delete-option/{id}:
+ * /admin/options/delete-option/{id}:
  *   put:
  *     summary: Delete an option
  *     tags: [Options]

@@ -9,7 +9,7 @@ const router = Router();
 
 /**
  * @swagger
- * /users/create-details:
+ * /admin/users/create-details:
  *   post:
  *     summary: Create user aptitude details
  *     tags: [Aptitude-Details]
@@ -54,7 +54,7 @@ router.route("/create-details").post(createUserAptitudeDetails);
 
 /**
  * @swagger
- * /users/get-details/{userId}:
+ * /admin/users/get-details/{userId}:
  *   get:
  *     summary: Get user aptitude details
  *     tags: [Aptitude-Details]
@@ -90,7 +90,7 @@ router.route("/get-details/:userId").get(getUserAptitudeDetails);
 
 /**
  * @swagger
- * /users/update-details/{userId}:
+ * /admin/users/update-details/{userId}:
  *   put:
  *     summary: Update user aptitude details
  *     tags: [Aptitude-Details]
@@ -138,7 +138,7 @@ router.route("/update-details/:userId").put(updateUserAptitudeDetails);
 
 /**
  * @swagger
- * /users/delete-details/{userId}:
+ * /admin/users/delete-details/{userId}:
  *   put:
  *     summary: Delete user aptitude details
  *     tags: [Aptitude-Details]

@@ -10,7 +10,7 @@ const router = Router();
 
 /**
  * @swagger
- * /contest/create-contest:
+ * /admin/contest/create-contest:
  *   post:
  *     summary: Create a new contest
  *     tags: [Contest]
@@ -61,7 +61,7 @@ router.route("/create-contest").post(createContest);
 
 /**
  * @swagger
- * /contest:
+ * /admin/contest:
  *   get:
  *     summary: Get all contests
  *     tags: [Contest]
@@ -93,7 +93,7 @@ router.route("/").get(getAllContests);
 
 /**
  * @swagger
- * /contest/get/{id}:
+ * /admin/contest/get/{id}:
  *   get:
  *     summary: Get contest by ID
  *     tags: [Contest]
@@ -126,7 +126,7 @@ router.route("/get/:id").get(getContestById);
 
 /**
  * @swagger
- * /contest/update-contest/{id}:
+ * /admin/contest/update-contest/{id}:
  *   put:
  *     summary: Update a contest
  *     tags: [Contest]
@@ -180,7 +180,7 @@ router.route("/update-contest/:id").put(updateContest);
 
 /**
  * @swagger
- * /contest/delete-contest/{id}:
+ * /admin/contest/delete-contest/{id}:
  *   put:
  *     summary: Delete a contest
  *     tags: [Contest]

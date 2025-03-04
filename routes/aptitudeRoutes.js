@@ -10,7 +10,7 @@ const router = Router();
 
 /**
  * @swagger
- * /aptitude/create-aptitude:
+ * /admin/aptitude/create-aptitude:
  *   post:
  *     summary: Create a new aptitude test
  *     tags: [Aptitude]
@@ -65,7 +65,7 @@ router.route("/create-aptitude").post(createAptitude);
 
 /**
  * @swagger
- * /aptitude/:
+ * /admin/aptitude/:
  *   get:
  *     summary: Get all aptitude tests
  *     tags: [Aptitude]
@@ -99,7 +99,7 @@ router.route("/").get(getAllAptitudes);
 
 /**
  * @swagger
- * /aptitude/{id}:
+ * /admin/aptitude/{id}:
  *   get:
  *     summary: Get a specific aptitude test by ID
  *     tags: [Aptitude]
@@ -145,7 +145,7 @@ router.route("/:id").get(getAptitudesById);
 
 /**
  * @swagger
- * /aptitude/update-aptitude/{id}:
+ * /admin/aptitude/update-aptitude/{id}:
  *   put:
  *     summary: Update an aptitude test
  *     tags: [Aptitude]
@@ -201,7 +201,7 @@ router.route("/update-aptitude/:id").put(updateAptitude);
 
 /**
  * @swagger
- * /aptitude/delete-aptitude/{id}:
+ * /admin/aptitude/delete-aptitude/{id}:
  *   put:
  *     summary: Delete an aptitude test
  *     tags: [Aptitude]

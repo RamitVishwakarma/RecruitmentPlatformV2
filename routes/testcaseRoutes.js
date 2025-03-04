@@ -9,7 +9,7 @@ const router = Router();
 
 /**
  * @swagger
- * /contest/create-testcase:
+ * /admin/contest/create-testcase:
  *   post:
  *     summary: Create a new test case for a problem
  *     tags: [Contest]
@@ -40,7 +40,7 @@ router.route("/create-testcase").post(createTestCase);
 
 /**
  * @swagger
- * /contest/all/{contestProblemId}:
+ * /admin/contest/all/{contestProblemId}:
  *   get:
  *     summary: Get all test cases for a specific problem
  *     tags: [Contest]
@@ -62,7 +62,7 @@ router.route("/all/:contestProblemId").get(getAllTestCasesForProblem);
 
 /**
  * @swagger
- * /contest/update-testcase/{id}:
+ * /admin/contest/update-testcase/{id}:
  *   put:
  *     summary: Update a test case
  *     tags: [Contest]
@@ -99,7 +99,7 @@ router.route("/update-testcase/:id").put(updateTestCase);
 
 /**
  * @swagger
- * /contest/delete-testcase/{id}:
+ * /admin/contest/delete-testcase/{id}:
  *   put:
  *     summary: Delete a test case
  *     tags: [Contest]

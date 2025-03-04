@@ -13,7 +13,7 @@ const router = Router();
 
 /**
  * @swagger
- * /users/:
+ * /admin/users/:
  *   get:
  *     summary: Get all users
  *     tags: [User]
@@ -39,7 +39,7 @@ router.route("/").get(paginationMiddleware, getUsers);
 
 /**
  * @swagger
- * /users/shortlist:
+ * /admin/users/shortlist:
  *   get:
  *     summary: Check user shortlist status
  *     tags: [User]
@@ -63,7 +63,7 @@ router.route("/shortlist").get(paginationMiddleware, checkUserShortlistStatus);
 
 /**
  * @swagger
- * /users/domain:
+ * /admin/users/domain:
  *   get:
  *     summary: Get users by domain
  *     tags: [User]
@@ -158,7 +158,7 @@ router.route("/domain").get(paginationMiddleware, getUsersByDomain);
 
 /**
  * @swagger
- * /users/{id}:
+ * /admin/users/{id}:
  *   get:
  *     summary: Get a user by ID
  *     tags: [User]
@@ -180,7 +180,7 @@ router.route("/:id").get(getUserById);
 
 /**
  * @swagger
- * /users/{id}:
+ * /admin/users/{id}:
  *   put:
  *     summary: Update user details
  *     tags: [User]
@@ -236,7 +236,7 @@ router.route("/:id").put(updateUser);
 
 /**
  * @swagger
- * /users/delete/{id}:
+ * /admin/users/delete/{id}:
  *   put:
  *     summary: Delete a user
  *     tags: [User]
