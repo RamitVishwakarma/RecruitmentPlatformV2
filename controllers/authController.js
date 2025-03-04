@@ -431,6 +431,53 @@ const resetPassword = asyncHandler(async (req, res) => {
   });
 });
 
+// reset password with old password
+
+const resetPasswordWithOldPassword = asyncHandler(async (req, res) => {
+  const { email, oldPassword, newPassword } = req.body;
+
+  if (!email || !oldPassword || !newPassword) {
+    return res
+      .status(statusCode.BadRequest400)
+      .json({ message: "Old and new password, email required" });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (!user) {
+    return res
+      .status(statusCode.NotFount404)
+      .json({ message: "User not found" });
+  }
+
+  const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+  if (!isPasswordValid) {
+    return res
+      .status(statusCode.BadRequest400)
+      .json({ message: "Old password is incorrect" });
+  }
+
+  const passwordValidation = validatePassword(newPassword);
+  if (!passwordValidation.isValid) {
+    return res
+      .status(statusCode.BadRequest400)
+      .json({ errors: passwordValidation.errors });
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  await prisma.user.update({
+    where: { email },
+    data: { password: hashedPassword },
+  });
+
+  return res.status(statusCode.Ok200).json({
+    message: "Password reset successful",
+  });
+});
+
 // verify user
 
 const verifyUser = asyncHandler(async (req, res) => {
@@ -485,6 +532,7 @@ export {
   registerUser,
   requestPasswordReset,
   resetPassword,
+  resetPasswordWithOldPassword,
   verifyUser,
   sendOtpToEmail,
   verifyEmailOtp,

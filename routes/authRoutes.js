@@ -4,6 +4,7 @@ import {
   authLimiter,
 } from "../middlewares/rateLimiter.js";
 import { upload } from "../middlewares/multerMiddleware.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 import {
   loginUser,
   logoutUser,
@@ -11,6 +12,7 @@ import {
   registerUser,
   requestPasswordReset,
   resetPassword,
+  resetPasswordWithOldPassword,
   verifyUser,
   sendOtpToEmail,
   verifyEmailOtp,
@@ -209,6 +211,43 @@ router.get("/verify/:token", verifyUser);
  *         description: Server error during password reset
  */
 router.post("/reset-password", passwordResetLimiter, resetPassword);
+
+/**
+ * @swagger
+ * /users/reset-password-with-old-password:
+ *   post:
+ *     summary: Reset user password using the old password
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               oldPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *             required:
+ *               - email
+ *               - oldPassword
+ *               - newPassword
+ *     responses:
+ *       200:
+ *         description: Password reset successful
+ *       400:
+ *         description: Invalid old password or new password is invalid
+ *       500:
+ *         description: Server error during password reset
+ */
+router.post(
+  "/reset-password-with-old-password",
+  resetPasswordWithOldPassword,
+  authMiddleware,
+);
 
 /**
  * @swagger
