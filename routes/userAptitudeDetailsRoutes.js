@@ -12,7 +12,7 @@ const router = Router();
  * /admin/users/create-details:
  *   post:
  *     summary: Create user aptitude details
- *     tags: [Aptitude-Details]
+ *     tags: [Admin - Aptitude-Details]
  *     description: Create new aptitude details for a user.
  *     requestBody:
  *       required: true
@@ -57,7 +57,7 @@ router.route("/create-details").post(createUserAptitudeDetails);
  * /admin/users/get-details/{userId}:
  *   get:
  *     summary: Get user aptitude details
- *     tags: [Aptitude-Details]
+ *     tags: [Admin - Aptitude-Details]
  *     description: Retrieve the aptitude details for a specific user using the user ID.
  *     parameters:
  *       - name: userId
@@ -93,7 +93,7 @@ router.route("/get-details/:userId").get(getUserAptitudeDetails);
  * /admin/users/update-details/{userId}:
  *   put:
  *     summary: Update user aptitude details
- *     tags: [Aptitude-Details]
+ *     tags: [Admin - Aptitude-Details]
  *     description: Update the aptitude details of a user using the user ID.
  *     parameters:
  *       - name: userId
@@ -141,7 +141,7 @@ router.route("/update-details/:userId").put(updateUserAptitudeDetails);
  * /admin/users/delete-details/{userId}:
  *   put:
  *     summary: Delete user aptitude details
- *     tags: [Aptitude-Details]
+ *     tags: [Admin - Aptitude-Details]
  *     description: Soft delete the aptitude details of a user using the user ID.
  *     parameters:
  *       - name: userId

@@ -16,7 +16,7 @@ const router = Router();
  * /admin/questions/create-question:
  *   post:
  *     summary: Create a new question
- *     tags: [Questions]
+ *     tags: [Admin - Questions]
  *     requestBody:
  *       required: true
  *       content:
@@ -47,7 +47,7 @@ router.route("/create-question").post(createQuestion);
  * /admin/questions/:
  *   get:
  *     summary: Get paginated questions
- *     tags: [Questions]
+ *     tags: [Admin - Questions]
  *     parameters:
  *       - in: query
  *         name: page
@@ -72,7 +72,7 @@ router.route("/").get(paginationMiddleware, getPaginatedQuestions);
  * /admin/questions/{id}:
  *   get:
  *     summary: Get question by ID
- *     tags: [Questions]
+ *     tags: [Admin - Questions]
  *     parameters:
  *       - in: path
  *         name: id
@@ -93,7 +93,7 @@ router.route("/:id").get(getQuestionById);
  * /admin/questions/question-aptitude/{aptitudeId}:
  *   get:
  *     summary: Get questions by aptitude ID
- *     tags: [Questions]
+ *     tags: [Admin - Questions]
  *     parameters:
  *       - in: path
  *         name: aptitudeId
@@ -114,7 +114,7 @@ router.route("/question-aptitude/:aptitudeId").get(getQuestionsByAptitude);
  * /admin/questions/update-question/{id}:
  *   patch:
  *     summary: Update a question by ID
- *     tags: [Questions]
+ *     tags: [Admin - Questions]
  *     parameters:
  *       - in: path
  *         name: id
@@ -148,7 +148,7 @@ router.route("/update-question/:id").patch(updateQuestion);
  * /admin/questions/delete-question/{id}:
  *   put:
  *     summary: Soft delete a question by ID
- *     tags: [Questions]
+ *     tags: [Admin - Questions]
  *     parameters:
  *       - in: path
  *         name: id

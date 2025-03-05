@@ -16,7 +16,7 @@ const router = Router();
  * /admin/users/:
  *   get:
  *     summary: Get all users
- *     tags: [User]
+ *     tags: [Admin - User]
  *     description: Retrieve a paginated list of all users.
  *     parameters:
  *       - in: query
@@ -42,7 +42,7 @@ router.route("/").get(paginationMiddleware, getUsers);
  * /admin/users/shortlist:
  *   get:
  *     summary: Check user shortlist status
- *     tags: [User]
+ *     tags: [Admin - User]
  *     description: Retrieve a paginated list of users and their shortlist statuses.
  *     parameters:
  *       - in: query
@@ -66,7 +66,7 @@ router.route("/shortlist").get(paginationMiddleware, checkUserShortlistStatus);
  * /admin/users/domain:
  *   get:
  *     summary: Get users by domain
- *     tags: [User]
+ *     tags: [Admin - User]
  *     description: Retrieve a paginated list of users filtered by their domain (e.g., programming, development, etc.).
  *     parameters:
  *       - in: query
@@ -161,7 +161,7 @@ router.route("/domain").get(paginationMiddleware, getUsersByDomain);
  * /admin/users/{id}:
  *   get:
  *     summary: Get a user by ID
- *     tags: [User]
+ *     tags: [Admin - User]
  *     description: Retrieve user details by their unique ID.
  *     parameters:
  *       - name: id
@@ -183,7 +183,7 @@ router.route("/:id").get(getUserById);
  * /admin/users/{id}:
  *   put:
  *     summary: Update user details
- *     tags: [User]
+ *     tags: [Admin - User]
  *     description: Update the details of a specific user by their unique ID.
  *     parameters:
  *       - name: id
@@ -239,7 +239,7 @@ router.route("/:id").put(updateUser);
  * /admin/users/delete/{id}:
  *   put:
  *     summary: Delete a user
- *     tags: [User]
+ *     tags: [Admin - User]
  *     description: Soft delete a user by marking them as deleted.
  *     parameters:
  *       - name: id

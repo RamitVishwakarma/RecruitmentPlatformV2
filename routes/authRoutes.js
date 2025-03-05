@@ -4,6 +4,7 @@ import {
   authLimiter,
 } from "../middlewares/rateLimiter.js";
 import { upload } from "../middlewares/multerMiddleware.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 import {
   loginUser,
   logoutUser,
@@ -11,6 +12,7 @@ import {
   registerUser,
   requestPasswordReset,
   resetPassword,
+  resetPasswordWithOldPassword,
   verifyUser,
   sendOtpToEmail,
   verifyEmailOtp,
@@ -23,7 +25,7 @@ const router = Router();
  * /users/register:
  *   post:
  *     summary: Register a new user
- *     tags: [User]
+ *     tags: [User - Auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -39,11 +41,14 @@ const router = Router();
  *                 type: string
  *               admissionNumber:
  *                 type: string
+ *               phone:
+ *                 type: string
  *             required:
  *               - name
  *               - email
  *               - password
  *               - admissionNumber
+ *               - phone
  *     responses:
  *       201:
  *         description: User registered successfully, verification email sent
@@ -67,7 +72,7 @@ router.post(
  * /users/send-otp-email:
  *   post:
  *     summary: Send OTP to email for verification
- *     tags: [User]
+ *     tags: [User - Auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -98,7 +103,7 @@ router.post("/send-otp-email", sendOtpToEmail);
  * /users/verify-otp-email:
  *   post:
  *     summary: Verify the OTP sent to email
- *     tags: [User]
+ *     tags: [User - Auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -131,7 +136,7 @@ router.post("/verify-otp-email", verifyEmailOtp);
  * /users/request-password-reset:
  *   post:
  *     summary: Request password reset for user
- *     tags: [User]
+ *     tags: [User - Auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -162,7 +167,7 @@ router.post(
  * /users/verify/{token}:
  *   get:
  *     summary: Verify user's email address
- *     tags: [User]
+ *     tags: [User - Auth]
  *     parameters:
  *       - in: path
  *         name: token
@@ -185,7 +190,7 @@ router.get("/verify/:token", verifyUser);
  * /users/reset-password:
  *   post:
  *     summary: Reset user password
- *     tags: [User]
+ *     tags: [User - Auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -212,10 +217,47 @@ router.post("/reset-password", passwordResetLimiter, resetPassword);
 
 /**
  * @swagger
+ * /users/reset-password-with-old-password:
+ *   post:
+ *     summary: Reset user password using the old password
+ *     tags: [User - Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               oldPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *             required:
+ *               - email
+ *               - oldPassword
+ *               - newPassword
+ *     responses:
+ *       200:
+ *         description: Password reset successful
+ *       400:
+ *         description: Invalid old password or new password is invalid
+ *       500:
+ *         description: Server error during password reset
+ */
+router.post(
+  "/reset-password-with-old-password",
+  resetPasswordWithOldPassword,
+  authMiddleware,
+);
+
+/**
+ * @swagger
  * /users/login:
  *   post:
  *     summary: Login user and get access and refresh tokens
- *     tags: [User]
+ *     tags: [User - Auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -245,7 +287,7 @@ router.post("/login", authLimiter, loginUser);
  * /users/logout:
  *   post:
  *     summary: Logout user by invalidating their refresh token
- *     tags: [User]
+ *     tags: [User - Auth]
  *     responses:
  *       200:
  *         description: User logged out successfully
@@ -261,7 +303,7 @@ router.route("/logout").post(logoutUser);
  * /users/refresh-token:
  *   post:
  *     summary: Refresh the access token using the refresh token
- *     tags: [User]
+ *     tags: [User - Auth]
  *     requestBody:
  *       required: true
  *       content:

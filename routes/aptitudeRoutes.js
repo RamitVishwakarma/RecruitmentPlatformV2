@@ -13,7 +13,7 @@ const router = Router();
  * /admin/aptitude/create-aptitude:
  *   post:
  *     summary: Create a new aptitude test
- *     tags: [Aptitude]
+ *     tags: [Admin - Aptitude]
  *     description: Create a new aptitude test with its details and associated questions.
  *     requestBody:
  *       required: true
@@ -68,7 +68,7 @@ router.route("/create-aptitude").post(createAptitude);
  * /admin/aptitude/:
  *   get:
  *     summary: Get all aptitude tests
- *     tags: [Aptitude]
+ *     tags: [Admin - Aptitude]
  *     description: Retrieve all aptitude tests that are not marked as deleted.
  *     responses:
  *       200:
@@ -102,7 +102,7 @@ router.route("/").get(getAllAptitudes);
  * /admin/aptitude/{id}:
  *   get:
  *     summary: Get a specific aptitude test by ID
- *     tags: [Aptitude]
+ *     tags: [Admin - Aptitude]
  *     description: Retrieve details of a specific aptitude test using its ID.
  *     parameters:
  *       - name: id
@@ -148,7 +148,7 @@ router.route("/:id").get(getAptitudesById);
  * /admin/aptitude/update-aptitude/{id}:
  *   put:
  *     summary: Update an aptitude test
- *     tags: [Aptitude]
+ *     tags: [Admin - Aptitude]
  *     description: Update the details of an existing aptitude test using its ID.
  *     parameters:
  *       - name: id
@@ -204,7 +204,7 @@ router.route("/update-aptitude/:id").put(updateAptitude);
  * /admin/aptitude/delete-aptitude/{id}:
  *   put:
  *     summary: Delete an aptitude test
- *     tags: [Aptitude]
+ *     tags: [Admin - Aptitude]
  *     description: Soft delete an aptitude test using its ID by marking it as deleted.
  *     parameters:
  *       - name: id

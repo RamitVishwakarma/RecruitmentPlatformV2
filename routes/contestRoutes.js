@@ -13,7 +13,7 @@ const router = Router();
  * /admin/contest/create-contest:
  *   post:
  *     summary: Create a new contest
- *     tags: [Contest]
+ *     tags: [Admin - Contest]
  *     description: Create a new contest with details such as title, description, start date, end date, and problems.
  *     requestBody:
  *       required: true
@@ -64,7 +64,7 @@ router.route("/create-contest").post(createContest);
  * /admin/contest:
  *   get:
  *     summary: Get all contests
- *     tags: [Contest]
+ *     tags: [Admin - Contest]
  *     description: Retrieve a list of all contests that are not marked as deleted.
  *     responses:
  *       200:
@@ -96,7 +96,7 @@ router.route("/").get(getAllContests);
  * /admin/contest/get/{id}:
  *   get:
  *     summary: Get contest by ID
- *     tags: [Contest]
+ *     tags: [Admin - Contest]
  *     description: Retrieve details of a specific contest by its ID.
  *     parameters:
  *       - in: path
@@ -129,7 +129,7 @@ router.route("/get/:id").get(getContestById);
  * /admin/contest/update-contest/{id}:
  *   put:
  *     summary: Update a contest
- *     tags: [Contest]
+ *     tags: [Admin - Contest]
  *     description: Update contest details such as title, description, start date, and end date.
  *     parameters:
  *       - in: path
@@ -183,7 +183,7 @@ router.route("/update-contest/:id").put(updateContest);
  * /admin/contest/delete-contest/{id}:
  *   put:
  *     summary: Delete a contest
- *     tags: [Contest]
+ *     tags: [Admin - Contest]
  *     description: Soft-delete a contest by marking it as deleted.
  *     parameters:
  *       - in: path

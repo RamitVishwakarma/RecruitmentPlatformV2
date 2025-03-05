@@ -13,7 +13,7 @@ const router = Router();
  * /admin/problems/create/coding-question:
  *   post:
  *     summary: Create a new coding question
- *     tags: [Coding-Problems]
+ *     tags: [Admin - Coding-Problems]
  *     description: Add a new coding question to the database with various attributes.
  *     requestBody:
  *       required: true
@@ -65,7 +65,7 @@ router.route("/create/coding-question").post(createCodingQuestion);
  * /admin/problems/:
  *   get:
  *     summary: Get all coding questions
- *     tags: [Coding-Problems]
+ *     tags: [Admin - Coding-Problems]
  *     description: Retrieve all coding questions that are not marked as deleted.
  *     responses:
  *       200:
@@ -81,7 +81,7 @@ router.route("/").get(getAllCodingQuestions);
  * /admin/problems/{contestId}:
  *   get:
  *     summary: Get all coding questions for a specific contest
- *     tags: [Coding-Problems]
+ *     tags: [Admin - Coding-Problems]
  *     description: Retrieve coding questions associated with a given contest ID.
  *     parameters:
  *       - in: path
@@ -103,7 +103,7 @@ router.route("/:contestId").get(getCodingQuestionsByContest);
  * /admin/problems/update/coding-question/{id}:
  *   put:
  *     summary: Update a coding question
- *     tags: [Coding-Problems]
+ *     tags: [Admin - Coding-Problems]
  *     description: Update the details of a specific coding question.
  *     parameters:
  *       - in: path
@@ -164,7 +164,7 @@ router.route("/update/coding-question/:id").put(updateCodingQuestion);
  * /admin/problems/delete/coding-question/{id}:
  *   put:
  *     summary: Delete a coding question
- *     tags: [Coding-Problems]
+ *     tags: [Admin - Coding-Problems]
  *     description: Soft-delete a coding question by marking it as deleted.
  *     parameters:
  *       - in: path
