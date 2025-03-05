@@ -6,8 +6,6 @@ import {
   sendPasswordResetEmail,
 } from "../utils/emailService.js";
 import { validatePassword } from "../utils/validators.js";
-import { sendOTP } from "../utils/twilioService.js";
-import twilio from "twilio";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
 import upload from "../utils/upload.js";
@@ -480,59 +478,6 @@ const verifyUser = asyncHandler(async (req, res) => {
     .json({ message: "Email verified successfully" });
 });
 
-// verify phone
-const verifyPhone = asyncHandler(async (req, res) => {
-  const { phone } = req.body;
-
-  const phoneRegex = /^\+[1-9]\d{1,14}$/;
-  if (!phoneRegex.test(phone)) {
-    return res.status(statusCode.BadRequest400).json({
-      message: "Invalid phone number format. Use format: +919876543210",
-    });
-  }
-
-  const existingUser = await prisma.user.findFirst({
-    where: { phone },
-  });
-
-  if (existingUser) {
-    return res.status(statusCode.Conflict409).json({
-      message: "Phone number already registered",
-    });
-  }
-
-  await sendOTP(phone);
-
-  res.status(statusCode.Ok200).json({
-    message: "OTP sent successfully",
-  });
-});
-
-// verify OTP
-const verifyOTP = asyncHandler(async (req, res) => {
-  const { phone, otp } = req.body;
-
-  const accountSid = process.env.TWILIO_ACCOUNT_SID;
-  const authToken = process.env.TWILIO_AUTH_TOKEN;
-  const serviceSid = process.env.TWILIO_SERVICE_SID;
-
-  const client = twilio(accountSid, authToken);
-
-  const verification_check = await client.verify.v2
-    .services(serviceSid)
-    .verificationChecks.create({ to: phone, code: otp });
-
-  if (verification_check.status === "approved") {
-    return res.status(statusCode.Ok200).json({
-      message: "Phone number verified successfully",
-    });
-  } else {
-    return res.status(statusCode.BadRequest400).json({
-      message: "Invalid OTP",
-    });
-  }
-});
-
 export {
   loginUser,
   logoutUser,
@@ -541,8 +486,6 @@ export {
   requestPasswordReset,
   resetPassword,
   verifyUser,
-  verifyPhone,
-  verifyOTP,
   sendOtpToEmail,
   verifyEmailOtp,
 };
