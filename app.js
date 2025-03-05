@@ -6,6 +6,7 @@ import {
   socialRoutes,
   oauthRoutes,
   adminRoutes,
+  userDetailsUpdateRoutes,
 } from "./routes/index.js";
 import swaggerSpecs from "./utils/swaggerconfig.js";
 import swaggerUi from "swagger-ui-express";
@@ -56,6 +57,7 @@ app.use((err, req, res, next) => {
 app.use("/users", authRoutes);
 app.use("/auth", oauthRoutes);
 app.use("/social", socialRoutes);
+app.use("/users", userDetailsUpdateRoutes);
 app.use("/admin", adminRoutes);
 
 export default app;

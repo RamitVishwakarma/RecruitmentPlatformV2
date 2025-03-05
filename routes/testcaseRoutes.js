@@ -12,7 +12,7 @@ const router = Router();
  * /admin/contest/create-testcase:
  *   post:
  *     summary: Create a new test case for a problem
- *     tags: [Contest]
+ *     tags: [Admin - Contest]
  *     description: Add a new test case for a contest problem with input and expected output.
  *     requestBody:
  *       required: true
@@ -43,7 +43,7 @@ router.route("/create-testcase").post(createTestCase);
  * /admin/contest/all/{contestProblemId}:
  *   get:
  *     summary: Get all test cases for a specific problem
- *     tags: [Contest]
+ *     tags: [Admin - Contest]
  *     description: Retrieve all test cases associated with a specific contest problem.
  *     parameters:
  *       - in: path
@@ -65,7 +65,7 @@ router.route("/all/:contestProblemId").get(getAllTestCasesForProblem);
  * /admin/contest/update-testcase/{id}:
  *   put:
  *     summary: Update a test case
- *     tags: [Contest]
+ *     tags: [Admin - Contest]
  *     description: Update the input and/or expected output for a specific test case.
  *     parameters:
  *       - in: path
@@ -102,7 +102,7 @@ router.route("/update-testcase/:id").put(updateTestCase);
  * /admin/contest/delete-testcase/{id}:
  *   put:
  *     summary: Delete a test case
- *     tags: [Contest]
+ *     tags: [Admin - Contest]
  *     description: Soft-delete a test case by marking it as deleted.
  *     parameters:
  *       - in: path

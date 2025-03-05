@@ -13,7 +13,7 @@ const router = express.Router();
  * /social/{userId}:
  *   post:
  *     summary: Create a social link for a user
- *     tags: [Social]
+ *     tags: [User - Social]
  *     description: Adds a new social link for a specific user based on their userId.
  *     parameters:
  *       - name: userId
@@ -60,7 +60,7 @@ router.post("/:userId", createSocialLink);
  * /social/{userId}:
  *   get:
  *     summary: Get all social links for a user
- *     tags: [Social]
+ *     tags: [User - Social]
  *     description: Retrieve all social links for a specific user by their userId.
  *     parameters:
  *       - name: userId
@@ -95,7 +95,7 @@ router.get("/:userId", getSocialLinksByUserId);
  * /social/{id}:
  *   put:
  *     summary: Update a social link
- *     tags: [Social]
+ *     tags: [User - Social]
  *     description: Update the URL of an existing social link.
  *     parameters:
  *       - name: id
@@ -140,7 +140,7 @@ router.put("/:id", updateSocialLink);
  * /social/{id}/delete:
  *   put:
  *     summary: Delete a social link
- *     tags: [Social]
+ *     tags: [User - Social]
  *     description: Soft delete a social link by marking it as deleted.
  *     parameters:
  *       - name: id
