@@ -18,9 +18,13 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
     res.status(401).json({ message: "Token has been blacklisted" });
   }
 
-  const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-  req.user = decodedToken;
-  next();
+  try {
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    req.user = decodedToken;
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
 });
 
 export { authMiddleware };

@@ -9,8 +9,14 @@ import contestProblemRoutes from "./contestProblemRoutes.js";
 import contestRoutes from "./contestRoutes.js";
 import testcaseRoutes from "./testcaseRoutes.js";
 import codingQuestionsRoutes from "./codingQuestionsRoutes.js";
+import adminAuthRoutes from "./adminAuthRoutes.js";
+import { adminAuthMiddleware } from "../middlewares/adminAuthMiddleware.js";
 
 const router = Router();
+
+router.use("/auth", adminAuthRoutes);
+
+router.use(adminAuthMiddleware);
 
 router.use("/users", userRoutes);
 router.use("/questions", questionRoutes);

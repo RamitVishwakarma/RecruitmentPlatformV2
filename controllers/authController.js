@@ -431,7 +431,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   });
 });
 
-// reset password with old password
+// reset password with old password {authenticated route}
 
 const resetPasswordWithOldPassword = asyncHandler(async (req, res) => {
   const { email, oldPassword, newPassword } = req.body;

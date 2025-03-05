@@ -13,7 +13,7 @@ const router = Router();
  * /admin/options/create-option:
  *   post:
  *     summary: Create a new option
- *     tags: [Options]
+ *     tags: [Admin - Options]
  *     description: Adds a new option for a specific question.
  *     requestBody:
  *       required: true
@@ -57,7 +57,7 @@ router.route("/create-option").post(createOption);
  * /admin/options/option-question/{questionId}:
  *   get:
  *     summary: Get all options for a question
- *     tags: [Options]
+ *     tags: [Admin - Options]
  *     description: Retrieve all options for a specific question using the questionId.
  *     parameters:
  *       - name: questionId
@@ -90,7 +90,7 @@ router.route("/option-question/:questionId").get(getOptionsByQuestion);
  * /admin/options/{id}:
  *   get:
  *     summary: Get an option by ID
- *     tags: [Options]
+ *     tags: [Admin - Options]
  *     description: Retrieve a specific option using its unique ID.
  *     parameters:
  *       - name: id
@@ -121,7 +121,7 @@ router.route("/:id").get(getOptionById);
  * /admin/options/update-option/{id}:
  *   patch:
  *     summary: Update an option
- *     tags: [Options]
+ *     tags: [Admin - Options]
  *     description: Modify the text or correctness of an option.
  *     parameters:
  *       - name: id
@@ -168,7 +168,7 @@ router.route("/update-option/:id").patch(updateOption);
  * /admin/options/delete-option/{id}:
  *   put:
  *     summary: Delete an option
- *     tags: [Options]
+ *     tags: [Admin - Options]
  *     description: Soft delete an option by marking it as deleted.
  *     parameters:
  *       - name: id

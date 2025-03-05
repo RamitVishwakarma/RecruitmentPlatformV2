@@ -13,7 +13,7 @@ const router = Router();
  * /admin/contest/create/problem:
  *   post:
  *     summary: Create a new contest problem
- *     tags: [Contest]
+ *     tags: [Admin - Contest]
  *     description: Add a new problem to a contest, including test cases and year information.
  *     requestBody:
  *       required: true
@@ -44,7 +44,7 @@ router.route("/create/problem").post(createContestProblem);
  * /admin/contest/problems:
  *   get:
  *     summary: Get contest problems by year
- *     tags: [Contest]
+ *     tags: [Admin - Contest]
  *     description: Retrieve contest problems based on the year and contest ID.
  *     parameters:
  *       - in: query
@@ -72,7 +72,7 @@ router.route("/problems").get(getContestProblemsByYear);
  * /admin/contest/get/{contestId}:
  *   get:
  *     summary: Get all problems for a contest
- *     tags: [Contest]
+ *     tags: [Admin - Contest]
  *     description: Retrieve all problems associated with a specific contest.
  *     parameters:
  *       - in: path
@@ -95,7 +95,7 @@ router.route("/get/:contestId").get(getAllContestProblems);
  * /admin/contest/update/{id}:
  *   put:
  *     summary: Update a contest problem
- *     tags: [Contest]
+ *     tags: [Admin - Contest]
  *     description: Update the year or other fields of a contest problem.
  *     parameters:
  *       - in: path
@@ -129,7 +129,7 @@ router.route("/update/:id").put(updateContestProblem);
  * /admin/contest/delete/{id}:
  *   put:
  *     summary: Delete a contest problem
- *     tags: [Contest]
+ *     tags: [Admin - Contest]
  *     description: Soft-delete a contest problem by marking it as deleted.
  *     parameters:
  *       - in: path
