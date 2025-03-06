@@ -65,7 +65,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
     .status(statusCode.Ok200)
     .cookie("accessToken", accessToken, cookieOptions)
     .cookie("refreshToken", refreshToken, cookieOptions)
-    .json({ message: "User logged in successfully" });
+    .json({ message: "User logged in successfully", user: user });
 });
 
 const logoutUser = asyncHandler(async (req, res, next) => {
@@ -258,6 +258,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   res.status(statusCode.Created201).json({
     message: "Registration successful.",
+    user: user,
   });
 });
 
