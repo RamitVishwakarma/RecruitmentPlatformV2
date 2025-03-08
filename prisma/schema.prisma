@@ -55,14 +55,12 @@ model User {
   shortlistStatus    Boolean              @default(false)
   interviewStatus    Boolean              @default(false)
   isDeleted          Boolean              @default(false)
-  emailVerified      Boolean              @default(false)
   googleId           String?              @unique
   RefreshToken       RefreshToken[]
   socialLinks        SocialLink[]
   aptitude           UserAptitudeDetails?
   verificationTokens VerificationToken[]
   phone              String?               @unique 
-  phoneVerified      Boolean              @default(false)
 }
 
 model Otp {
