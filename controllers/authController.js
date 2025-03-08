@@ -8,7 +8,6 @@ import {
 import { validatePassword } from "../utils/validators.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
-import upload from "../utils/upload.js";
 
 const cookieOptions = {
   httpOnly: true,
@@ -158,6 +157,8 @@ const registerUser = asyncHandler(async (req, res) => {
     year,
     aptitudeDetails,
     socialLinks,
+    photoUrl,
+    resumeUrl,
   } = req.body;
 
   const errors = [];
@@ -189,26 +190,6 @@ const registerUser = asyncHandler(async (req, res) => {
     return res.status(statusCode.BadRequest400).json({ errors });
   }
 
-  let photoUrl = null;
-  if (req.files && req.files.photo && req.files.photo.length > 0) {
-    photoUrl = await upload(req.files.photo[0]);
-    if (!photoUrl) {
-      return res
-        .status(statusCode.BadRequest400)
-        .json({ message: "Could not upload image." });
-    }
-  }
-
-  let resumeUrl = null;
-  if (req.files && req.files.resume && req.files.resume.length > 0) {
-    resumeUrl = await upload(req.files.resume[0]);
-    if (!resumeUrl) {
-      return res
-        .status(statusCode.BadRequest400)
-        .json({ message: "Could not upload resume." });
-    }
-  }
-
   const existingUser = await prisma.user.findUnique({
     where: { email },
   });
@@ -238,7 +219,6 @@ const registerUser = asyncHandler(async (req, res) => {
       password: hashedPassword,
       admissionNumber,
       phone,
-      phoneVerified: true,
       photo: photoUrl ?? null,
       resume: resumeUrl ?? null,
       domain: domain ?? null,
@@ -512,7 +492,6 @@ const verifyUser = asyncHandler(async (req, res) => {
   await prisma.user.update({
     where: { id: verificationToken.userId },
     data: {
-      emailVerified: true,
       updatedAt: new Date(),
     },
   });

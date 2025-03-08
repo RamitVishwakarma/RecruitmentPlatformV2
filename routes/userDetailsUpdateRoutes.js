@@ -1,7 +1,6 @@
 import Router from "express";
 import { updateUserProfile } from "../controllers/updateUserDetailsController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
-import { upload } from "../middlewares/multerMiddleware.js";
 
 const router = Router();
 
@@ -10,7 +9,7 @@ const router = Router();
  * /users/update-profile:
  *   patch:
  *     summary: Update user profile
- *     description: Allows an authenticated user to update their profile details, including name, photo, year, resume, admission number, and domain.
+ *     description: Allows an authenticated user to update their profile details, including name, photo, year, resume, admission number, domain, photoUrl, and resumeUrl.
  *     tags:
  *       - [User - Profile]
  *     security:
@@ -43,6 +42,13 @@ const router = Router();
  *                 type: string
  *                 format: binary
  *                 description: Resume file (optional)
+ *               photoUrl:
+ *                 type: string
+ *                 description: URL of the profile picture (optional)
+ *               resumeUrl:
+ *                 type: string
+ *                 description: URL of the resume (optional)
+ *
  *     responses:
  *       200:
  *         description: Profile updated successfully
@@ -65,14 +71,6 @@ const router = Router();
  *         description: User not found
  */
 
-router.patch(
-  "/update-profile",
-  authMiddleware,
-  upload.fields([
-    { name: "photo", maxCount: 1 },
-    { name: "resume", maxCount: 1 },
-  ]),
-  updateUserProfile,
-);
+router.patch("/update-profile", authMiddleware, updateUserProfile);
 
 export default router;

@@ -43,6 +43,10 @@ const router = Router();
  *                 type: string
  *               phone:
  *                 type: string
+ *               photoUrl:
+ *                 type: string
+ *               resumeUrl:
+ *                 type: string
  *             required:
  *               - name
  *               - email
@@ -57,15 +61,7 @@ const router = Router();
  *       500:
  *         description: Server error during registration
  */
-router.post(
-  "/register",
-  authLimiter,
-  upload.fields([
-    { name: "photo", maxCount: 1 },
-    { name: "resume", maxCount: 1 },
-  ]),
-  registerUser,
-);
+router.post("/register", authLimiter, registerUser);
 
 /**
  * @swagger
