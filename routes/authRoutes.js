@@ -244,8 +244,8 @@ router.post("/reset-password", passwordResetLimiter, resetPassword);
  */
 router.post(
   "/reset-password-with-old-password",
-  resetPasswordWithOldPassword,
   authMiddleware,
+  resetPasswordWithOldPassword,
 );
 
 /**

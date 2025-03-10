@@ -433,6 +433,12 @@ const resetPasswordWithOldPassword = asyncHandler(async (req, res) => {
       .json({ message: "User not found" });
   }
 
+  if (user.id !== req.user.userId) {
+    return res
+      .status(statusCode.Unauthorized401)
+      .json({ message: "Invalid email" });
+  }
+
   const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
   if (!isPasswordValid) {
     return res
