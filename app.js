@@ -60,6 +60,6 @@ app.use("/auth", oauthRoutes);
 app.use("/social", socialRoutes);
 app.use("/users", userDetailsUpdateRoutes);
 app.use("/admin", adminRoutes);
-app.use("/", uploadRoutes);
+app.use("/upload", uploadRoutes);
 
 export default app;

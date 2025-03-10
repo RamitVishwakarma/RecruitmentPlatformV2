@@ -1,15 +1,35 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
+import { uploadToAzure } from "../utils/upload.js";
 
-const uploadFiles = asyncHandler(async (req, res) => {
-  const photoUrl = req.files.photo ? req.files.photo[0].location : null;
-  const resumeUrl = req.files.resume ? req.files.resume[0].location : null;
+const uploadPhoto = asyncHandler(async (req, res) => {
+  if (!req.file) {
+    return res.status(statusCode.BadRequest400).json({
+      message: "No photo file uploaded",
+    });
+  }
+
+  const uploadResult = await uploadToAzure(req.file); // Upload photo to Azure
 
   res.status(statusCode.Ok200).json({
-    message: "Files uploaded successfully",
-    "photo-url": photoUrl,
-    "resume-url": resumeUrl,
+    message: "Photo uploaded successfully",
+    "photo-url": uploadResult.fileUrl,
   });
 });
 
-export { uploadFiles };
+const uploadResume = asyncHandler(async (req, res) => {
+  if (!req.file) {
+    return res.status(statusCode.BadRequest400).json({
+      message: "No resume file uploaded",
+    });
+  }
+
+  const uploadResult = await uploadToAzure(req.file); // Upload resume to Azure
+
+  res.status(statusCode.Ok200).json({
+    message: "Resume uploaded successfully",
+    "resume-url": uploadResult.fileUrl,
+  });
+});
+
+export { uploadPhoto, uploadResume };
