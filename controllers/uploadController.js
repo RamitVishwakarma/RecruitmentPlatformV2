@@ -13,7 +13,7 @@ const uploadPhoto = asyncHandler(async (req, res) => {
 
   res.status(statusCode.Ok200).json({
     message: "Photo uploaded successfully",
-    "photo-url": uploadResult.fileUrl,
+    url: uploadResult.fileUrl,
   });
 });
 
@@ -28,7 +28,7 @@ const uploadResume = asyncHandler(async (req, res) => {
 
   res.status(statusCode.Ok200).json({
     message: "Resume uploaded successfully",
-    "resume-url": uploadResult.fileUrl,
+    url: uploadResult.fileUrl,
   });
 });
 
