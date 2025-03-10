@@ -9,7 +9,7 @@ const uploadPhoto = asyncHandler(async (req, res) => {
     });
   }
 
-  const uploadResult = await uploadToAzure(req.file); // Upload photo to Azure
+  const uploadResult = await uploadToAzure(req.file);
 
   res.status(statusCode.Ok200).json({
     message: "Photo uploaded successfully",
@@ -24,7 +24,7 @@ const uploadResume = asyncHandler(async (req, res) => {
     });
   }
 
-  const uploadResult = await uploadToAzure(req.file); // Upload resume to Azure
+  const uploadResult = await uploadToAzure(req.file);
 
   res.status(statusCode.Ok200).json({
     message: "Resume uploaded successfully",
