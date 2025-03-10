@@ -1,37 +1,80 @@
 import multer from "multer";
-import multerS3 from "multer-s3";
-import s3 from "./s3.js";
+import { BlobServiceClient } from "@azure/storage-blob";
+import { Readable } from "stream";
+import dotenv from "dotenv";
 
-const allowedMimeTypes = [
-  "image/png",
-  "image/jpg",
-  "image/jpeg",
-  "application/pdf",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-];
+dotenv.config();
 
+// Azure SAS URL
+const AZURE_SAS_URL = process.env.AZURE_SAS_URL;
+const PHOTO_CONTAINER = process.env.AZURE_PHOTO_CONTAINER;
+const RESUME_CONTAINER = process.env.AZURE_RESUME_CONTAINER;
+
+// Allowed MIME types
+const allowedMimeTypes = {
+  photos: ["image/png", "image/jpg", "image/jpeg"],
+  resumes: [
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ],
+};
+
+// Multer in-memory storage
+const storage = multer.memoryStorage();
+
+// Multer upload middleware
 const upload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: process.env.S3_BUCKET_NAME,
-    acl: "public-read",
-    metadata: (req, file, cb) => {
-      cb(null, { fieldName: file.fieldname });
-    },
-    key: (req, file, cb) => {
-      cb(null, `uploads/${Date.now()}_${file.originalname}`);
-    },
-  }),
+  storage: storage,
   fileFilter: (req, file, cb) => {
-    if (allowedMimeTypes.includes(file.mimetype)) {
+    const isPhoto = allowedMimeTypes.photos.includes(file.mimetype);
+    const isResume = allowedMimeTypes.resumes.includes(file.mimetype);
+
+    if (isPhoto || isResume) {
       cb(null, true);
     } else {
-      cb(new Error("Only .png, .jpg, .jpeg, .pdf, .docx files are allowed"));
+      cb(new Error("Invalid file type. Only photos and resumes are allowed."));
     }
   },
-  limits: {
-    fileSize: 1024 * 1024 * 5, // 5 MB
-  },
+  limits: { fileSize: 1024 * 1024 * 5 }, // 5 MB
 });
+
+// Function to determine the container based on file type
+function getContainerName(file) {
+  if (allowedMimeTypes.photos.includes(file.mimetype)) {
+    return PHOTO_CONTAINER;
+  }
+  if (allowedMimeTypes.resumes.includes(file.mimetype)) {
+    return RESUME_CONTAINER;
+  }
+  throw new Error("Unsupported file type");
+}
+
+// Upload file to correct container
+export async function uploadToAzure(file) {
+  try {
+    if (!file) throw new Error("No file provided");
+
+    const containerName = getContainerName(file);
+    const blobServiceClient = new BlobServiceClient(AZURE_SAS_URL);
+    const containerClient = blobServiceClient.getContainerClient(containerName);
+
+    const blobName = `${Date.now()}_${file.originalname}`;
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+    const stream = Readable.from(file.buffer);
+
+    // Setting content type for the file so that it can be displayed in the browser
+    const options = {
+      blobHTTPHeaders: { blobContentType: file.mimetype },
+    };
+
+    await blockBlobClient.uploadStream(stream, file.size, undefined, options);
+
+    return { fileUrl: blockBlobClient.url };
+  } catch (error) {
+    console.error("Error uploading file:", error.message);
+    throw error;
+  }
+}
 
 export default upload;
