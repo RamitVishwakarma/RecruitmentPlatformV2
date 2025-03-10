@@ -239,6 +239,8 @@ router.post("/reset-password", passwordResetLimiter, resetPassword);
  *         description: Password reset successful
  *       400:
  *         description: Invalid old password or new password is invalid
+ *       401:
+ *         description: Unauthorized User
  *       500:
  *         description: Server error during password reset
  */
