@@ -61,8 +61,8 @@ const router = express.Router();
  *                     type: object
  *       400:
  *         description: Invalid input or missing fields.
- *       409:
- *         description: Conflict, all provided links already exist.
+ *       404:
+ *        description: User not found.
  */
 router.post("/:userId", createOrUpdateSocialLinks);
 
