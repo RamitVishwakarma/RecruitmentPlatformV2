@@ -48,18 +48,19 @@ app.use(cookieParser());
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  return res.status(err.status || 500).json({
-    message: err.message || "Internal Server Error",
-  });
-});
-
 app.use("/users", authRoutes);
 app.use("/auth", oauthRoutes);
 app.use("/social", socialRoutes);
 app.use("/users", userDetailsUpdateRoutes);
 app.use("/admin", adminRoutes);
 app.use("/upload", uploadRoutes);
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  return res.status(err.status || 500).json({
+    message: err.message || "Internal Server Error",
+  });
+});
 
 export default app;
