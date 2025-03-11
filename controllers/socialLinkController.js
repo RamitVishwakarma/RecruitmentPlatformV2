@@ -2,39 +2,65 @@ import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
 
-//~ Create a social link
+// check userId
+const checkUserId = async (userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+  if (!user) {
+    return false;
+  } else {
+    return true;
+  }
+};
 
-const createSocialLink = asyncHandler(async (req, res) => {
+//~ Create or update social links
+const createOrUpdateSocialLinks = asyncHandler(async (req, res) => {
   const { userId } = req.params;
-  const { name, link } = req.body;
+  const { socialLinks } = req.body; // array of { name, link }
 
-  if (!name || !link || !userId) {
+  if (!Array.isArray(socialLinks) || socialLinks.length === 0 || !userId) {
+    return res
+      .status(statusCode.BadRequest400)
+      .json({ message: "Invalid input format" });
+  }
+
+  const userExists = await checkUserId(userId);
+  if (!userExists) {
     return res
       .status(statusCode.NotFount404)
-      .json({ message: "All fields are required!" });
+      .json({ message: "User not found!" });
   }
 
-  const existingLink = await prisma.socialLink.findFirst({
-    where: { name, userId, isDeleted: false },
-  });
+  const duplicateLinks = socialLinks.filter(
+    (link, index) =>
+      socialLinks.findIndex((l) => l.name === link.name) !== index,
+  );
 
-  if (existingLink) {
-    return res.status(statusCode.Conflict409).json({
-      message: `Link already exists for this user: ${name}`,
-    });
+  if (duplicateLinks.length > 0) {
+    return res
+      .status(statusCode.BadRequest400)
+      .json({ message: "Duplicate social links not allowed" });
   }
 
-  const socialLink = await prisma.socialLink.create({
-    data: {
-      name,
-      link,
-      userId,
-    },
+  const upsertOperations = socialLinks.map(({ name, link }) =>
+    prisma.socialLink.upsert({
+      where: { userId_name: { userId, name } },
+      update: { link, isDeleted: false },
+      create: { name, link, userId },
+    }),
+  );
+
+  const updatedLinks = await prisma.$transaction(upsertOperations);
+
+  const allLinks = await prisma.socialLink.findMany({
+    where: { userId, isDeleted: false },
   });
 
-  return res
-    .status(statusCode.Created201)
-    .json({ message: "Social link created!", socialLink });
+  return res.status(statusCode.Created201).json({
+    message: "Social links updated successfully!",
+    allLinks,
+  });
 });
 
 //~ Get social links by userId
@@ -45,7 +71,14 @@ const getSocialLinksByUserId = asyncHandler(async (req, res) => {
   if (!userId) {
     return res
       .status(statusCode.NotFount404)
-      .json({ message: "userId is required!" });
+      .json({ message: "userId is required" });
+  }
+
+  const userExists = await checkUserId(userId);
+  if (!userExists) {
+    return res
+      .status(statusCode.NotFount404)
+      .json({ message: "User not found" });
   }
 
   const socialLinks = await prisma.socialLink.findMany({
@@ -59,50 +92,6 @@ const getSocialLinksByUserId = asyncHandler(async (req, res) => {
   }
 
   return res.status(statusCode.Ok200).json(socialLinks);
-});
-
-//~ Update a social link
-
-const updateSocialLink = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const { link } = req.body;
-
-  if (!link || !id) {
-    return res
-      .status(statusCode.NotFount404)
-      .json({ message: "Link and id are required!" });
-  }
-
-  const existingLink = await prisma.socialLink.findUnique({
-    where: { id, isDeleted: false },
-  });
-
-  if (!existingLink) {
-    return res
-      .status(statusCode.NotFount404)
-      .json({ message: "Social link not found!" });
-  }
-
-  const duplicateLink = await prisma.socialLink.findFirst({
-    where: { link, userId: existingLink.userId, isDeleted: false },
-  });
-
-  if (duplicateLink && duplicateLink.id === id) {
-    return res
-      .status(statusCode.Conflict409)
-      .json({ message: "Link already exists for this user!" });
-  }
-
-  const updatedLink = await prisma.socialLink.update({
-    where: { id, isDeleted: false },
-    data: {
-      link,
-    },
-  });
-
-  return res
-    .status(statusCode.Ok200)
-    .json({ message: "Social link updated!", updatedLink });
 });
 
 //~ Delete a social link
@@ -132,9 +121,4 @@ const deleteSocialLink = asyncHandler(async (req, res) => {
     .json({ message: "Social link deleted!" });
 });
 
-export {
-  createSocialLink,
-  getSocialLinksByUserId,
-  updateSocialLink,
-  deleteSocialLink,
-};
+export { createOrUpdateSocialLinks, getSocialLinksByUserId, deleteSocialLink };

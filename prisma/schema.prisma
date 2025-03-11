@@ -23,6 +23,8 @@ model SocialLink {
   userId    String
   isDeleted Boolean @default(false)
   user      User    @relation(fields: [userId], references: [id])
+
+  @@unique([userId, name])
 }
 
 model UserAptitudeDetails {

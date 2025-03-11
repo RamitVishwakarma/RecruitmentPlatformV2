@@ -1,8 +1,7 @@
 import express from "express";
 import {
-  createSocialLink,
+  createOrUpdateSocialLinks,
   getSocialLinksByUserId,
-  updateSocialLink,
   deleteSocialLink,
 } from "../controllers/socialLinkController.js";
 
@@ -12,9 +11,9 @@ const router = express.Router();
  * @swagger
  * /social/{userId}:
  *   post:
- *     summary: Create a social link for a user
+ *     summary: Create or update multiple social links for a user
  *     tags: [User - Social]
- *     description: Adds a new social link for a specific user based on their userId.
+ *     description: Adds new social links for a specific user or updates existing ones based on their userId.
  *     parameters:
  *       - name: userId
  *         in: path
@@ -29,18 +28,26 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - link
+ *               - socialLinks
  *             properties:
- *               name:
- *                 type: string
- *                 description: The name of the social platform.
- *               link:
- *                 type: string
- *                 description: The URL of the social link.
+ *               socialLinks:
+ *                 type: array
+ *                 description: Array of social links to add or update.
+ *                 items:
+ *                   type: object
+ *                   required:
+ *                     - name
+ *                     - link
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       description: The name of the social platform.
+ *                     link:
+ *                       type: string
+ *                       description: The URL of the social link.
  *     responses:
  *       201:
- *         description: Social link created successfully.
+ *         description: Social links created or updated successfully.
  *         content:
  *           application/json:
  *             schema:
@@ -48,12 +55,16 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                 socialLink:
- *                   type: object
+ *                 updatedLinks:
+ *                   type: array
+ *                   items:
+ *                     type: object
  *       400:
- *         description: Required fields are missing or the link already exists.
+ *         description: Invalid input or missing fields.
+ *       404:
+ *        description: User not found.
  */
-router.post("/:userId", createSocialLink);
+router.post("/:userId", createOrUpdateSocialLinks);
 
 /**
  * @swagger
@@ -89,51 +100,6 @@ router.post("/:userId", createSocialLink);
  *         description: No social links found for the user.
  */
 router.get("/:userId", getSocialLinksByUserId);
-
-/**
- * @swagger
- * /social/{id}:
- *   put:
- *     summary: Update a social link
- *     tags: [User - Social]
- *     description: Update the URL of an existing social link.
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         description: The ID of the social link.
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - link
- *             properties:
- *               link:
- *                 type: string
- *                 description: The new URL for the social link.
- *     responses:
- *       200:
- *         description: Social link updated successfully.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 updatedLink:
- *                   type: object
- *       400:
- *         description: Required fields are missing or the link already exists.
- *       404:
- *         description: Social link not found.
- */
-router.put("/:id", updateSocialLink);
 
 /**
  * @swagger
