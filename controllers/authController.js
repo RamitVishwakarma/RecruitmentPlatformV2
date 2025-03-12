@@ -22,8 +22,18 @@ const loginUser = asyncHandler(async (req, res, next) => {
       .json({ message: "All fields are required" });
 
   const user = await prisma.user.findUnique({
-    where: {
-      email,
+    where: { email },
+    include: {
+      socialLinks: {
+        where: {
+          isDeleted: false,
+        },
+        select: {
+          id: true,
+          name: true,
+          link: true,
+        },
+      },
     },
   });
   if (!user)
