@@ -62,7 +62,7 @@ model User {
   socialLinks        SocialLink[]
   aptitude           UserAptitudeDetails?
   verificationTokens VerificationToken[]
-  phone              String?               @unique 
+  phone              String?               
 }
 
 model Otp {

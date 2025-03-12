@@ -182,9 +182,9 @@ const registerUser = asyncHandler(async (req, res) => {
     errors.push("Invalid email address.");
   }
 
-  const phoneRegex = /^\+[1-9]\d{1,14}$/;
+  const phoneRegex = /^\+91[6789]\d{9}$/;
   if (!phone || !phoneRegex.test(phone)) {
-    errors.push("Invalid phone number format");
+    errors.push("Invalid Indian phone number format");
   }
 
   if (!admissionNumber || admissionNumber.trim().length < 6) {
@@ -210,15 +210,17 @@ const registerUser = asyncHandler(async (req, res) => {
       .json({ message: "User already exists" });
   }
 
-  const existingUserWithPhone = await prisma.user.findFirst({
-    where: { phone },
-  });
+  // TODO: Currently, phone number is not a required field. Uncomment the following code to make it required.
 
-  if (existingUserWithPhone) {
-    return res
-      .status(statusCode.Conflict409)
-      .json({ message: "Phone number already registered" });
-  }
+  // const existingUserWithPhone = await prisma.user.findFirst({
+  //   where: { phone },
+  // });
+
+  // if (existingUserWithPhone) {
+  //   return res
+  //     .status(statusCode.Conflict409)
+  //     .json({ message: "Phone number already registered" });
+  // }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
