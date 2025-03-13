@@ -120,38 +120,51 @@ const deleteQuestion = asyncHandler(async (req, res) => {
 
 const updateQuestion = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { questionLongDesc, questionShortDesc, aptitudeId } = req.body;
-  if (!id) {
-    return res.status(statusCode.NotFount404).json({ error: "ID is required" });
+  const { questionShortDesc, options } = req.body;
+
+  if (!questionShortDesc || !options || !options.length) {
+    return res.status(statusCode.BadRequest400).json({
+      success: false,
+      message:
+        "Question short description and at least one option are required",
+    });
   }
 
   const question = await prisma.question.findUnique({
-    where: {
-      id,
-    },
+    where: { id },
+    include: { options: true },
   });
 
   if (!question) {
-    return res
-      .status(statusCode.NotFount404)
-      .json({ error: "Question does not exist" });
+    return res.status(statusCode.NotFount404).json({
+      success: false,
+      message: "Question not found",
+    });
   }
 
-  const updatedQuestion = await prisma.question.update({
-    where: { id, isDeleted: false },
-    data: {
-      questionLongDesc,
-      questionShortDesc,
-      aptitudeId,
-    },
+  const updatedQuestion = await prisma.$transaction(async (tx) => {
+    await tx.option.deleteMany({ where: { questionId: id } });
+
+    return await tx.question.update({
+      where: { id },
+      data: {
+        questionShortDesc,
+        options: {
+          create: options.map((option) => ({
+            optionText: option.optionText,
+            isCorrect: option.isCorrect,
+          })),
+        },
+      },
+      include: { options: true },
+    });
   });
 
-  if (!updatedQuestion) {
-    return res
-      .status(statusCode.BadRequest400)
-      .json({ error: "Unable to update question", data: updatedQuestion });
-  }
-  return res.status(statusCode.Ok200).json({ message: "Updated successfully" });
+  return res.status(statusCode.Ok200).json({
+    success: true,
+    message: "Question updated successfully",
+    data: updatedQuestion,
+  });
 });
 
 const getPaginatedQuestions = asyncHandler(async (req, res, next) => {

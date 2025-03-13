@@ -73,6 +73,8 @@ router.post("/logout", adminLogout);
  *                 type: string
  *               name:
  *                 type: string
+ *               domain:
+ *                 type: string
  *             required:
  *               - email
  *               - password

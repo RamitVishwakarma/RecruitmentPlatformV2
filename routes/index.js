@@ -5,6 +5,7 @@ import oauthRoutes from "./oauthRoutes.js";
 import adminRoutes from "./adminRoutes.js";
 import userDetailsUpdateRoutes from "./userDetailsUpdateRoutes.js";
 import uploadRoutes from "./uploadRoute.js";
+import userAptitudeRoutes from "./userAptitudeRoutes.js";
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router.use("/", socialRoutes);
 router.use("/", adminRoutes);
 router.use("/", userDetailsUpdateRoutes);
 router.use("/", uploadRoutes);
+router.use("/", userAptitudeRoutes);
 
 export {
   authRoutes,
@@ -22,4 +24,5 @@ export {
   adminRoutes,
   userDetailsUpdateRoutes,
   uploadRoutes,
+  userAptitudeRoutes,
 };

@@ -3,7 +3,6 @@ import {
   passwordResetLimiter,
   authLimiter,
 } from "../middlewares/rateLimiter.js";
-import { upload } from "../middlewares/multerMiddleware.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import {
   loginUser,

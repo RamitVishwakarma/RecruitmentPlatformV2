@@ -113,15 +113,17 @@ router.route("/question-aptitude/:aptitudeId").get(getQuestionsByAptitude);
  * @swagger
  * /admin/questions/update-question/{id}:
  *   patch:
- *     summary: Update a question by ID
+ *     summary: Update a question with new options
  *     tags: [Admin - Questions]
+ *     description: Replaces an existing question with new data including options.
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: Question ID
+ *         description: Question ID to update
+ *         example: "123e4567-e89b-12d3-a456-426614174000"
  *     requestBody:
  *       required: true
  *       content:
@@ -131,15 +133,89 @@ router.route("/question-aptitude/:aptitudeId").get(getQuestionsByAptitude);
  *             properties:
  *               questionShortDesc:
  *                 type: string
+ *                 example: "What is 2 + 2?"
  *               questionLongDesc:
  *                 type: string
- *               aptitudeId:
- *                 type: string
+ *                 example: "A basic addition question"
+ *               options:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     optionText:
+ *                       type: string
+ *                       example: "4"
+ *                     isCorrect:
+ *                       type: boolean
+ *                       example: true
  *     responses:
- *       201:
- *         description: Successfully updated question
+ *       200:
+ *         description: Question updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Question updated successfully"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       format: uuid
+ *                       example: "123e4567-e89b-12d3-a456-426614174000"
+ *                     questionShortDesc:
+ *                       type: string
+ *                       example: "What is 2 + 2?"
+ *                     questionLongDesc:
+ *                       type: string
+ *                       example: "A basic addition question"
+ *                     options:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: string
+ *                             format: uuid
+ *                             example: "223e4567-e89b-12d3-a456-426614174000"
+ *                           optionText:
+ *                             type: string
+ *                             example: "4"
+ *                           isCorrect:
+ *                             type: boolean
+ *                             example: true
  *       400:
- *         description: Unable to update question or ID not found
+ *         description: Bad request - Missing required fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Question short description and at least one option are required"
+ *       404:
+ *         description: Question not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Question not found"
  */
 router.route("/update-question/:id").patch(updateQuestion);
 

@@ -12,90 +12,185 @@ const router = Router();
  * @swagger
  * /admin/aptitude/create-aptitude:
  *   post:
- *     summary: Create a new aptitude test
+ *     summary: Create a new aptitude with questions and options
+ *     description: Creates an aptitude including multiple questions and options in one go.
  *     tags: [Admin - Aptitude]
- *     description: Create a new aptitude test with its details and associated questions.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - title
- *               - shortDescription
- *               - domain
- *               - year
- *               - duration
  *             properties:
- *               title:
+ *               aptitudeTitle:
  *                 type: string
- *                 description: The title of the aptitude test.
- *               shortDescription:
+ *                 example: "Logical Reasoning Test"
+ *               aptitudeDomain:
  *                 type: string
- *                 description: A short description of the test.
- *               longDescription:
- *                 type: string
- *                 description: A long description of the test (optional).
- *               domain:
- *                 type: string
- *                 description: The domain of the aptitude test.
- *               year:
+ *                 example: "Logical Reasoning"
+ *               aptitudeYear:
  *                 type: integer
- *                 description: The year of the aptitude test.
- *               duration:
+ *                 example: 2024
+ *               aptitudeDuration:
  *                 type: integer
- *                 description: The duration of the aptitude test in minutes.
+ *                 example: 60
+ *               questions:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     questionShortDesc:
+ *                       type: string
+ *                       example: "What comes next in the series? 2, 4, 8, 16, ?"
+ *                     options:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           optionText:
+ *                             type: string
+ *                             example: "32"
+ *                           isCorrect:
+ *                             type: boolean
+ *                             example: true
  *     responses:
  *       201:
- *         description: Aptitude test created successfully.
+ *         description: Aptitude created successfully
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *                 message:
  *                   type: string
- *                 aptitude:
+ *                   example: "Aptitude created successfully"
+ *                 data:
  *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       format: uuid
+ *                       example: "123e4567-e89b-12d3-a456-426614174000"
+ *                     aptitudeTitle:
+ *                       type: string
+ *                       example: "Logical Reasoning Test"
+ *                     aptitudeQuestions:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: string
+ *                             format: uuid
+ *                             example: "223e4567-e89b-12d3-a456-426614174000"
+ *                           questionShortDesc:
+ *                             type: string
+ *                             example: "What comes next in the series? 2, 4, 8, 16, ?"
+ *                           options:
+ *                             type: array
+ *                             items:
+ *                               type: object
+ *                               properties:
+ *                                 id:
+ *                                   type: string
+ *                                   format: uuid
+ *                                   example: "323e4567-e89b-12d3-a456-426614174000"
+ *                                 optionText:
+ *                                   type: string
+ *                                   example: "32"
+ *                                 isCorrect:
+ *                                   type: boolean
+ *                                   example: true
  *       400:
- *         description: Missing required fields.
+ *         description: Bad request - Missing required fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "All required fields (title, domain, year, duration, questions) must be provided"
  */
+
 router.route("/create-aptitude").post(createAptitude);
 
 /**
  * @swagger
- * /admin/aptitude/:
+ * /admin/aptitude/get-all-aptitudes:
  *   get:
- *     summary: Get all aptitude tests
+ *     summary: Get all aptitudes with optional filters
+ *     description: Fetches all aptitudes. Supports filtering by domain and year.
  *     tags: [Admin - Aptitude]
- *     description: Retrieve all aptitude tests that are not marked as deleted.
+ *     parameters:
+ *       - in: query
+ *         name: aptitudeDomain
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Filter by aptitude domain
+ *         example: "Logical Reasoning"
+ *       - in: query
+ *         name: aptitudeYear
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Filter by aptitude year
+ *         example: 2024
  *     responses:
  *       200:
- *         description: A list of all aptitude tests.
+ *         description: List of aptitudes
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                   aptitudeTitle:
- *                     type: string
- *                   aptitudeShortDesc:
- *                     type: string
- *                   aptitudeDomain:
- *                     type: string
- *                   aptitudeYear:
- *                     type: integer
- *                   aptitudeDuration:
- *                     type: integer
- *       500:
- *         description: Server error.
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                         format: uuid
+ *                         example: "123e4567-e89b-12d3-a456-426614174000"
+ *                       aptitudeTitle:
+ *                         type: string
+ *                         example: "Logical Reasoning Test"
+ *                       aptitudeDomain:
+ *                         type: string
+ *                         example: "Logical Reasoning"
+ *                       aptitudeYear:
+ *                         type: integer
+ *                         example: 2024
+ *                       aptitudeDuration:
+ *                         type: integer
+ *                         example: 60
+ *       400:
+ *         description: Invalid query parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid query parameters"
  */
-router.route("/").get(getAllAptitudes);
+
+router.route("/get-all-aptitudes").get(getAllAptitudes);
 
 /**
  * @swagger

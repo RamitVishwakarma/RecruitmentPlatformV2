@@ -2,32 +2,6 @@ import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
 
-//~ Get all users
-
-const getUsers = asyncHandler(async (req, res) => {
-  const { skip, take, page, perPage } = req.pagination;
-
-  const users = await prisma.user.findMany({
-    where: { isDeleted: false },
-    include: {
-      socialLinks: true,
-      aptitude: true,
-    },
-    skip,
-    take,
-  });
-  const totalUsers = await prisma.user.count({ where: { isDeleted: false } });
-
-  return res.status(statusCode.Ok200).json({
-    data: users,
-    meta: {
-      page: page,
-      total: totalUsers,
-      pages: Math.ceil(totalUsers / perPage),
-    },
-  });
-});
-
 //~ get user by Id
 
 const getUserById = asyncHandler(async (req, res) => {
@@ -48,7 +22,9 @@ const getUserById = asyncHandler(async (req, res) => {
 //~get users by domain
 
 const getUsersByDomain = asyncHandler(async (req, res) => {
-  const { domain } = req.query;
+  const { domain, year, shortlistedStatus, interviewedStatus, projectStatus } =
+    req.query;
+
   const { skip, take, page, perPage } = req.pagination;
 
   if (!domain) {
@@ -57,11 +33,22 @@ const getUsersByDomain = asyncHandler(async (req, res) => {
       .json({ error: "Domain parameter is required." });
   }
 
+  const filters = {
+    isDeleted: false,
+    isAdmin: false,
+    ...(domain && { domain }),
+    ...(year && { year: parseInt(year, 10) }),
+    ...(shortlistedStatus && {
+      shortlistStatus: shortlistedStatus === "true",
+    }),
+    ...(interviewedStatus && {
+      interviewStatus: interviewedStatus === "true",
+    }),
+    ...(projectStatus && { projectStatus: projectStatus === "true" }),
+  };
+
   const users = await prisma.user.findMany({
-    where: {
-      domain,
-      isDeleted: false,
-    },
+    where: filters,
     include: {
       socialLinks: true,
       aptitude: true,
@@ -76,7 +63,7 @@ const getUsersByDomain = asyncHandler(async (req, res) => {
   if (users.length === 0) {
     return res
       .status(statusCode.NotFount404)
-      .json({ error: `No users found in the ${domain} domain.` });
+      .json({ error: "No users found with specific filters" });
   }
 
   return res.status(statusCode.Ok200).json({
@@ -89,111 +76,10 @@ const getUsersByDomain = asyncHandler(async (req, res) => {
   });
 });
 
-//~ Update a user
-
-const updateUser = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-
-  const {
-    name,
-    email,
-    admissionNumber,
-    domain,
-    year,
-    photo,
-    resume,
-    aptitudeScore,
-    aptitudeDetails,
-    socialLinks,
-  } = req.body;
-
-  if (
-    !name &&
-    !email &&
-    !domain &&
-    !year &&
-    !photo &&
-    !resume &&
-    !admissionNumber
-  ) {
-    return res
-      .status(statusCode.NotFount404)
-      .json({ message: "No fields provided!" });
-  }
-
-  const existingUser = await prisma.user.findUnique({ where: { id } });
-
-  if (!existingUser) {
-    return res
-      .status(statusCode.NotFount404)
-      .json({ message: "User not found" });
-  }
-
-  const user = await prisma.user.update({
-    where: { id },
-    data: {
-      ...(name && { name }),
-      ...(email && { email }),
-      ...(admissionNumber && { admissionNumber }),
-      ...(domain && { domain }),
-      ...(year && { year }),
-      ...(photo && { photo }),
-      ...(resume && { resume }),
-      ...(aptitudeScore && { aptitudeScore }),
-      socialLinks: socialLinks
-        ? {
-            create: socialLinks,
-          }
-        : undefined,
-      aptitude: aptitudeDetails
-        ? {
-            upsert: {
-              create: aptitudeDetails,
-              update: aptitudeDetails,
-            },
-          }
-        : undefined,
-    },
-  });
-
-  return res.status(statusCode.Ok200).json({ message: "User updated!", user });
-});
-
-//~ Delete user by id
-
-const deleteUser = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-
-  if (!id) {
-    return res
-      .status(statusCode.NotFount404)
-      .json({ msg: "User ID is required!" });
-  }
-
-  const existingUser = await prisma.user.findUnique({
-    where: { id, isDeleted: false },
-  });
-
-  if (!existingUser) {
-    return res.status(statusCode.NotFount404).json({ msg: "User not found!" });
-  }
-
-  const deletedUser = await prisma.user.update({
-    where: { id },
-    data: {
-      isDeleted: true,
-    },
-  });
-
-  return res
-    .status(statusCode.NoContent204)
-    .json({ msg: "User deleted!", deletedUser });
-});
-
 const checkUserShortlistStatus = asyncHandler(async (req, res, next) => {
   const { skip, take, page, perPage } = req.pagination;
   const users = await prisma.user.findMany({
-    where: { isDeleted: false },
+    where: { isDeleted: false, isAdmin: false },
     skip,
     take,
     select: {
@@ -223,11 +109,83 @@ const checkUserShortlistStatus = asyncHandler(async (req, res, next) => {
   });
 });
 
+const updateUserShortlistStatus = asyncHandler(async (req, res, next) => {
+  const { userId, shortlisted } = req.body;
+
+  const existingUser = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!existingUser) {
+    return res
+      .status(statusCode.NotFount404)
+      .json({ message: "User not found!" });
+  }
+
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: { shortlistStatus: shortlisted === "true" },
+  });
+
+  return res.status(statusCode.Ok200).json({
+    message: "User shortlist status updated successfully",
+    user: user,
+  });
+});
+
+const updateUserInterviewStatus = asyncHandler(async (req, res, next) => {
+  const { userId, interviewed } = req.body;
+
+  const existingUser = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!existingUser) {
+    return res
+      .status(statusCode.NotFount404)
+      .json({ message: "User not found!" });
+  }
+
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: { interviewStatus: interviewed === "true" },
+  });
+
+  return res.status(statusCode.Ok200).json({
+    message: "User interview status updated successfully",
+    user: user,
+  });
+});
+
+const updateUserProjectStatus = asyncHandler(async (req, res, next) => {
+  const { userId, projectSubmitted } = req.body;
+
+  const existingUser = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!existingUser) {
+    return res
+      .status(statusCode.NotFount404)
+      .json({ message: "User not found!" });
+  }
+
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: { projectStatus: projectSubmitted === "true" },
+  });
+
+  return res.status(statusCode.Ok200).json({
+    message: "User project status updated successfully",
+    user: user,
+  });
+});
+
 export {
-  getUsers,
   getUserById,
   getUsersByDomain,
-  updateUser,
-  deleteUser,
   checkUserShortlistStatus,
+  updateUserShortlistStatus,
+  updateUserInterviewStatus,
+  updateUserProjectStatus,
 };
