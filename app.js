@@ -8,6 +8,7 @@ import {
   adminRoutes,
   userDetailsUpdateRoutes,
   uploadRoutes,
+  userAptitudeRoutes,
 } from "./routes/index.js";
 import swaggerSpecs from "./utils/swaggerconfig.js";
 import swaggerUi from "swagger-ui-express";
@@ -54,6 +55,7 @@ app.use("/social", socialRoutes);
 app.use("/users", userDetailsUpdateRoutes);
 app.use("/admin", adminRoutes);
 app.use("/upload", uploadRoutes);
+app.use("/users", userAptitudeRoutes);
 
 // Global error handler
 app.use((err, req, res, next) => {
