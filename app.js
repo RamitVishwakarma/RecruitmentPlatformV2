@@ -85,6 +85,12 @@ app.use((err, req, res, next) => {
         { expiresIn: process.env.ACCESS_TOKEN_EXPIRY },
       );
 
+      res.cookie("accessToken", newAccessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      });
+
       return res.status(200).json({
         message: "Access token refreshed. Try again.",
         accessToken: newAccessToken,
