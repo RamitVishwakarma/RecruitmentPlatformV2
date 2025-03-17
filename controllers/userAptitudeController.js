@@ -7,6 +7,30 @@ const getAptitudes = asyncHandler(async (req, res) => {
 
   const whereCondition = {
     isDeleted: false,
+    OR: [
+      {
+        beginsAt: {
+          lte: new Date(),
+        },
+      },
+      {
+        beginsAt: null,
+      },
+    ],
+    AND: [
+      {
+        OR: [
+          {
+            expiresAt: {
+              gte: new Date(),
+            },
+          },
+          {
+            expiresAt: null,
+          },
+        ],
+      },
+    ],
   };
 
   if (aptitudeYear) {

@@ -8,6 +8,8 @@ const createAptitude = asyncHandler(async (req, res) => {
     aptitudeDomain,
     aptitudeYear,
     aptitudeDuration,
+    beginsAt,
+    expiresAt,
     questions,
   } = req.body;
 
@@ -32,6 +34,12 @@ const createAptitude = asyncHandler(async (req, res) => {
         aptitudeDomain,
         aptitudeYear,
         aptitudeDuration,
+        beginsAt:
+          beginsAt && !isNaN(Date.parse(beginsAt)) ? new Date(beginsAt) : null,
+        expiresAt:
+          expiresAt && !isNaN(Date.parse(expiresAt))
+            ? new Date(expiresAt)
+            : null,
         aptitudeQuestions: {
           create: questions.map((question) => ({
             questionShortDesc: question.questionShortDesc,
@@ -73,17 +81,17 @@ const getAllAptitudes = asyncHandler(async (req, res) => {
 
   const aptitudes = await prisma.aptitude.findMany({
     where: filters,
-    include: {
-      aptitudeQuestions: {
-        include: {
-          options: true,
-        },
-      },
-    },
+    // include: {
+    //   aptitudeQuestions: {
+    //     include: {
+    //       options: true,
+    //     },
+    //   },
+    // },
   });
 
   if (!aptitudes.length) {
-    return res.status(statusCode.NotFound404).json({
+    return res.status(statusCode.NotFount404).json({
       success: false,
       message: "No aptitudes found",
     });
@@ -114,8 +122,16 @@ const getAptitudesById = asyncHandler(async (req, res) => {
 
 const updateAptitude = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { title, shortDescription, longDescription, domain, year, duration } =
-    req.body;
+  const {
+    title,
+    shortDescription,
+    longDescription,
+    domain,
+    year,
+    duration,
+    beginsAt,
+    expiresAt,
+  } = req.body;
 
   const updatedAptitude = await prisma.aptitude.update({
     where: { id: id, isDeleted: false },
@@ -126,6 +142,8 @@ const updateAptitude = asyncHandler(async (req, res) => {
       aptitudeDomain: domain,
       aptitudeYear: year,
       aptitudeDuration: duration,
+      beginsAt: beginsAt === null ? null : new Date(beginsAt),
+      expiresAt: expiresAt === null ? null : new Date(expiresAt),
     },
   });
   res

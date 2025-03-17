@@ -27,11 +27,11 @@ const getUsersByDomain = asyncHandler(async (req, res) => {
 
   const { skip, take, page, perPage } = req.pagination;
 
-  if (!domain) {
-    return res
-      .status(statusCode.NotFount404)
-      .json({ error: "Domain parameter is required." });
-  }
+  // if (!domain) {
+  //   return res
+  //     .status(statusCode.NotFount404)
+  //     .json({ error: "Domain parameter is required." });
+  // }
 
   const filters = {
     isDeleted: false,

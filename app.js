@@ -60,9 +60,82 @@ app.use("/users", userAptitudeRoutes);
 // Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  return res.status(err.status || 500).json({
+
+  if (err.name === "TokenExpiredError") {
+    const refreshToken = req.cookies?.refreshToken;
+
+    if (!refreshToken) {
+      return res.status(401).json({
+        error: "Unauthorized",
+        message: "No refresh token provided, please log in again.",
+      });
+    }
+
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+      if (err) {
+        return res.status(401).json({
+          error: "Unauthorized",
+          message: "Refresh token expired, please log in again.",
+        });
+      }
+
+      const newAccessToken = jwt.sign(
+        { userId: user.id, email: user.email, isAdmin: user.isAdmin },
+        process.env.ACCESS_SECRET,
+        { expiresIn: process.env.ACCESS_TOKEN_EXPIRY },
+      );
+
+      return res.status(200).json({
+        message: "Access token refreshed. Try again.",
+        accessToken: newAccessToken,
+      });
+    });
+
+    return;
+  }
+
+  const errorResponse = {
+    error: err.name || "Error",
     message: err.message || "Internal Server Error",
-  });
+  };
+
+  switch (err.name) {
+    case "JsonWebTokenError":
+      return res
+        .status(401)
+        .json({ error: "Unauthorized", message: "Invalid token" });
+
+    case "ValidationError":
+      return res.status(400).json({
+        error: "Bad Request",
+        message: "Validation error",
+        details: err.errors,
+      });
+
+    case "NotFoundError":
+      return res
+        .status(404)
+        .json({ error: "Not Found", message: "Resource not found" });
+
+    case "UnauthorizedError":
+      return res
+        .status(401)
+        .json({ error: "Unauthorized", message: "Unauthorized access" });
+
+    case "CastError":
+      return res
+        .status(400)
+        .json({ error: "Bad Request", message: "Invalid ID format" });
+
+    case "RateLimitExceeded":
+      return res.status(429).json({
+        error: "Too Many Requests",
+        message: "Too many requests. Please try again later.",
+      });
+
+    default:
+      return res.status(err.status || 500).json(errorResponse);
+  }
 });
 
 export default app;
