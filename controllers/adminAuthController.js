@@ -49,13 +49,13 @@ const adminLogin = asyncHandler(async (req, res) => {
   }
 
   const accessToken = jwt.sign(
-    { userId: admin.id, isAdmin: admin.isAdmin },
+    { userId: admin.id, isAdmin: admin.isAdmin, email: admin.email },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: process.env.ACCESS_TOKEN_EXPIRY },
   );
 
   const refreshToken = jwt.sign(
-    { userId: admin.id, isAdmin: admin.isAdmin },
+    { userId: admin.id, isAdmin: admin.isAdmin, email: admin.email },
     process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: process.env.REFRESH_TOKEN_EXPIRY },
   );

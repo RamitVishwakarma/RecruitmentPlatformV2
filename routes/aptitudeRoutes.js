@@ -34,6 +34,14 @@ const router = Router();
  *               aptitudeDuration:
  *                 type: integer
  *                 example: 60
+ *               beginsAt:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-01-01T00:00:00Z"
+ *               expiresAt:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-12-31T23:59:59Z"
  *               questions:
  *                 type: array
  *                 items:
@@ -277,6 +285,14 @@ router.route("/:id").get(getAptitudesById);
  *                 type: integer
  *               duration:
  *                 type: integer
+ *               beginsAt:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-01-01T00:00:00Z"
+ *               expiresAt:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-12-31T23:59:59Z"
  *     responses:
  *       200:
  *         description: Aptitude test updated successfully.

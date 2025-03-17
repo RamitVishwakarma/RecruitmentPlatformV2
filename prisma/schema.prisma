@@ -38,7 +38,7 @@ model UserAptitudeDetails {
 model User {
   id                 String               @id @default(uuid())
   createdAt          DateTime             @default(now())
-  updatedAt          DateTime?
+  updatedAt          DateTime?            @updatedAt
   email              String               @unique
   name               String
   password           String
@@ -112,6 +112,10 @@ model Aptitude {
   aptitudeDuration  Int
   isDeleted         Boolean    @default(false)
   aptitudeQuestions Question[]
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime?  @updatedAt
+  beginsAt          DateTime?
+  expiresAt         DateTime?
 }
 
 model BlackListToken {

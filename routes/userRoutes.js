@@ -177,7 +177,7 @@ router.route("/update-project-status").put(updateUserProjectStatus);
 
 /**
  * @swagger
- * /admin/users/domain:
+ * /admin/users/:
  *   get:
  *     summary: Get users by domain
  *     tags: [Admin - User]
@@ -187,7 +187,6 @@ router.route("/update-project-status").put(updateUserProjectStatus);
  *         name: domain
  *         schema:
  *           type: string
- *         required: true
  *         description: The domain to filter users by (e.g., "Programming").
  *       - in: query
  *         name: year
@@ -288,7 +287,7 @@ router.route("/update-project-status").put(updateUserProjectStatus);
  *                   type: string
  *                   example: No users found with specific filters
  */
-router.route("/domain").get(paginationMiddleware, getUsersByDomain);
+router.route("/").get(paginationMiddleware, getUsersByDomain);
 
 /**
  * @swagger

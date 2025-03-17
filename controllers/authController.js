@@ -48,12 +48,12 @@ const loginUser = asyncHandler(async (req, res, next) => {
       .json({ message: "Password doesn’t match. Try again." });
 
   const accessToken = jwt.sign(
-    { userId: user.id, email: user.email },
+    { userId: user.id, email: user.email, isAdmin: user.isAdmin },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: process.env.ACCESS_TOKEN_EXPIRY },
   );
   const refreshToken = jwt.sign(
-    { userId: user.id, email: user.email },
+    { userId: user.id, email: user.email, isAdmin: user.isAdmin },
     process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: process.env.REFRESH_TOKEN_EXPIRY },
   );
@@ -127,7 +127,7 @@ const refreshAccessToken = asyncHandler(async (req, res, next) => {
   }
 
   const presentTime = new Date();
-  if (presentTime > refresh_Token.expiresAt) {
+  if (presentTime > dbToken.expiresAt) {
     await prisma.refreshToken.delete({
       where: {
         token: refresh_Token,
