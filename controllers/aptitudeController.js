@@ -4,47 +4,95 @@ import { statusCode } from "../utils/statusCodes.js";
 
 const createAptitude = asyncHandler(async (req, res) => {
   const {
-    title,
-    shortDescription,
-    longDescription,
+    aptitudeTitle,
+    aptitudeDomain,
+    aptitudeYear,
+    aptitudeDuration,
     questions,
-    domain,
-    year,
-    duration,
   } = req.body;
-  if (!title || !shortDescription || !domain || !year || !duration) {
-    return res
-      .status(statusCode.NotFount404)
-      .json({ error: "All Fields are required" });
+
+  if (
+    !aptitudeTitle ||
+    !aptitudeDomain ||
+    !aptitudeYear ||
+    !aptitudeDuration ||
+    !questions?.length
+  ) {
+    return res.status(statusCode.BadRequest400).json({
+      success: false,
+      message:
+        "All required fields (title, domain, year, duration, questions) must be provided",
+    });
   }
 
-  const aptitude = await prisma.aptitude.create({
-    data: {
-      aptitudeTitle: title,
-      aptitudeShortDesc: shortDescription,
-      aptitudeLongDesc: longDescription ?? null,
-      aptitudeDomain: domain,
-      aptitudeYear: year,
-      aptitudeDuration: duration,
-      aptitudeQuestions: {
-        create: questions,
+  const aptitude = await prisma.$transaction(async (tx) => {
+    const createdAptitude = await tx.aptitude.create({
+      data: {
+        aptitudeTitle,
+        aptitudeDomain,
+        aptitudeYear,
+        aptitudeDuration,
+        aptitudeQuestions: {
+          create: questions.map((question) => ({
+            questionShortDesc: question.questionShortDesc,
+            options: {
+              create: question.options.map((option) => ({
+                optionText: option.optionText,
+                isCorrect: option.isCorrect,
+              })),
+            },
+          })),
+        },
       },
-    },
-    include: {
-      aptitudeQuestions: true,
-    },
+      include: {
+        aptitudeQuestions: {
+          include: {
+            options: true,
+          },
+        },
+      },
+    });
+
+    return createdAptitude;
   });
 
-  res
-    .status(statusCode.Created201)
-    .json({ message: "Aptitude created successfully", aptitude });
+  return res.status(statusCode.Created201).json({
+    success: true,
+    message: "Aptitude created successfully",
+    data: aptitude,
+  });
 });
 
 const getAllAptitudes = asyncHandler(async (req, res) => {
+  const { aptitudeDomain, aptitudeYear } = req.query;
+
+  const filters = {};
+  if (aptitudeDomain) filters.aptitudeDomain = aptitudeDomain;
+  if (aptitudeYear) filters.aptitudeYear = parseInt(aptitudeYear);
+  filters.isDeleted = false;
+
   const aptitudes = await prisma.aptitude.findMany({
-    where: { isDeleted: false },
+    where: filters,
+    include: {
+      aptitudeQuestions: {
+        include: {
+          options: true,
+        },
+      },
+    },
   });
-  res.status(statusCode.Ok200).json(aptitudes);
+
+  if (!aptitudes.length) {
+    return res.status(statusCode.NotFound404).json({
+      success: false,
+      message: "No aptitudes found",
+    });
+  }
+
+  return res.status(statusCode.Ok200).json({
+    success: true,
+    data: aptitudes,
+  });
 });
 
 const getAptitudesById = asyncHandler(async (req, res) => {

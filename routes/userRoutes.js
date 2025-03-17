@@ -1,11 +1,11 @@
 import { Router } from "express";
 import {
-  getUsers,
   getUserById,
   getUsersByDomain,
-  updateUser,
-  deleteUser,
   checkUserShortlistStatus,
+  updateUserShortlistStatus,
+  updateUserInterviewStatus,
+  updateUserProjectStatus,
 } from "../controllers/userController.js";
 import { paginationMiddleware } from "../middlewares/paginationMiddleware.js";
 
@@ -13,33 +13,7 @@ const router = Router();
 
 /**
  * @swagger
- * /admin/users/:
- *   get:
- *     summary: Get all users
- *     tags: [Admin - User]
- *     description: Retrieve a paginated list of all users.
- *     parameters:
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *         description: The page number.
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *         description: Number of items per page.
- *     responses:
- *       200:
- *         description: A paginated list of users.
- *       400:
- *         description: Error in fetching users.
- */
-router.route("/").get(paginationMiddleware, getUsers);
-
-/**
- * @swagger
- * /admin/users/shortlist:
+ * /admin/users/shortlisted-users:
  *   get:
  *     summary: Check user shortlist status
  *     tags: [Admin - User]
@@ -59,7 +33,147 @@ router.route("/").get(paginationMiddleware, getUsers);
  *       200:
  *         description: Users and shortlist statuses fetched successfully.
  */
-router.route("/shortlist").get(paginationMiddleware, checkUserShortlistStatus);
+router
+  .route("/shortlisted-users")
+  .get(paginationMiddleware, checkUserShortlistStatus);
+
+/**
+ * @swagger
+ * /admin/users/update-shortlist-status:
+ *   put:
+ *     summary: Update user shortlist status
+ *     tags: [Admin - User]
+ *     description: Update the shortlist status of a user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: The unique ID of the user.
+ *               shortlisted:
+ *                 type: string
+ *                 description: The new shortlist status of the user.
+ *     responses:
+ *       200:
+ *         description: User shortlist status updated successfully.
+ *       400:
+ *         description: Invalid input data.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid user ID or shortlist status.
+ *       404:
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: User not found.
+ */
+router.route("/update-shortlist-status").put(updateUserShortlistStatus);
+
+/**
+ * @swagger
+ * /admin/users/update-interview-status:
+ *   put:
+ *     summary: Update user interview status
+ *     tags: [Admin - User]
+ *     description: Update the interview status of a user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: The unique ID of the user.
+ *               interviewed:
+ *                 type: string
+ *                 description: The new interview status of the user.
+ *     responses:
+ *       200:
+ *         description: User interview status updated successfully.
+ *       400:
+ *         description: Invalid input data.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid user ID or interview status.
+ *       404:
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: User not found.
+ */
+router.route("/update-interview-status").put(updateUserInterviewStatus);
+
+/**
+ * @swagger
+ * /admin/users/update-project-status:
+ *   put:
+ *     summary: Update user project status
+ *     tags: [Admin - User]
+ *     description: Update the project status of a user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: The unique ID of the user.
+ *               projectSubmitted:
+ *                 type: string
+ *                 description: The new project status of the user.
+ *     responses:
+ *       200:
+ *         description: User project status updated successfully.
+ *       400:
+ *         description: Invalid input data.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid user ID or project status.
+ *       404:
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: User not found.
+ */
+router.route("/update-project-status").put(updateUserProjectStatus);
 
 /**
  * @swagger
@@ -75,6 +189,26 @@ router.route("/shortlist").get(paginationMiddleware, checkUserShortlistStatus);
  *           type: string
  *         required: true
  *         description: The domain to filter users by (e.g., "Programming").
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: integer
+ *         description: Filter users by year.
+ *       - in: query
+ *         name: shortlistedStatus
+ *         schema:
+ *           type: boolean
+ *         description: Filter users by shortlist status.
+ *       - in: query
+ *         name: interviewedStatus
+ *         schema:
+ *           type: boolean
+ *         description: Filter users by interview status.
+ *       - in: query
+ *         name: projectSubmitted
+ *         schema:
+ *           type: boolean
+ *         description: Filter users by project submission status.
  *       - in: query
  *         name: page
  *         schema:
@@ -144,7 +278,7 @@ router.route("/shortlist").get(paginationMiddleware, checkUserShortlistStatus);
  *                   type: string
  *                   example: Domain parameter is required.
  *       404:
- *         description: No users found in the specified domain.
+ *         description: No users found in the specified filters.
  *         content:
  *           application/json:
  *             schema:
@@ -152,7 +286,7 @@ router.route("/shortlist").get(paginationMiddleware, checkUserShortlistStatus);
  *               properties:
  *                 error:
  *                   type: string
- *                   example: No users found in the programming domain.
+ *                   example: No users found with specific filters
  */
 router.route("/domain").get(paginationMiddleware, getUsersByDomain);
 
@@ -177,83 +311,5 @@ router.route("/domain").get(paginationMiddleware, getUsersByDomain);
  *         description: User not found.
  */
 router.route("/:id").get(getUserById);
-
-/**
- * @swagger
- * /admin/users/{id}:
- *   put:
- *     summary: Update user details
- *     tags: [Admin - User]
- *     description: Update the details of a specific user by their unique ID.
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: string
- *         description: The unique ID of the user.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               email:
- *                 type: string
- *               admissionNumber:
- *                 type: string
- *               domain:
- *                 type: string
- *               year:
- *                 type: string
- *               photo:
- *                 type: string
- *               resume:
- *                 type: string
- *               aptitudeScore:
- *                 type: number
- *               aptitudeDetails:
- *                 type: object
- *               socialLinks:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     name:
- *                       type: string
- *                     link:
- *                       type: string
- *     responses:
- *       200:
- *         description: User updated successfully.
- *       400:
- *         description: No fields provided or user not found.
- */
-router.route("/:id").put(updateUser);
-
-/**
- * @swagger
- * /admin/users/delete/{id}:
- *   put:
- *     summary: Delete a user
- *     tags: [Admin - User]
- *     description: Soft delete a user by marking them as deleted.
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: string
- *         description: The unique ID of the user.
- *     responses:
- *       200:
- *         description: User deleted successfully.
- *       404:
- *         description: User not found.
- */
-router.route("/delete/:id").put(deleteUser);
 
 export default router;

@@ -99,13 +99,13 @@ model Option {
   isCorrect  Boolean
   questionId String
   isDeleted  Boolean  @default(false)
-  question   Question @relation(fields: [questionId], references: [id])
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
 model Aptitude {
   id                String     @id @default(uuid())
   aptitudeTitle     String
-  aptitudeShortDesc String
+  aptitudeShortDesc String?
   aptitudeLongDesc  String?
   aptitudeDomain    String
   aptitudeYear      Int

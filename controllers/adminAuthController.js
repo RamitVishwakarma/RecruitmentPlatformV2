@@ -5,7 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
 
 const adminRegister = asyncHandler(async (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password, name, domain } = req.body;
 
   const existingAdmin = await prisma.user.findUnique({ where: { email } });
   if (existingAdmin) {
@@ -21,13 +21,14 @@ const adminRegister = asyncHandler(async (req, res) => {
       email,
       password: hashedPassword,
       name,
+      domain,
       isAdmin: true,
     },
   });
 
   return res
     .status(statusCode.Created201)
-    .json({ message: "Admin registered successfully" });
+    .json({ message: "Admin registered successfully", admin });
 });
 
 const adminLogin = asyncHandler(async (req, res) => {
@@ -50,18 +51,28 @@ const adminLogin = asyncHandler(async (req, res) => {
   const accessToken = jwt.sign(
     { userId: admin.id, isAdmin: admin.isAdmin },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "1h" },
+    { expiresIn: process.env.ACCESS_TOKEN_EXPIRY },
+  );
+
+  const refreshToken = jwt.sign(
+    { userId: admin.id, isAdmin: admin.isAdmin },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: process.env.REFRESH_TOKEN_EXPIRY },
   );
 
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "Strict",
+    secure: true,
+  });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: true,
   });
 
   return res
     .status(statusCode.Ok200)
-    .json({ message: "Admin logged in successfully" });
+    .json({ message: "Admin logged in successfully", admin });
 });
 
 const adminLogout = asyncHandler(async (req, res) => {
