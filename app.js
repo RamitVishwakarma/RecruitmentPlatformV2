@@ -61,51 +61,18 @@ app.use("/users", userAptitudeRoutes);
 app.use((err, req, res, next) => {
   console.error(err.stack);
 
-  if (err.name === "TokenExpiredError") {
-    const refreshToken = req.cookies?.refreshToken;
-
-    if (!refreshToken) {
-      return res.status(401).json({
-        error: "Unauthorized",
-        message: "No refresh token provided, please log in again.",
-      });
-    }
-
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-      if (err) {
-        return res.status(401).json({
-          error: "Unauthorized",
-          message: "Refresh token expired, please log in again.",
-        });
-      }
-
-      const newAccessToken = jwt.sign(
-        { userId: user.id, email: user.email, isAdmin: user.isAdmin },
-        process.env.ACCESS_SECRET,
-        { expiresIn: process.env.ACCESS_TOKEN_EXPIRY },
-      );
-
-      res.cookie("accessToken", newAccessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-      });
-
-      return res.status(200).json({
-        message: "Access token refreshed. Try again.",
-        accessToken: newAccessToken,
-      });
-    });
-
-    return;
-  }
-
   const errorResponse = {
     error: err.name || "Error",
     message: err.message || "Internal Server Error",
   };
 
   switch (err.name) {
+    case "TokenExpiredError":
+      return res.status(401).json({
+        error: "Unauthorized",
+        message: "Token expired, please log in again.",
+      });
+
     case "JsonWebTokenError":
       return res
         .status(401)
