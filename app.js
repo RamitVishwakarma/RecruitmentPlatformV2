@@ -49,26 +49,26 @@ app.use(express.static("public"));
 app.use(cookieParser());
 
 // Route to store a subscription in the database
-app.post("/subscribe", async (req, res) => {
-  try {
-    const { userId, endpoint, auth, p256dh } = req.body;
+// app.post("/subscribe", async (req, res) => {
+//   try {
+//     const { userId, endpoint, auth, p256dh } = req.body;
 
-    if (!userId || !endpoint || !auth || !p256dh) {
-      return res.status(400).json({ error: "Missing subscription data" });
-    }
+//     if (!userId || !endpoint || !auth || !p256dh) {
+//       return res.status(400).json({ error: "Missing subscription data" });
+//     }
 
-    // Store subscription in database
-    const subscription = await prisma.subscription.upsert({
-      where: { endpoint },
-      update: { userId, auth, p256dh },
-      create: { userId, endpoint, auth, p256dh },
-    });
+//     // Store subscription in database
+//     const subscription = await prisma.subscription.upsert({
+//       where: { endpoint },
+//       update: { userId, auth, p256dh },
+//       create: { userId, endpoint, auth, p256dh },
+//     });
 
-    res.status(201).json({ message: "Subscription saved!", subscription });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+//     res.status(201).json({ message: "Subscription saved!", subscription });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
