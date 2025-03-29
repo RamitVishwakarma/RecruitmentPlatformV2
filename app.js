@@ -9,6 +9,7 @@ import {
   userDetailsUpdateRoutes,
   uploadRoutes,
   userAptitudeRoutes,
+  notificationRoutes,
 } from "./routes/index.js";
 import swaggerSpecs from "./utils/swaggerconfig.js";
 import swaggerUi from "swagger-ui-express";
@@ -47,6 +48,28 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
+// Route to store a subscription in the database
+// app.post("/subscribe", async (req, res) => {
+//   try {
+//     const { userId, endpoint, auth, p256dh } = req.body;
+
+//     if (!userId || !endpoint || !auth || !p256dh) {
+//       return res.status(400).json({ error: "Missing subscription data" });
+//     }
+
+//     // Store subscription in database
+//     const subscription = await prisma.subscription.upsert({
+//       where: { endpoint },
+//       update: { userId, auth, p256dh },
+//       create: { userId, endpoint, auth, p256dh },
+//     });
+
+//     res.status(201).json({ message: "Subscription saved!", subscription });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 app.use("/users", authRoutes);
@@ -56,6 +79,7 @@ app.use("/users", userDetailsUpdateRoutes);
 app.use("/admin", adminRoutes);
 app.use("/upload", uploadRoutes);
 app.use("/users", userAptitudeRoutes);
+app.use("/notification", notificationRoutes);
 
 // Global error handler
 app.use((err, req, res, next) => {
