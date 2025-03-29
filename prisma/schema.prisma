@@ -63,7 +63,7 @@ model User {
   aptitude           UserAptitudeDetails?
   verificationTokens VerificationToken[]
   phone              String?              @unique
-  Subscription       Subscription[]
+  subscription       Subscription[]
 }
 
 model Otp {
