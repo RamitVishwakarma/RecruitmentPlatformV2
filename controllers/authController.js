@@ -490,7 +490,7 @@ const verifyUser = asyncHandler(async (req, res) => {
       .json({ message: "Invalid verification token" });
   }
 
-  if (verificationToken.type !== "EMAIL_VERIFICATION") {
+  if (verificationToken.type !== "PASSWORD_RESET") {
     return res
       .status(statusCode.BadRequest400)
       .json({ message: "Invalid token type" });

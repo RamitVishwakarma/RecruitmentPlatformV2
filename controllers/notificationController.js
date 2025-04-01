@@ -16,8 +16,10 @@ webPush.setVapidDetails(
 
 const subscribeUser = asyncHandler(async (req, res) => {
   const { userId, subscription } = req.body;
-  saveSubscription(userId, subscription);
-  res
+
+  const subObj = await saveSubscription(userId, subscription);
+
+  return res
     .status(statusCode.Ok200)
     .json({ message: "Subscription saved successfully!" });
 });
@@ -26,7 +28,7 @@ const sendNotification = asyncHandler(async (req, res) => {
   const { userId, title, message, url } = req.body;
 
   const notif = await prisma.notification.create({
-    data: { userId, title, message },
+    data: { userId, title, message, url },
   });
 
   if (!notif) {
@@ -37,18 +39,43 @@ const sendNotification = asyncHandler(async (req, res) => {
 
   const subscriptions = await getSubscription(userId);
 
-  if (!subscriptions) {
+  if (!subscriptions || subscriptions.length === 0) {
     return res
       .status(statusCode.NotFount404)
       .json({ error: "Subscriptions not found" });
   }
 
   const payload = JSON.stringify({ title, message, url });
-  await subscriptions.forEach((sub) => {
-    webPush.sendNotification(sub, payload);
-  });
-  // await webPush.sendNotification(subscription, payload);
 
+  for (const sub of subscriptions) {
+    if (!sub.auth || !sub.p256dh) {
+      console.error("Subscription is missing auth/p256dh:", sub);
+      continue;
+    }
+
+    const pushSubscription = {
+      endpoint: sub.endpoint,
+      keys: {
+        auth: sub.auth,
+        p256dh: sub.p256dh,
+      },
+    };
+
+    try {
+      await webPush.sendNotification(pushSubscription, payload);
+    } catch (error) {
+      console.error("Error sending push notification:", error);
+
+      if (error.statusCode === 410) {
+        console.error("Deleting expired subscription:", sub.endpoint);
+        await prisma.subscription.delete({
+          where: { endpoint: sub.endpoint },
+        });
+      }
+    }
+  }
+
+  console.log("Notifications successfully sent to all valid subscriptions");
   return res.status(statusCode.Ok200).json({ message: "Notification sent" });
 });
 
@@ -73,6 +100,22 @@ const markNotificationAsRead = asyncHandler(async (req, res) => {
 
   return res.json({ success: true });
 });
+
+// const getAllSubscriptions = asyncHandler(async (req, res) => {
+//   const subscriptions = await prisma.subscription.findMany({
+//     select: {
+//       id: true,
+//       userId: true,
+//       endpoint: true,
+//       auth: true,
+//       p256dh: true,
+//     },
+//   });
+//   if (!subscriptions.length) {
+//     return res.status(404).json({ error: "No subscriptions found" });
+//   }
+//   return res.status(200).json(subscriptions);
+// });
 
 export {
   subscribeUser,

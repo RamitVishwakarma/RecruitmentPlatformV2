@@ -9,7 +9,7 @@ const router = Router();
 
 /**
  * @swagger
- * /notifications/get/{userId}:
+ * /notification/get/{userId}:
  *   get:
  *     summary: Retrieve notifications for a specific user
  *     tags: [Notifications]
@@ -37,7 +37,7 @@ router.route("/get/:userId").get(getNotificationByUserId);
 
 /**
  * @swagger
- * /notifications/subscribe:
+ * /notification/subscribe:
  *   post:
  *     summary: Subscribe a user for push notifications
  *     tags: [Notifications]
@@ -65,7 +65,7 @@ router.route("/subscribe").post(subscribeUser);
 
 /**
  * @swagger
- * /notifications/send-notification:
+ * /notification/send-notification:
  *   post:
  *     summary: Send a push notification to a user
  *     tags: [Notifications]
@@ -99,7 +99,7 @@ router.route("/send-notification").post(sendNotification);
 
 /**
  * @swagger
- * /notifications/mark-read:
+ * /notification/mark-read:
  *   put:
  *     summary: Mark a notification as read
  *     tags: [Notifications]
