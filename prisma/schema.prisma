@@ -42,7 +42,6 @@ model User {
   email              String               @unique
   name               String
   password           String
-  isAdmin            Boolean              @default(false)
   admissionNumber    String?
   photo              String?
   year               Int?
@@ -58,20 +57,21 @@ model User {
   interviewStatus    Boolean              @default(false)
   isDeleted          Boolean              @default(false)
   googleId           String?              @unique
+  phone              String?              @unique
+  isAdmin            Boolean              @default(false)
   RefreshToken       RefreshToken[]
   socialLinks        SocialLink[]
+  subscription       Subscription[]
   aptitude           UserAptitudeDetails?
   verificationTokens VerificationToken[]
-  phone              String?              @unique
-  subscription       Subscription[]
 }
 
 model Otp {
   id        String   @id @default(uuid())
   email     String   @unique
-  otp       Int
   createdAt DateTime @default(now())
   expiresAt DateTime
+  otp       Int
 }
 
 model VerificationToken {
@@ -112,11 +112,11 @@ model Aptitude {
   aptitudeYear      Int
   aptitudeDuration  Int
   isDeleted         Boolean    @default(false)
-  aptitudeQuestions Question[]
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime?  @updatedAt
   beginsAt          DateTime?
+  createdAt         DateTime   @default(now())
   expiresAt         DateTime?
+  updatedAt         DateTime?  @updatedAt
+  aptitudeQuestions Question[]
 }
 
 model BlackListToken {
@@ -176,9 +176,9 @@ model Notification {
   userId    String
   title     String
   message   String
-  url       String?
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
+  url       String?
 }
 
 model Subscription {

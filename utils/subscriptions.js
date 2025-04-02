@@ -1,11 +1,15 @@
 import prisma from "../utils/prisma.js";
 
 const saveSubscription = async (userId, subscription) => {
-  // const { userId, subscription } = req.body;
-  await prisma.subscription.upsert({
+  if (!subscription) {
+    console.error(" Subscription object is missing!");
+  }
+  if (!subscription.endpoint) {
+    console.error(" Subscription endpoint is missing!", subscription);
+  }
+  const sub = await prisma.subscription.upsert({
     where: { endpoint: subscription.endpoint },
     update: {
-      // endpoint: subscription.endpoint,
       auth: subscription.keys.auth,
       p256dh: subscription.keys.p256dh,
     },
@@ -16,10 +20,10 @@ const saveSubscription = async (userId, subscription) => {
       p256dh: subscription.keys.p256dh,
     },
   });
+  return sub;
 };
 
 const getSubscription = async (userId) => {
-  // const { userId } = req.body;
   if (!userId) throw new Error("userId is required");
 
   return prisma.subscription.findMany({ where: { userId } });
