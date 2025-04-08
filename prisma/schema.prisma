@@ -27,19 +27,19 @@ model SocialLink {
   @@unique([userId, name])
 }
 
-model UserAptitudeDetails {
-  id            String  @id @default(uuid())
-  userId        String  @unique
-  aptitudeScore Int
-  isDeleted     Boolean @default(false)
-  user          User    @relation(fields: [userId], references: [id])
-}
+// model UserAptitudeDetails {
+//   id            String  @id @default(uuid())
+//   userId        String  @unique
+//   aptitudeScore Int
+//   isDeleted     Boolean @default(false)
+//   user          User    @relation(fields: [userId], references: [id])
+// }
 
 model User {
-  id                 String               @id @default(uuid())
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime?            @updatedAt
-  email              String               @unique
+  id                 String              @id @default(uuid())
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime?           @updatedAt
+  email              String              @unique
   name               String
   password           String
   admissionNumber    String?
@@ -50,19 +50,19 @@ model User {
   aptitudeId         String?
   domain             String?
   socialLinkId       String?
-  aptitudeStatus     Boolean              @default(false)
-  projectStatus      Boolean              @default(false)
-  reviewStatus       Boolean              @default(false)
-  shortlistStatus    Boolean              @default(false)
-  interviewStatus    Boolean              @default(false)
-  isDeleted          Boolean              @default(false)
-  googleId           String?              @unique
-  phone              String?              @unique
-  isAdmin            Boolean              @default(false)
+  TaskLink           String?
+  aptitudeStatus     Boolean             @default(false)
+  projectStatus      Boolean             @default(false)
+  reviewStatus       Boolean             @default(false)
+  shortlistStatus    Boolean             @default(false)
+  interviewStatus    Boolean             @default(false)
+  isDeleted          Boolean             @default(false)
+  googleId           String?             @unique
+  phone              String?             @unique
+  isAdmin            Boolean             @default(false)
   RefreshToken       RefreshToken[]
   socialLinks        SocialLink[]
   subscription       Subscription[]
-  aptitude           UserAptitudeDetails?
   verificationTokens VerificationToken[]
 }
 
@@ -85,39 +85,46 @@ model VerificationToken {
 }
 
 model Question {
-  id                String   @id @default(uuid())
-  questionShortDesc String
-  questionLongDesc  String?
-  aptitudeId        String
-  isDeleted         Boolean  @default(false)
-  options           Option[]
-  aptitude          Aptitude @relation(fields: [aptitudeId], references: [id], onDelete: Cascade)
+  id           String  @id @default(uuid())
+  questionText String
+  isDeleted    Boolean @default(false)
+  year         Int
+  quizTitle    String
+  answer       Answer?
 }
 
-model Option {
+model Answer {
   id         String   @id @default(uuid())
-  optionText String
-  isCorrect  Boolean
-  questionId String
+  answer     String
+  questionId String   @unique
   isDeleted  Boolean  @default(false)
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
-model Aptitude {
-  id                String     @id @default(uuid())
-  aptitudeTitle     String
-  aptitudeShortDesc String?
-  aptitudeLongDesc  String?
-  aptitudeDomain    String
-  aptitudeYear      Int
-  aptitudeDuration  Int
-  isDeleted         Boolean    @default(false)
-  beginsAt          DateTime?
-  createdAt         DateTime   @default(now())
-  expiresAt         DateTime?
-  updatedAt         DateTime?  @updatedAt
-  aptitudeQuestions Question[]
-}
+// model Option {
+//   id         String   @id @default(uuid())
+//   optionText String
+//   isCorrect  Boolean
+//   questionId String
+//   isDeleted  Boolean  @default(false)
+//   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+// }
+
+// model Aptitude {
+//   id                String     @id @default(uuid())
+//   aptitudeTitle     String
+//   aptitudeShortDesc String?
+//   aptitudeLongDesc  String?
+//   aptitudeDomain    String
+//   aptitudeYear      Int
+//   aptitudeDuration  Int
+//   isDeleted         Boolean    @default(false)
+//   beginsAt          DateTime?
+//   createdAt         DateTime   @default(now())
+//   expiresAt         DateTime?
+//   updatedAt         DateTime?  @updatedAt
+//   aptitudeQuestions Question[]
+// }
 
 model BlackListToken {
   id        String   @id @default(uuid())

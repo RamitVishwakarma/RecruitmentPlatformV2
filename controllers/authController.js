@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import {
   sendVerificationEmail,
   sendPasswordResetEmail,
-} from "../utils/emailService.js";
+} from "../utils/sendMailerEmail.js";
 import { validatePassword } from "../utils/validators.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
