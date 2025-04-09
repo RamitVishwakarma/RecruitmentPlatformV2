@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import userRoutes from "./userRoutes.js";
-import questionRoutes from "./questionsRoutes.js";
+
 import optionsRoutes from "./optionsRoutes.js";
 import aptitudeRoutes from "./aptitudeRoutes.js";
 import userAptitudeDetailsRoutes from "./userAptitudeDetailsRoutes.js";
@@ -19,7 +19,7 @@ router.use("/auth", adminAuthRoutes);
 router.use(adminAuthMiddleware);
 
 router.use("/users", userRoutes);
-router.use("/questions", questionRoutes);
+// router.use("/questions", questionRoutes);
 router.use("/options", optionsRoutes);
 router.use("/aptitude", aptitudeRoutes);
 router.use("/users", userAptitudeDetailsRoutes);

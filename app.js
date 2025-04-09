@@ -10,6 +10,8 @@ import {
   uploadRoutes,
   userAptitudeRoutes,
   notificationRoutes,
+  questionRoutes,
+  answerRoutes,
 } from "./routes/index.js";
 import swaggerSpecs from "./utils/swaggerconfig.js";
 import swaggerUi from "swagger-ui-express";
@@ -56,6 +58,8 @@ app.use("/users", userDetailsUpdateRoutes);
 app.use("/admin", adminRoutes);
 app.use("/upload", uploadRoutes);
 app.use("/users", userAptitudeRoutes);
+app.use("/questions", questionRoutes);
+app.use("/questions", answerRoutes);
 app.use("/notification", notificationRoutes);
 
 // Global error handler

@@ -9,7 +9,7 @@ const getUserById = asyncHandler(async (req, res) => {
 
   const user = await prisma.user.findUnique({
     where: { id, isDeleted: false },
-    include: { socialLinks: true, aptitude: true },
+    include: { socialLinks: true },
   });
 
   if (!user) {
@@ -51,7 +51,6 @@ const getUsersByDomain = asyncHandler(async (req, res) => {
     where: filters,
     include: {
       socialLinks: true,
-      aptitude: true,
     },
     skip,
     take,

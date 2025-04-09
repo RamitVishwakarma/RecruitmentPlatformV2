@@ -8,9 +8,15 @@ const loginSuccess = asyncHandler((req, res) => {
   if (!req.user) {
     return res.redirect("/");
   }
+  const user = req.user;
   res.json({
     message: "Welcome to your profile!",
-    user: req.user,
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      googleId: user.googleId ?? null,
+    },
   });
 });
 
@@ -22,16 +28,17 @@ const logout = asyncHandler((req, res) => {
         .json({ error: "Logout Failed" });
     req.session.destroy(() => {
       res.clearCookie("connect.sid");
-      res.redirect(
-        "https://accounts.google.com/o/oauth2/v2/auth" +
-          "?response_type=code" +
-          "&client_id=" +
-          process.env.GOOGLE_CLIENT_ID +
-          "&redirect_uri=" +
-          encodeURIComponent(process.env.CALLBACK_URL) +
-          "&scope=profile%20email" +
-          "&prompt=select_account",
-      );
+      res.redirect("http://localhost:3000/login");
+      // res.redirect(
+      //   "https://accounts.google.com/o/oauth2/v2/auth" +
+      //     "?response_type=code" +
+      //     "&client_id=" +
+      //     process.env.GOOGLE_CLIENT_ID +
+      //     "&redirect_uri=" +
+      //     encodeURIComponent(process.env.CALLBACK_URL) +
+      //     "&scope=profile%20email" +
+      //     "&prompt=select_account",
+      // );
     });
   });
 });

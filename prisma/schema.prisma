@@ -46,11 +46,9 @@ model User {
   photo              String?
   year               Int?
   resume             String?
-  aptitudeScore      Int?
-  aptitudeId         String?
   domain             String?
   socialLinkId       String?
-  TaskLink           String?
+  taskLink           String?
   aptitudeStatus     Boolean             @default(false)
   projectStatus      Boolean             @default(false)
   reviewStatus       Boolean             @default(false)
@@ -64,6 +62,7 @@ model User {
   socialLinks        SocialLink[]
   subscription       Subscription[]
   verificationTokens VerificationToken[]
+  answer             Answer[]
 }
 
 model Otp {
@@ -90,15 +89,19 @@ model Question {
   isDeleted    Boolean @default(false)
   year         Int
   quizTitle    String
-  answer       Answer?
+  answer       Answer[]
 }
 
 model Answer {
   id         String   @id @default(uuid())
   answer     String
-  questionId String   @unique
+  questionId String   
   isDeleted  Boolean  @default(false)
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@unique([questionId, userId])
 }
 
 // model Option {

@@ -165,7 +165,6 @@ const registerUser = asyncHandler(async (req, res) => {
     phone,
     domain,
     year,
-    aptitudeDetails,
     socialLinks,
     photoUrl,
     resumeUrl,
@@ -236,13 +235,9 @@ const registerUser = asyncHandler(async (req, res) => {
       socialLinks: {
         create: socialLinks,
       },
-      aptitude: {
-        create: aptitudeDetails,
-      },
     },
     include: {
       socialLinks: true,
-      aptitude: true,
     },
   });
 
