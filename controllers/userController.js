@@ -1,6 +1,10 @@
 import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
+import {
+  sendInterviewEmail,
+  sendTaskShortlistEmail,
+} from "../utils/sendMailerEmail.js";
 
 //~ get user by Id
 
@@ -22,8 +26,14 @@ const getUserById = asyncHandler(async (req, res) => {
 //~get users by domain
 
 const getUsersByDomain = asyncHandler(async (req, res) => {
-  const { domain, year, shortlistedStatus, interviewedStatus, projectStatus } =
-    req.query;
+  const {
+    domain,
+    year,
+    shortlistedStatus,
+    interviewedStatus,
+    projectStatus,
+    aptitudeStatus,
+  } = req.query;
 
   const { skip, take, page, perPage } = req.pagination;
 
@@ -45,6 +55,7 @@ const getUsersByDomain = asyncHandler(async (req, res) => {
       interviewStatus: interviewedStatus === "true",
     }),
     ...(projectStatus && { projectStatus: projectStatus === "true" }),
+    ...(aptitudeStatus && { aptitudeStatus: aptitudeStatus === "true" }),
   };
 
   const users = await prisma.user.findMany({
@@ -126,6 +137,8 @@ const updateUserShortlistStatus = asyncHandler(async (req, res, next) => {
     data: { shortlistStatus: shortlisted === "true" },
   });
 
+  await sendTaskShortlistEmail(user.email, user.name);
+
   return res.status(statusCode.Ok200).json({
     message: "User shortlist status updated successfully",
     user: user,
@@ -149,6 +162,8 @@ const updateUserInterviewStatus = asyncHandler(async (req, res, next) => {
     where: { id: userId },
     data: { interviewStatus: interviewed === "true" },
   });
+
+  await sendInterviewEmail(user.email, user.name);
 
   return res.status(statusCode.Ok200).json({
     message: "User interview status updated successfully",
@@ -180,6 +195,30 @@ const updateUserProjectStatus = asyncHandler(async (req, res, next) => {
   });
 });
 
+const updateUserAptitudeStatus = asyncHandler(async (req, res, next) => {
+  const { userId, quizSubmitted } = req.body;
+
+  const existingUser = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!existingUser) {
+    return res
+      .status(statusCode.NotFount404)
+      .json({ message: "User not found!" });
+  }
+
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: { aptitudeStatus: quizSubmitted === "true" },
+  });
+
+  return res.status(statusCode.Ok200).json({
+    message: "User aptitude status updated successfully",
+    user: user,
+  });
+});
+
 export {
   getUserById,
   getUsersByDomain,
@@ -187,4 +226,5 @@ export {
   updateUserShortlistStatus,
   updateUserInterviewStatus,
   updateUserProjectStatus,
+  updateUserAptitudeStatus,
 };
