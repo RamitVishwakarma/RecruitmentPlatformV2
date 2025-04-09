@@ -2,8 +2,7 @@ import { Router } from "express";
 import {
   createQuestion,
   getQuestionById,
-  getQuestionsByAptitude,
-  updateQuestion,
+  getRandomQuestions,
   deleteQuestion,
   getPaginatedQuestions,
 } from "../controllers/questionsController.js";
@@ -41,6 +40,8 @@ const router = Router();
  *         description: Missing required fields
  */
 router.route("/create-question").post(createQuestion);
+
+router.route("/random-question").get(getRandomQuestions);
 
 /**
  * @swagger
@@ -107,7 +108,7 @@ router.route("/:id").get(getQuestionById);
  *       400:
  *         description: Unable to get questions or aptitude ID is missing
  */
-router.route("/question-aptitude/:aptitudeId").get(getQuestionsByAptitude);
+// router.route("/question-aptitude/:aptitudeId").get(getQuestionsByAptitude);
 
 /**
  * @swagger
@@ -217,7 +218,7 @@ router.route("/question-aptitude/:aptitudeId").get(getQuestionsByAptitude);
  *                   type: string
  *                   example: "Question not found"
  */
-router.route("/update-question/:id").patch(updateQuestion);
+// router.route("/update-question/:id").patch(updateQuestion);
 
 /**
  * @swagger

@@ -32,4 +32,23 @@ const uploadResume = asyncHandler(async (req, res) => {
   });
 });
 
-export { uploadPhoto, uploadResume };
+const submitTaskLink = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { taskLink } = req.body;
+
+  if (!taskLink || !id) {
+    return res
+      .status(statusCode.NotFount404)
+      .json({ error: "Task link and id is required" });
+  }
+  const updatedUser = await prisma.user.update({
+    where: { id, isDeleted: false },
+    data: { taskLink },
+  });
+
+  return res
+    .status(statusCode.Ok200)
+    .json({ message: "Task link submitted successfully" });
+});
+
+export { uploadPhoto, uploadResume, submitTaskLink };

@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import {
   sendVerificationEmail,
   sendPasswordResetEmail,
-} from "../utils/emailService.js";
+} from "../utils/sendMailerEmail.js";
 import { validatePassword } from "../utils/validators.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
@@ -165,7 +165,6 @@ const registerUser = asyncHandler(async (req, res) => {
     phone,
     domain,
     year,
-    aptitudeDetails,
     socialLinks,
     photoUrl,
     resumeUrl,
@@ -236,13 +235,9 @@ const registerUser = asyncHandler(async (req, res) => {
       socialLinks: {
         create: socialLinks,
       },
-      aptitude: {
-        create: aptitudeDetails,
-      },
     },
     include: {
       socialLinks: true,
-      aptitude: true,
     },
   });
 

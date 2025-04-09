@@ -12,7 +12,8 @@ router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
-    res.redirect("/auth/login");
+    const user = req.user;
+    res.redirect("http://localhost:3000/login");
   },
 );
 

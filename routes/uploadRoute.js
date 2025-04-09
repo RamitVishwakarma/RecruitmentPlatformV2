@@ -1,6 +1,10 @@
 import { Router } from "express";
 import upload from "../utils/upload.js";
-import { uploadPhoto, uploadResume } from "../controllers/uploadController.js";
+import {
+  uploadPhoto,
+  uploadResume,
+  submitTaskLink,
+} from "../controllers/uploadController.js";
 
 const router = Router();
 /**
@@ -54,5 +58,7 @@ router.post("/photo", upload.single("photo"), uploadPhoto);
  *         description: Bad request
  */
 router.post("/resume", upload.single("resume"), uploadResume);
+
+router.route("/:id/task-link").put(submitTaskLink);
 
 export default router;
