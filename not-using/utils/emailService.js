@@ -1,5 +1,5 @@
 import sgMail from "@sendgrid/mail";
-import { generateEmailTemplate } from "./emailTemplates.js";
+import { generateEmailTemplate } from "../../utils/emailTemplates.js";
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
