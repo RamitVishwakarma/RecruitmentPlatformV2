@@ -7,7 +7,8 @@
     "dev": "nodemon server.js",
     "migrate": "prisma migrate dev",
     "prepare": "husky install",
-    "studio": "prisma studio"
+    "studio": "prisma studio",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +23,6 @@
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
