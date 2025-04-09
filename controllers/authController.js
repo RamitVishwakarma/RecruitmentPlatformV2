@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import {
   sendVerificationEmail,
   sendPasswordResetEmail,
+  sendRegistrationEmail,
 } from "../utils/sendMailerEmail.js";
 import { validatePassword } from "../utils/validators.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -240,8 +241,10 @@ const registerUser = asyncHandler(async (req, res) => {
       socialLinks: true,
     },
   });
+  const userData = name;
+  await sendRegistrationEmail(email, userData);
 
-  res.status(statusCode.Created201).json({
+  return res.status(statusCode.Created201).json({
     message: "Registration successful.",
     user: user,
   });
@@ -288,11 +291,11 @@ const sendOtpToEmail = async (req, res) => {
 
     await sendVerificationEmail(email, otp);
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "OTP sent to email",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error sending OTP",
       error: error.message,
     });
@@ -329,11 +332,11 @@ const verifyEmailOtp = async (req, res) => {
       where: { email },
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Email verified successfully",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error verifying email",
       error: error.message,
     });
@@ -366,7 +369,7 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
 
   await sendPasswordResetEmail(email, resetToken.token);
 
-  res.status(statusCode.Ok200).json({
+  return res.status(statusCode.Ok200).json({
     message: "Password reset link sent to email",
   });
 });
@@ -412,7 +415,7 @@ const resetPassword = asyncHandler(async (req, res) => {
     where: { token },
   });
 
-  res.status(statusCode.Ok200).json({
+  return res.status(statusCode.Ok200).json({
     message: "Password reset successful",
   });
 });

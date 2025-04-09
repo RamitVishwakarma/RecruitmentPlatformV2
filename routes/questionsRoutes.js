@@ -7,8 +7,11 @@ import {
   getPaginatedQuestions,
 } from "../controllers/questionsController.js";
 import { paginationMiddleware } from "../middlewares/paginationMiddleware.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = Router();
+
+router.use(authMiddleware);
 
 /**
  * @swagger

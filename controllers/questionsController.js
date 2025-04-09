@@ -5,24 +5,38 @@ import { statusCode } from "../utils/statusCodes.js";
 //Questions
 
 const createQuestion = asyncHandler(async (req, res) => {
-  const { questionText, year, quizTitle } = req.body;
+  const questions = req.body.questions;
 
-  if (!questionText || !year || !quizTitle) {
+  if (!Array.isArray(questions) || questions.length === 0) {
     return res
-      .status(statusCode.NotFount404)
-      .json({ error: "All fields are required" });
+      .status(statusCode.BadRequest400)
+      .json({ error: "Questions array is required and cannot be empty" });
   }
-  const question = await prisma.question.create({
-    data: {
-      questionText,
-      year,
-      quizTitle,
-    },
-  });
 
-  return res
-    .status(statusCode.Created201)
-    .json({ message: "Question created successfully" });
+  const createdQuestions = [];
+
+  for (const q of questions) {
+    if (!q.questionText || !q.year || !q.quizTitle) {
+      return res.status(statusCode.BadRequest400).json({
+        error: "Each question must have questionText, year, and quizTitle",
+      });
+    }
+
+    const created = await prisma.question.create({
+      data: {
+        questionText: q.questionText,
+        year: q.year,
+        quizTitle: q.quizTitle,
+      },
+    });
+
+    createdQuestions.push(created);
+  }
+
+  return res.status(statusCode.Created201).json({
+    message: `${createdQuestions.length} questions created successfully`,
+    questions: createdQuestions,
+  });
 });
 
 const getQuestionById = asyncHandler(async (req, res) => {
@@ -111,25 +125,39 @@ const getPaginatedQuestions = asyncHandler(async (req, res, next) => {
 });
 
 const getRandomQuestions = asyncHandler(async (req, res) => {
-  const allQuestions = await prisma.question.findMany({
+  const userId = req.user.userId;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { randomQuestionIds: true },
+  });
+
+  let questionIds = user?.randomQuestionIds || [];
+
+  if (questionIds.length === 0) {
+    const allQuestions = await prisma.question.findMany({
+      where: {
+        isDeleted: false,
+      },
+    });
+
+    const shuffled = allQuestions.sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 10);
+    questionIds = selected.map((q) => q.id);
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { randomQuestionIds: questionIds },
+    });
+  }
+
+  const questions = await prisma.question.findMany({
     where: {
-      isDeleted: false,
+      id: { in: questionIds },
     },
   });
 
-  function fisherYatesShuffle(array) {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  }
-
-  const shuffled = fisherYatesShuffle(allQuestions);
-  const selected = shuffled.slice(0, 10);
-
-  return res.status(statusCode.Ok200).json({ questions: selected });
+  return res.status(statusCode.Ok200).json({ questions });
 });
 
 export {
@@ -139,6 +167,49 @@ export {
   getPaginatedQuestions,
   getRandomQuestions,
 };
+
+// const createQuestion = asyncHandler(async (req, res) => {
+//   const { questionText, year, quizTitle } = req.body;
+
+//   if (!questionText || !year || !quizTitle) {
+//     return res
+//       .status(statusCode.NotFount404)
+//       .json({ error: "All fields are required" });
+//   }
+//   const question = await prisma.question.create({
+//     data: {
+//       questionText,
+//       year,
+//       quizTitle,
+//     },
+//   });
+
+//   return res
+//     .status(statusCode.Created201)
+//     .json({ message: "Question created successfully" });
+// });
+
+// const getRandomQuestions = asyncHandler(async (req, res) => {
+//   const allQuestions = await prisma.question.findMany({
+//     where: {
+//       isDeleted: false,
+//     },
+//   });
+
+//   function fisherYatesShuffle(array) {
+//     const shuffled = [...array];
+//     for (let i = shuffled.length - 1; i > 0; i--) {
+//       const j = Math.floor(Math.random() * (i + 1));
+//       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+//     }
+//     return shuffled;
+//   }
+
+//   const shuffled = fisherYatesShuffle(allQuestions);
+//   const selected = shuffled.slice(0, 10);
+
+//   return res.status(statusCode.Ok200).json({ questions: selected });
+// });
 
 // const createQuestion = asyncHandler(async (req, res) => {
 //   const { questionShortDesc, questionLongDesc, aptitudeId, options } = req.body;

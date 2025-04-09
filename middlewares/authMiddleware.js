@@ -25,6 +25,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
       process.env.ACCESS_TOKEN_SECRET,
     );
     req.user = decodedToken;
+    // console.log(req.user);
     return next();
   } catch (err) {
     if (err.name === "TokenExpiredError" && refreshToken) {
