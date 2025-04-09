@@ -28,7 +28,7 @@ const logout = asyncHandler((req, res) => {
         .json({ error: "Logout Failed" });
     req.session.destroy(() => {
       res.clearCookie("connect.sid");
-      res.redirect("http://localhost:3000/login");
+      res.redirect(process.env.FRONTEND_URL + "/login");
       // res.redirect(
       //   "https://accounts.google.com/o/oauth2/v2/auth" +
       //     "?response_type=code" +
