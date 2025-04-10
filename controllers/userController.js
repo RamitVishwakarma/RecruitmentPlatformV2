@@ -1,10 +1,7 @@
 import prisma from "../utils/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
-import {
-  sendInterviewEmail,
-  sendTaskShortlistEmail,
-} from "../utils/sendMailerEmail.js";
+import { sendInterviewEmail } from "../utils/sendMailerEmail.js";
 
 //~ get user by Id
 
@@ -137,7 +134,7 @@ const updateUserShortlistStatus = asyncHandler(async (req, res, next) => {
     data: { shortlistStatus: shortlisted === "true" },
   });
 
-  await sendTaskShortlistEmail(user.email, user.name);
+  // await sendTaskShortlistEmail(user.email, user.name);
 
   return res.status(statusCode.Ok200).json({
     message: "User shortlist status updated successfully",
