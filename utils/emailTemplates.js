@@ -359,10 +359,10 @@ export const generateEmailTemplate = (type, token) => {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 24px;">
                 <tr>
                   <td width="49%" align="center" style="padding: 10px;">
-                    <a href="https://recruitment-platform-v2-frontend.vercel.app/" class="full-btn btn-secondary">View Timeline</a>
+                    <a href="https://recruitments.gdscjss.in" class="full-btn btn-secondary">View Timeline</a>
                   </td>
                   <td width="49%" align="center" style="padding: 10px;">
-                    <a href="https://recruitment-platform-v2-frontend.vercel.app/dashboard" class="full-btn btn-primary">Visit Dashboard</a>
+                    <a href="https://recruitments.gdscjss.in/dashboard" class="full-btn btn-primary">Visit Dashboard</a>
                   </td>
                 </tr>
               </table>
@@ -1077,7 +1077,7 @@ export const generateEmailTemplate = (type, token) => {
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                       <tr>
                         <td align="center">
-                          <a href="https://recruitment-platform-v2-frontend.vercel.app/" target="_blank" class="full-btn btn-secondary">View Timeline</a>
+                          <a href="https://recruitments.gdscjss.in/" target="_blank" class="full-btn btn-secondary">View Timeline</a>
                         </td>
                       </tr>
                     </table>
@@ -1086,7 +1086,7 @@ export const generateEmailTemplate = (type, token) => {
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                       <tr>
                         <td align="center">
-                          <a href="https://recruitment-platform-v2-frontend.vercel.app/dashboard" target="_blank" class="full-btn btn-primary">Visit Dashboard</a>
+                          <a href="https://recruitments.gdscjss.in/dashboard" target="_blank" class="full-btn btn-primary">Visit Dashboard</a>
                         </td>
                       </tr>
                     </table>

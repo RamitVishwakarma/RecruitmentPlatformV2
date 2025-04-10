@@ -168,7 +168,7 @@ const registerUser = asyncHandler(async (req, res) => {
     year,
     socialLinks,
     photoUrl,
-    resumeUrl,
+    resume,
   } = req.body;
 
   const errors = [];
@@ -230,7 +230,7 @@ const registerUser = asyncHandler(async (req, res) => {
       admissionNumber,
       phone,
       photo: photoUrl ?? null,
-      resume: resumeUrl ?? null,
+      resume: resume ?? null,
       domain: domain ?? null,
       year: year ?? null,
       socialLinks: {
@@ -241,6 +241,7 @@ const registerUser = asyncHandler(async (req, res) => {
       socialLinks: true,
     },
   });
+
   const userData = name;
   await sendRegistrationEmail(email, userData);
 
