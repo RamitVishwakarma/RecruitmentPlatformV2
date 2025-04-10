@@ -139,7 +139,7 @@ export const generateEmailTemplate = (type, token) => {
          
           <tr>
             <td class="header">
-              <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/logo.svg" alt="Google Developer Groups Logo" />
+              <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/logo.png" alt="Google Developer Groups Logo" />
               <h1 style="margin: 16px 0 0; color: #272727; font-size: 19px; font-weight: 500;">Google Developer Groups OnCampus</h1>
               <p style="margin: 8px 0 0; color: #585858; font-size: 13px; font-weight: 400;">JSS Academy Of Technical Education</p>
             </td>
@@ -162,7 +162,7 @@ export const generateEmailTemplate = (type, token) => {
               <p class="help-text">Feel free to reach out if you have any questions. We're here to help!</p>
 
               <a href="https://chat.whatsapp.com/KIzWKEujQqbHgOWKAtYhWj" class="help-button">
-                <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/help.svg " alt="Help Icon" width="18" height="18" /> Need help?
+                <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/help.png" alt="Help Icon" width="18" height="18" /> Need help?
               </a>
             </td>
           </tr>
@@ -177,7 +177,7 @@ export const generateEmailTemplate = (type, token) => {
                     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 30px;">
                       <tr>
                         <td width="36">
-                          <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/logo.svg" alt="Logo" width="36" height="36" style="display: block;" />
+                          <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/logo.png" alt="Logo" width="36" height="36" style="display: block;" />
                         </td>
                         <td style="padding-left: 16px;">
                           <p style="margin: 0; font-family: Arial, sans-serif; font-size: 18px; font-weight: 500; color: #374151;">Google Developer Groups OnCampus</p>
@@ -197,17 +197,17 @@ export const generateEmailTemplate = (type, token) => {
                             <tr>
                                 <td style="padding: 0 8px;">
                                   <a href="https://www.linkedin.com/company/dsc-jssaten/" target="_blank" style="text-decoration: none;">
-                                    <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/linkedin.svg" alt="LinkedIn" width="24" height="24" style="display: block;" />
+                                    <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/linkedin.png" alt="LinkedIn" width="24" height="24" style="display: block;" />
                                   </a>
                                 </td>
                                 <td style="padding: 0 8px;">
                                   <a href="https://www.instagram.com/gdgoncampus.jss?igsh=MnJudjI3aGMxN2hp" target="_blank" style="text-decoration: none;">
-                                    <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/insta.svg" alt="Instagram" width="24" height="24" style="display: block;" />
+                                    <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/insta.png" alt="Instagram" width="24" height="24" style="display: block;" />
                                   </a>
                                 </td>
                                 <td style="padding: 0 8px;">
                                   <a href="https://x.com/GDSCJSSATEN?t=gZio_ve6LIQSw6HunOiqdg&s=09" target="_blank" style="text-decoration: none;">
-                                    <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/x.svg" alt="twitter" width="24" height="24" style="display: block;" />
+                                    <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/x.png" alt="twitter" width="24" height="24" style="display: block;" />
                                   </a>
                                 </td>
                               </tr>
@@ -337,7 +337,7 @@ export const generateEmailTemplate = (type, token) => {
           
           <tr>
             <td class="header">
-              <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/logo.svg" alt="Logo" />
+              <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/logo.png" alt="Logo" />
               <h1 style="margin: 16px 0 0; color: #272727; font-size: 19px; font-weight: 500;">Google Developer Groups OnCampus</h1>
               <p style="margin: 8px 0 0; color: #585858; font-size: 13px; font-weight: 400;">JSS Academy Of Technical Education</p>
             </td>
@@ -352,7 +352,7 @@ export const generateEmailTemplate = (type, token) => {
               <p style="font-size: 14px; color: #333333; line-height: 24px;">Completing your profile helps recruiters get to know you better and boosts your chances of landing the right opportunity.</p>
               <p class="help-text">Feel free to reach out if you have any questions. We're here to help!</p>
               <a href="https://chat.whatsapp.com/KIzWKEujQqbHgOWKAtYhWj" class="help-button">
-                <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/help.svg " alt="Help Icon" width="18" height="18" /> Need help?
+                <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/help.png" alt="Help Icon" width="18" height="18" /> Need help?
               </a>
 
               
@@ -378,7 +378,7 @@ export const generateEmailTemplate = (type, token) => {
                                         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 30px;">
                                             <tr>
                                                 <td width="36">
-                                                    <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/logo.svg" alt="Logo" width="36" height="36" style="display: block;" />
+                                                    <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/logo.png" alt="Logo" width="36" height="36" style="display: block;" />
                                                 </td>
                                                 <td style="padding-left: 16px;">
                                                     <p style="margin: 0; font-family: Arial, sans-serif; font-size: 18px; font-weight: 500; color: #374151;">Google Developer Groups OnCampus</p>
@@ -398,17 +398,17 @@ export const generateEmailTemplate = (type, token) => {
                                                         <tr>
                                                             <td style="padding: 0 8px;">
                                                               <a href="https://www.linkedin.com/company/dsc-jssaten/" target="_blank" style="text-decoration: none;">
-                                                                <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/linkedin.svg" alt="LinkedIn" width="24" height="24" style="display: block;" />
+                                                                <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/linkedin.png" alt="LinkedIn" width="24" height="24" style="display: block;" />
                                                               </a>
                                                             </td>
                                                             <td style="padding: 0 8px;">
                                                               <a href="https://www.instagram.com/gdgoncampus.jss?igsh=MnJudjI3aGMxN2hp" target="_blank" style="text-decoration: none;">
-                                                                <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/insta.svg" alt="Instagram" width="24" height="24" style="display: block;" />
+                                                                <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/insta.png" alt="Instagram" width="24" height="24" style="display: block;" />
                                                               </a>
                                                             </td>
                                                             <td style="padding: 0 8px;">
                                                               <a href="https://x.com/GDSCJSSATEN?t=gZio_ve6LIQSw6HunOiqdg&s=09" target="_blank" style="text-decoration: none;">
-                                                                <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/x.svg" alt="twitter" width="24" height="24" style="display: block;" />
+                                                                <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/x.png" alt="twitter" width="24" height="24" style="display: block;" />
                                                               </a>
                                                             </td>
                                                           </tr>
@@ -561,7 +561,7 @@ export const generateEmailTemplate = (type, token) => {
                     
                      <tr>
                         <td class="header">
-                            <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/logo.svg" alt="Google Developer Groups Logo" />
+                            <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/logo.png" alt="Google Developer Groups Logo" />
                             <h1 style="margin: 16px 0 0; color: #272727; font-size: 19px; font-weight: 500;">Google Developer Groups OnCampus</h1>
                             <p style="margin: 8px 0 0; color: #585858; font-size: 13px; font-weight: 400;">JSS Academy Of Technical Education</p>
                         </td>
@@ -622,7 +622,7 @@ export const generateEmailTemplate = (type, token) => {
                             <p class="help-text">Feel free to reach out if you have any questions. We're here to help!</p>
                             
                             <a href="https://chat.whatsapp.com/KIzWKEujQqbHgOWKAtYhWj" class="help-button">
-                                <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/help.svg " alt="Help Icon" width="18" height="18" /> Need help?
+                                <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/help.png" alt="Help Icon" width="18" height="18" /> Need help?
                             </a>
                         </td>
                     </tr>
@@ -638,7 +638,7 @@ export const generateEmailTemplate = (type, token) => {
                                         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 30px;">
                                             <tr>
                                                 <td width="36">
-                                                    <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/logo.svg" alt="Logo" width="36" height="36" style="display: block;" />
+                                                    <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/logo.png" alt="Logo" width="36" height="36" style="display: block;" />
                                                 </td>
                                                 <td style="padding-left: 16px;">
                                                     <p style="margin: 0; font-family: Arial, sans-serif; font-size: 18px; font-weight: 500; color: #374151;">Google Developer Groups OnCampus</p>
@@ -658,17 +658,17 @@ export const generateEmailTemplate = (type, token) => {
                                                         <tr>
                                                             <td style="padding: 0 8px;">
                                                               <a href="https://www.linkedin.com/company/dsc-jssaten/" target="_blank" style="text-decoration: none;">
-                                                                <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/linkedin.svg" alt="LinkedIn" width="24" height="24" style="display: block;" />
+                                                                <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/linkedin.png" alt="LinkedIn" width="24" height="24" style="display: block;" />
                                                               </a>
                                                             </td>
                                                             <td style="padding: 0 8px;">
                                                               <a href="https://www.instagram.com/gdgoncampus.jss?igsh=MnJudjI3aGMxN2hp" target="_blank" style="text-decoration: none;">
-                                                                <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/insta.svg" alt="Instagram" width="24" height="24" style="display: block;" />
+                                                                <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/insta.png" alt="Instagram" width="24" height="24" style="display: block;" />
                                                               </a>
                                                             </td>
                                                             <td style="padding: 0 8px;">
                                                               <a href="https://x.com/GDSCJSSATEN?t=gZio_ve6LIQSw6HunOiqdg&s=09" target="_blank" style="text-decoration: none;">
-                                                                <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/x.svg" alt="twitter" width="24" height="24" style="display: block;" />
+                                                                <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/x.png" alt="twitter" width="24" height="24" style="display: block;" />
                                                               </a>
                                                             </td>
                                                           </tr>
@@ -819,7 +819,7 @@ export const generateEmailTemplate = (type, token) => {
         <table class="container" border="0" cellpadding="0" cellspacing="0" width="600">
           <tr>
             <td class="header">
-              <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/logo.svg" alt="Google Developer Groups Logo" />
+              <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/logo.png" alt="Google Developer Groups Logo" />
               <h1 style="margin: 16px 0 0; color: #272727; font-size: 19px; font-weight: 500;">Google Developer Groups OnCampus</h1>
               <p style="margin: 8px 0 0; color: #585858; font-size: 13px; font-weight: 400;">JSS Academy Of Technical Education</p>
             </td>
@@ -853,7 +853,7 @@ export const generateEmailTemplate = (type, token) => {
             <td class="content">
               <p class="help-text">Feel free to reach out if you have any questions. We're here to help!</p>
               <a href="https://chat.whatsapp.com/KIzWKEujQqbHgOWKAtYhWj" class="help-button">
-                <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/help.svg " alt="Help Icon" width="18" height="18" /> Need help?
+                <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/help.png " alt="Help Icon" width="18" height="18" /> Need help?
               </a>
             </td>
           </tr>
@@ -866,7 +866,7 @@ export const generateEmailTemplate = (type, token) => {
                     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 30px;">
                       <tr>
                         <td width="36">
-                          <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/logo.svg" alt="Logo" width="36" height="36" style="display: block;" />
+                          <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/logo.png" alt="Logo" width="36" height="36" style="display: block;" />
                         </td>
                         <td style="padding-left: 16px;">
                           <p style="margin: 0; font-size: 18px; font-weight: 500; color: #374151;">Google Developer Groups OnCampus</p>
@@ -883,17 +883,17 @@ export const generateEmailTemplate = (type, token) => {
                             <tr>
                               <td style="padding: 0 8px;">
                                 <a href="https://www.linkedin.com/company/dsc-jssaten/" target="_blank">
-                                  <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/linkedin.svg" alt="LinkedIn" width="24" height="24" />
+                                  <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/linkedin.png" alt="LinkedIn" width="24" height="24" />
                                 </a>
                               </td>
                               <td style="padding: 0 8px;">
                                 <a href="https://www.instagram.com/gdgoncampus.jss?igsh=MnJudjI3aGMxN2hp" target="_blank">
-                                  <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/insta.svg" alt="Instagram" width="24" height="24" />
+                                  <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/insta.png" alt="Instagram" width="24" height="24" />
                                 </a>
                               </td>
                               <td style="padding: 0 8px;">
                                 <a href="https://x.com/GDSCJSSATEN?t=gZio_ve6LIQSw6HunOiqdg&s=09" target="_blank">
-                                  <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/x.svg" alt="Twitter" width="24" height="24" />
+                                  <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/x.png" alt="Twitter" width="24" height="24" />
                                 </a>
                               </td>
                             </tr>
@@ -1052,7 +1052,7 @@ export const generateEmailTemplate = (type, token) => {
         <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
           <tr>
             <td class="header">
-              <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/logo.svg" alt="Google Developer Groups Logo" />
+              <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/logo.png" alt="Google Developer Groups Logo" />
               <h1 style="margin: 16px 0 0; color: #272727; font-size: 19px; font-weight: 500;">Google Developer Groups OnCampus</h1>
               <p style="margin: 8px 0 0; color: #585858; font-size: 13px; font-weight: 400;">JSS Academy Of Technical Education</p>
             </td>
@@ -1099,7 +1099,7 @@ export const generateEmailTemplate = (type, token) => {
             <td class="content">
               <p class="help-text">Feel free to reach out if you have any questions. We're here to help!</p>
               <a href="https://chat.whatsapp.com/KIzWKEujQqbHgOWKAtYhWj" class="help-button">
-                <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/help.svg " alt="Help Icon" width="18" height="18" /> Need help?
+                <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/help.png " alt="Help Icon" width="18" height="18" /> Need help?
               </a>
             </td>
           </tr>
@@ -1112,7 +1112,7 @@ export const generateEmailTemplate = (type, token) => {
                     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 30px;">
                       <tr>
                         <td width="36">
-                          <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/logo.svg" alt="Logo" width="36" height="36" style="display: block;" />
+                          <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/logo.png" alt="Logo" width="36" height="36" style="display: block;" />
                         </td>
                         <td style="padding-left: 16px;">
                           <p style="margin: 0; font-family: Arial, sans-serif; font-size: 18px; font-weight: 500; color: #374151;">Google Developer Groups OnCampus</p>
@@ -1130,17 +1130,17 @@ export const generateEmailTemplate = (type, token) => {
                             <tr>
                               <td style="padding: 0 8px;">
                                 <a href="https://www.linkedin.com/company/dsc-jssaten/" target="_blank" style="text-decoration: none;">
-                                  <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/linkedin.svg" alt="LinkedIn" width="24" height="24" style="display: block;" />
+                                  <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/linkedin.png" alt="LinkedIn" width="24" height="24" style="display: block;" />
                                 </a>
                               </td>
                               <td style="padding: 0 8px;">
                                 <a href="https://www.instagram.com/gdgoncampus.jss?igsh=MnJudjI3aGMxN2hp" target="_blank" style="text-decoration: none;">
-                                  <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/insta.svg" alt="Instagram" width="24" height="24" style="display: block;" />
+                                  <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/insta.png" alt="Instagram" width="24" height="24" style="display: block;" />
                                 </a>
                               </td>
                               <td style="padding: 0 8px;">
                                 <a href="https://x.com/GDSCJSSATEN?t=gZio_ve6LIQSw6HunOiqdg&s=09" target="_blank" style="text-decoration: none;">
-                                  <img src="https://recplatformgdgoncampus.blob.core.windows.net/email-templates/x.svg" alt="twitter" width="24" height="24" style="display: block;" />
+                                  <img src="https://recruitmentplatformgdgjss.s3.ap-south-1.amazonaws.com/email-templates/x.png" alt="twitter" width="24" height="24" style="display: block;" />
                                 </a>
                               </td>
                             </tr>
