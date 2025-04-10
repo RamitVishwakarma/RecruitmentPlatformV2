@@ -244,10 +244,38 @@ const registerUser = asyncHandler(async (req, res) => {
   const userData = name;
   await sendRegistrationEmail(email, userData);
 
-  return res.status(statusCode.Created201).json({
-    message: "Registration successful.",
-    user: user,
+  const accessToken = jwt.sign(
+    { userId: user.id, email: user.email, isAdmin: user.isAdmin },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: process.env.ACCESS_TOKEN_EXPIRY },
+  );
+  const refreshToken = jwt.sign(
+    { userId: user.id, email: user.email, isAdmin: user.isAdmin },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: process.env.REFRESH_TOKEN_EXPIRY },
+  );
+
+  const createdAt = new Date();
+  const expiresAt = new Date();
+  expiresAt.setDate(createdAt.getDate() + 10);
+
+  const refreshTokenDb = await prisma.refreshToken.create({
+    data: {
+      token: refreshToken,
+      userId: user.id,
+      createdAt: createdAt,
+      expiresAt: expiresAt,
+    },
   });
+
+  return res
+    .status(statusCode.Created201)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
+    .json({
+      message: "Registration successful.",
+      user: user,
+    });
 });
 
 //send otp to email
@@ -367,6 +395,8 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
     },
   });
 
+  console.log(resetToken);
+
   await sendPasswordResetEmail(email, resetToken.token);
 
   return res.status(statusCode.Ok200).json({
@@ -377,13 +407,18 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
 // reset password
 
 const resetPassword = asyncHandler(async (req, res) => {
-  const { token, newPassword } = req.body;
+  const { password, token } = req.body;
 
   const verificationToken = await prisma.verificationToken.findUnique({
     where: { token },
   });
+  // console.log(verificationToken);
 
-  if (!verificationToken || verificationToken.type !== "PASSWORD_RESET") {
+  if (
+    !verificationToken ||
+    verificationToken.type !== "PASSWORD_RESET" ||
+    verificationToken.expiresAt < new Date()
+  ) {
     return res
       .status(statusCode.Unauthorized401)
       .json({ message: "Invalid or expired token" });
@@ -397,21 +432,21 @@ const resetPassword = asyncHandler(async (req, res) => {
       .json({ message: "Invalid token" });
   }
 
-  const passwordValidation = validatePassword(newPassword);
+  const passwordValidation = validatePassword(password);
   if (!passwordValidation.isValid) {
     return res
       .status(statusCode.BadRequest400)
       .json({ errors: passwordValidation.errors });
   }
 
-  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   await prisma.user.update({
     where: { id: decoded.userId },
     data: { password: hashedPassword },
   });
 
-  prisma.verificationToken.delete({
+  await prisma.verificationToken.delete({
     where: { token },
   });
 
@@ -510,9 +545,9 @@ const verifyUser = asyncHandler(async (req, res) => {
     },
   });
 
-  await prisma.verificationToken.delete({
-    where: { token },
-  });
+  // await prisma.verificationToken.delete({
+  //   where: { token },
+  // });
 
   return res
     .status(statusCode.Ok200)

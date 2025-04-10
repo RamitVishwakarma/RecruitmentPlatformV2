@@ -15,6 +15,7 @@ const loginSuccess = asyncHandler((req, res) => {
       id: user.id,
       name: user.name,
       email: user.email,
+      photo: user.photo,
       googleId: user.googleId ?? null,
     },
   });
@@ -28,7 +29,7 @@ const logout = asyncHandler((req, res) => {
         .json({ error: "Logout Failed" });
     req.session.destroy(() => {
       res.clearCookie("connect.sid");
-      res.redirect(process.env.FRONTEND_URL + "/login");
+      res.redirect(process.env.FRONTEND_URL + "/");
       // res.redirect(
       //   "https://accounts.google.com/o/oauth2/v2/auth" +
       //     "?response_type=code" +

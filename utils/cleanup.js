@@ -7,4 +7,5 @@ export const cleanupExpiredTokens = async () => {
       },
     },
   });
+  console.log("verification token cleanup ran");
 };
