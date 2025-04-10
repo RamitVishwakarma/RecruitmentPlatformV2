@@ -1,6 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
-import { uploadToAzure } from "../utils/upload.js";
+import { uploadToS3 } from "../utils/upload.js";
 
 const uploadPhoto = asyncHandler(async (req, res) => {
   if (!req.file) {
@@ -9,7 +9,7 @@ const uploadPhoto = asyncHandler(async (req, res) => {
     });
   }
 
-  const uploadResult = await uploadToAzure(req.file);
+  const uploadResult = await uploadToS3(req.file, "photo");
 
   res.status(statusCode.Ok200).json({
     message: "Photo uploaded successfully",
@@ -24,7 +24,7 @@ const uploadResume = asyncHandler(async (req, res) => {
     });
   }
 
-  const uploadResult = await uploadToAzure(req.file);
+  const uploadResult = await uploadToS3(req.file, "resume");
 
   res.status(statusCode.Ok200).json({
     message: "Resume uploaded successfully",

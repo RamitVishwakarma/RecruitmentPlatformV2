@@ -20,4 +20,4 @@ RUN npx prisma generate
 EXPOSE 5000
 
 # Run migrations & start the server
-CMD ["sh", "-c", "echo $DATABASE_URL && npx prisma migrate deploy && npm start"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
