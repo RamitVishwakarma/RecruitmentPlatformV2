@@ -41,6 +41,7 @@ model User {
   domain             String?
   socialLinkId       String?
   taskLink           String?
+  randomQuestionIds  String[]
   aptitudeStatus     Boolean             @default(false)
   projectStatus      Boolean             @default(false)
   reviewStatus       Boolean             @default(false)
@@ -76,9 +77,9 @@ model VerificationToken {
 }
 
 model Question {
-  id           String  @id @default(uuid())
+  id           String   @id @default(uuid())
   questionText String
-  isDeleted    Boolean @default(false)
+  isDeleted    Boolean  @default(false)
   year         Int
   quizTitle    String
   answer       Answer[]
@@ -87,7 +88,7 @@ model Question {
 model Answer {
   id         String   @id @default(uuid())
   answer     String
-  questionId String   
+  questionId String
   isDeleted  Boolean  @default(false)
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   userId     String
