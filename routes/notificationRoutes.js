@@ -1,15 +1,14 @@
 import { Router } from "express";
 import {
   subscribeUser,
-  sendNotification,
-  getNotificationByUserId,
+  getNotifications,
   markNotificationAsRead,
 } from "../controllers/notificationController.js";
 const router = Router();
 
 /**
  * @swagger
- * /notification/get/{userId}:
+ * /notification/get:
  *   get:
  *     summary: Retrieve notifications for a specific user
  *     tags: [Notifications]
@@ -33,7 +32,7 @@ const router = Router();
  *       404:
  *         description: No notifications found.
  */
-router.route("/get/:userId").get(getNotificationByUserId);
+router.route("/get").get(getNotifications);
 
 /**
  * @swagger
@@ -63,39 +62,38 @@ router.route("/get/:userId").get(getNotificationByUserId);
  */
 router.route("/subscribe").post(subscribeUser);
 
-/**
- * @swagger
- * /notification/send-notification:
- *   post:
- *     summary: Send a push notification to a user
- *     tags: [Notifications]
- *     description: Sends a notification and stores it in the database.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: string
- *                 description: The recipient user's ID.
- *               title:
- *                 type: string
- *                 description: Title of the notification.
- *               message:
- *                 type: string
- *                 description: Notification message content.
- *               url:
- *                 type: string
- *                 description: (Optional) URL the notification should link to.
- *     responses:
- *       200:
- *         description: Notification sent successfully.
- *       404:
- *         description: Subscription not found.
- */
-router.route("/send-notification").post(sendNotification);
+// /**
+//  * @swagger
+//  * /notification/send-notification:
+//  *   post:
+//  *     summary: Send a push notification to a user
+//  *     tags: [Notifications]
+//  *     description: Sends a notification and stores it in the database.
+//  *     requestBody:
+//  *       required: true
+//  *       content:
+//  *         application/json:
+//  *           schema:
+//  *             type: object
+//  *             properties:
+//  *               userId:
+//  *                 type: string
+//  *                 description: The recipient user's ID.
+//  *               title:
+//  *                 type: string
+//  *                 description: Title of the notification.
+//  *               message:
+//  *                 type: string
+//  *                 description: Notification message content.
+//  *               url:
+//  *                 type: string
+//  *                 description: (Optional) URL the notification should link to.
+//  *     responses:
+//  *       200:
+//  *         description: Notification sent successfully.
+//  *       404:
+//  *         description: Subscription not found.
+//  */
 
 /**
  * @swagger

@@ -2,6 +2,7 @@ import webPush from "web-push";
 import { saveSubscription, getSubscription } from "../utils/subscriptions.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
+import prisma from "../utils/prisma.js";
 
 const VAPID_KEYS = {
   publicKey: process.env.VAPID_PUBLIC_KEY,
@@ -24,66 +25,121 @@ const subscribeUser = asyncHandler(async (req, res) => {
     .json({ message: "Subscription saved successfully!" });
 });
 
+// const sendNotification = asyncHandler(async (req, res) => {
+//   const { userId, title, message, url } = req.body;
+
+//   const notif = await prisma.notification.create({
+//     data: { userId, title, message, url },
+//   });
+
+//   if (!notif) {
+//     return res
+//       .status(statusCode.Conflict409)
+//       .json({ error: "Notification creation unsuccessful" });
+//   }
+
+//   const subscriptions = await getSubscription(userId);
+
+//   if (!subscriptions || subscriptions.length === 0) {
+//     return res
+//       .status(statusCode.NotFount404)
+//       .json({ error: "Subscriptions not found" });
+//   }
+
+//   const payload = JSON.stringify({ title, message, url });
+
+//   for (const sub of subscriptions) {
+//     if (!sub.auth || !sub.p256dh) {
+//       console.error("Subscription is missing auth/p256dh:", sub);
+//       continue;
+//     }
+
+//     const pushSubscription = {
+//       endpoint: sub.endpoint,
+//       keys: {
+//         auth: sub.auth,
+//         p256dh: sub.p256dh,
+//       },
+//     };
+
+//     try {
+//       await webPush.sendNotification(pushSubscription, payload);
+//     } catch (error) {
+//       console.error("Error sending push notification:", error);
+
+//       if (error.statusCode === 410) {
+//         console.error("Deleting expired subscription:", sub.endpoint);
+//         await prisma.subscription.delete({
+//           where: { endpoint: sub.endpoint },
+//         });
+//       }
+//     }
+//   }
+
+//   console.log("Notifications successfully sent to all valid subscriptions");
+//   return res.status(statusCode.Ok200).json({ message: "Notification sent" });
+// });
+
 const sendNotification = asyncHandler(async (req, res) => {
-  const { userId, title, message, url } = req.body;
+  const { title, message, url } = req.body;
 
-  const notif = await prisma.notification.create({
-    data: { userId, title, message, url },
-  });
-
-  if (!notif) {
-    return res
-      .status(statusCode.Conflict409)
-      .json({ error: "Notification creation unsuccessful" });
+  if (!title || !message) {
+    return res.status(statusCode.BadRequest400).json({
+      error: "Title and message are required",
+    });
   }
 
-  const subscriptions = await getSubscription(userId);
-
-  if (!subscriptions || subscriptions.length === 0) {
-    return res
-      .status(statusCode.NotFount404)
-      .json({ error: "Subscriptions not found" });
-  }
+  const allUsers = await prisma.user.findMany({ select: { id: true } });
+  const targetUserIds = allUsers.map((user) => user.id);
 
   const payload = JSON.stringify({ title, message, url });
 
-  for (const sub of subscriptions) {
-    if (!sub.auth || !sub.p256dh) {
-      console.error("Subscription is missing auth/p256dh:", sub);
-      continue;
-    }
+  const notif = await prisma.notification.create({
+    data: { title, message, url },
+  });
+  await Promise.all(
+    targetUserIds.map(async (userId) => {
+      try {
+        const subscriptions = await getSubscription(userId);
 
-    const pushSubscription = {
-      endpoint: sub.endpoint,
-      keys: {
-        auth: sub.auth,
-        p256dh: sub.p256dh,
-      },
-    };
+        if (!subscriptions || subscriptions.length === 0) return;
 
-    try {
-      await webPush.sendNotification(pushSubscription, payload);
-    } catch (error) {
-      console.error("Error sending push notification:", error);
+        for (const sub of subscriptions) {
+          if (!sub.auth || !sub.p256dh) continue;
 
-      if (error.statusCode === 410) {
-        console.error("Deleting expired subscription:", sub.endpoint);
-        await prisma.subscription.delete({
-          where: { endpoint: sub.endpoint },
-        });
+          const pushSubscription = {
+            endpoint: sub.endpoint,
+            keys: {
+              auth: sub.auth,
+              p256dh: sub.p256dh,
+            },
+          };
+
+          try {
+            await webPush.sendNotification(pushSubscription, payload);
+          } catch (error) {
+            console.error("Push error:", error);
+
+            if (error.statusCode === 410) {
+              await prisma.subscription.delete({
+                where: { endpoint: sub.endpoint },
+              });
+            }
+          }
+        }
+      } catch (err) {
+        console.error(`Notification failed for user ${userId}:`, err);
       }
-    }
-  }
+    }),
+  );
 
-  console.log("Notifications successfully sent to all valid subscriptions");
-  return res.status(statusCode.Ok200).json({ message: "Notification sent" });
+  return res.status(statusCode.Ok200).json({
+    message: `Notification sent to ${targetUserIds.length} user(s)`,
+  });
 });
 
-const getNotificationByUserId = asyncHandler(async (req, res) => {
-  const { userId } = req.params;
-
+const getNotifications = asyncHandler(async (req, res) => {
   const notifications = await prisma.notification.findMany({
-    where: { userId },
     orderBy: { createdAt: "desc" },
   });
 
@@ -120,6 +176,6 @@ const markNotificationAsRead = asyncHandler(async (req, res) => {
 export {
   subscribeUser,
   sendNotification,
-  getNotificationByUserId,
+  getNotifications,
   markNotificationAsRead,
 };

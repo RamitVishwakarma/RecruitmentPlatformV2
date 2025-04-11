@@ -11,6 +11,8 @@ import testcaseRoutes from "./testcaseRoutes.js";
 import codingQuestionsRoutes from "./codingQuestionsRoutes.js";
 import adminAuthRoutes from "./adminAuthRoutes.js";
 import { adminAuthMiddleware } from "../middlewares/adminAuthMiddleware.js";
+import { createQuestion } from "../controllers/questionsController.js";
+import { sendNotification } from "../controllers/notificationController.js";
 
 const router = Router();
 
@@ -18,6 +20,8 @@ router.use("/auth", adminAuthRoutes);
 
 router.use(adminAuthMiddleware);
 
+router.route("/questions/create-question").post(createQuestion);
+router.route("/notification/send-notification").post(sendNotification);
 router.use("/users", userRoutes);
 // router.use("/questions", questionRoutes);
 router.use("/options", optionsRoutes);

@@ -236,13 +236,13 @@ export const generateEmailTemplate = (type, token) => {
     <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
       <h2 style="color: #333;">GDG Recruitments: Reset Password</h2>
       <p style="color: #555;">Hi there,</p>
-      <p style="color: #555;">It seems like you've requested a password reset. Use the token below to reset your password. This token will expire in 1 hour.</p>
+      <p style="color: #555;">It seems like you've requested a password reset.Click on the button below to reset your password.The button's link will be expired in an hour.</p>
       <div style="margin: 20px 0; padding: 15px; background-color: #f1f1f1; color: #333; border: 1px dashed #ccc; border-radius: 6px; font-size: 16px; text-align: center;">
        <a href=${`${process.env.FRONTEND_URL}/reset-password/${token}`} style="display: inline-block; padding: 10px 20px; background-color: #6366f1; color: white; text-decoration: none; border-radius: 5px;">
   Reset Password
 </a>
       </div>
-      <p style="color: #555;">Please paste this token in the app or site to proceed with password reset.</p>
+      <p style="color: #555;">If you face any further issues contact the team through the whatsapp channel.</p>
     </div>
   </body>
 </html>
