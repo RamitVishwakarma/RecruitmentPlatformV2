@@ -1,6 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
 import { uploadToAzure } from "../utils/upload.js";
+import prisma from "../utils/prisma.js";
 
 const uploadPhoto = asyncHandler(async (req, res) => {
   if (!req.file) {
