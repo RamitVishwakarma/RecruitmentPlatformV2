@@ -1,6 +1,5 @@
 import { Router } from "express";
 import {
-  createQuestion,
   getQuestionById,
   getRandomQuestions,
   deleteQuestion,
@@ -8,41 +7,41 @@ import {
 } from "../controllers/questionsController.js";
 import { paginationMiddleware } from "../middlewares/paginationMiddleware.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { adminAuthMiddleware } from "../middlewares/adminAuthMiddleware.js";
 
 const router = Router();
 
-router.use(authMiddleware);
+// /**
+//  * @swagger
+//  * /admin/questions/create-question:
+//  *   post:
+//  *     summary: Create a new question
+//  *     tags: [Admin - Questions]
+//  *     requestBody:
+//  *       required: true
+//  *       content:
+//  *         application/json:
+//  *           schema:
+//  *             type: object
+//  *             properties:
+//  *               questionShortDesc:
+//  *                 type: string
+//  *               questionLongDesc:
+//  *                 type: string
+//  *               aptitudeId:
+//  *                 type: string
+//  *             required:
+//  *               - questionShortDesc
+//  *               - questionLongDesc
+//  *               - aptitudeId
+//  *     responses:
+//  *       201:
+//  *         description: Successfully created question
+//  *       400:
+//  *         description: Missing required fields
+//  */
 
-/**
- * @swagger
- * /admin/questions/create-question:
- *   post:
- *     summary: Create a new question
- *     tags: [Admin - Questions]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               questionShortDesc:
- *                 type: string
- *               questionLongDesc:
- *                 type: string
- *               aptitudeId:
- *                 type: string
- *             required:
- *               - questionShortDesc
- *               - questionLongDesc
- *               - aptitudeId
- *     responses:
- *       201:
- *         description: Successfully created question
- *       400:
- *         description: Missing required fields
- */
-router.route("/create-question").post(createQuestion);
+router.use(authMiddleware);
 
 router.route("/random-question").get(getRandomQuestions);
 
