@@ -27,14 +27,6 @@ model SocialLink {
   @@unique([userId, name])
 }
 
-// model UserAptitudeDetails {
-//   id            String  @id @default(uuid())
-//   userId        String  @unique
-//   aptitudeScore Int
-//   isDeleted     Boolean @default(false)
-//   user          User    @relation(fields: [userId], references: [id])
-// }
-
 model User {
   id                 String              @id @default(uuid())
   createdAt          DateTime            @default(now())
@@ -104,32 +96,6 @@ model Answer {
 
   @@unique([questionId, userId])
 }
-
-// model Option {
-//   id         String   @id @default(uuid())
-//   optionText String
-//   isCorrect  Boolean
-//   questionId String
-//   isDeleted  Boolean  @default(false)
-//   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-// }
-
-// model Aptitude {
-//   id                String     @id @default(uuid())
-//   aptitudeTitle     String
-//   aptitudeShortDesc String?
-//   aptitudeLongDesc  String?
-//   aptitudeDomain    String
-//   aptitudeYear      Int
-//   aptitudeDuration  Int
-//   isDeleted         Boolean    @default(false)
-//   beginsAt          DateTime?
-//   createdAt         DateTime   @default(now())
-//   expiresAt         DateTime?
-//   updatedAt         DateTime?  @updatedAt
-//   aptitudeQuestions Question[]
-// }
-
 model BlackListToken {
   id        String   @id @default(uuid())
   token     String   @unique

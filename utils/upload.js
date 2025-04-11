@@ -1,14 +1,19 @@
 import multer from "multer";
-import { BlobServiceClient } from "@azure/storage-blob";
-import { Readable } from "stream";
 import dotenv from "dotenv";
+import { Upload } from "@aws-sdk/lib-storage";
+import { S3 } from "@aws-sdk/client-s3";
 
 dotenv.config();
 
-// Azure SAS URL
-const AZURE_SAS_URL = process.env.AZURE_SAS_URL;
-const PHOTO_CONTAINER = process.env.AZURE_PHOTO_CONTAINER;
-const RESUME_CONTAINER = process.env.AZURE_RESUME_CONTAINER;
+const s3 = new S3({
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+  region: process.env.AWS_REGION,
+});
+
+const bucketName = process.env.S3_BUCKET_NAME;
 
 // Allowed MIME types
 const allowedMimeTypes = {
@@ -35,46 +40,34 @@ const upload = multer({
       cb(new Error("Invalid file type. Only photos and resumes are allowed."));
     }
   },
-  limits: { fileSize: 1024 * 1024 * 5 }, // 5 MB
+  limits: { fileSize: 1024 * 1024 * 3 }, // 3 MB
 });
 
-// Function to determine the container based on file type
-function getContainerName(file) {
-  if (allowedMimeTypes.photos.includes(file.mimetype)) {
-    return PHOTO_CONTAINER;
-  }
-  if (allowedMimeTypes.resumes.includes(file.mimetype)) {
-    return RESUME_CONTAINER;
-  }
-  throw new Error("Unsupported file type");
-}
-
 // Upload file to correct container
-export async function uploadToAzure(file) {
-  try {
-    if (!file) throw new Error("No file provided");
+export async function uploadToS3(file, type) {
+  if (!file) throw new Error("No file provided");
 
-    const containerName = getContainerName(file);
-    const blobServiceClient = new BlobServiceClient(AZURE_SAS_URL);
-    const containerClient = blobServiceClient.getContainerClient(containerName);
+  let folder = "";
+  if (type === "photo") folder = "photo/";
+  else if (type === "resume") folder = "resume/";
+  else throw new Error("Invalid upload type");
 
-    const blobName = `${Date.now()}_${file.originalname}`;
-    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+  const key = `${folder}${Date.now()}_${file.originalname}`;
 
-    const stream = Readable.from(file.buffer);
+  const params = {
+    Bucket: bucketName,
+    Key: key,
+    Body: file.buffer,
+    ContentType: file.mimetype,
+  };
 
-    // Setting content type for the file so that it can be displayed in the browser
-    const options = {
-      blobHTTPHeaders: { blobContentType: file.mimetype },
-    };
+  const uploadResult = await new Upload({
+    client: s3,
+    params,
+  }).done();
+  const fileUrl = uploadResult.Location;
 
-    await blockBlobClient.uploadStream(stream, file.size, undefined, options);
-
-    return { fileUrl: blockBlobClient.url };
-  } catch (error) {
-    console.error("Error uploading file:", error.message);
-    throw error;
-  }
+  return { fileUrl };
 }
 
 export default upload;
