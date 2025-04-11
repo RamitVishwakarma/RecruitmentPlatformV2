@@ -94,13 +94,12 @@ const sendNotification = asyncHandler(async (req, res) => {
 
   const payload = JSON.stringify({ title, message, url });
 
+  const notif = await prisma.notification.create({
+    data: { title, message, url },
+  });
   await Promise.all(
     targetUserIds.map(async (userId) => {
       try {
-        await prisma.notification.create({
-          data: { userId, title, message, url },
-        });
-
         const subscriptions = await getSubscription(userId);
 
         if (!subscriptions || subscriptions.length === 0) return;
@@ -139,11 +138,8 @@ const sendNotification = asyncHandler(async (req, res) => {
   });
 });
 
-const getNotificationByUserId = asyncHandler(async (req, res) => {
-  const { userId } = req.params;
-
+const getNotifications = asyncHandler(async (req, res) => {
   const notifications = await prisma.notification.findMany({
-    where: { userId },
     orderBy: { createdAt: "desc" },
   });
 
@@ -180,6 +176,6 @@ const markNotificationAsRead = asyncHandler(async (req, res) => {
 export {
   subscribeUser,
   sendNotification,
-  getNotificationByUserId,
+  getNotifications,
   markNotificationAsRead,
 };

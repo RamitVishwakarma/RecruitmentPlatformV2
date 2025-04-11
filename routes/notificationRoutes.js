@@ -1,15 +1,14 @@
 import { Router } from "express";
 import {
   subscribeUser,
-  sendNotification,
-  getNotificationByUserId,
+  getNotifications,
   markNotificationAsRead,
 } from "../controllers/notificationController.js";
 const router = Router();
 
 /**
  * @swagger
- * /notification/get/{userId}:
+ * /notification/get:
  *   get:
  *     summary: Retrieve notifications for a specific user
  *     tags: [Notifications]
@@ -33,7 +32,7 @@ const router = Router();
  *       404:
  *         description: No notifications found.
  */
-router.route("/get/:userId").get(getNotificationByUserId);
+router.route("/get").get(getNotifications);
 
 /**
  * @swagger

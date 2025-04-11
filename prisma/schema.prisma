@@ -184,7 +184,6 @@ model TestCase {
 
 model Notification {
   id        String   @id @default(uuid())
-  userId    String
   title     String
   message   String
   isRead    Boolean  @default(false)
