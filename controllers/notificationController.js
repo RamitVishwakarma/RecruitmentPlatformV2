@@ -2,6 +2,7 @@ import webPush from "web-push";
 import { saveSubscription, getSubscription } from "../utils/subscriptions.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
+import prisma from "../utils/prisma.js";
 
 const VAPID_KEYS = {
   publicKey: process.env.VAPID_PUBLIC_KEY,

@@ -7,6 +7,22 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
   let accessToken = req.cookies?.accessToken;
   const refreshToken = req.cookies?.refreshToken;
 
+  if (req.isAuthenticated?.() && req.session?.passport?.user) {
+    const userId = req.session.passport.user;
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid Google user session" });
+    }
+
+    req.user = {
+      userId: user.id,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    };
+    return next();
+  }
+
   if (!accessToken) {
     return res.status(401).json({ message: "Unauthorized request" });
   }
