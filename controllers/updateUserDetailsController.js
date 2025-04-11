@@ -3,7 +3,8 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
 
 const updateUserProfile = asyncHandler(async (req, res) => {
-  const { name, year, admissionNumber, domain, photo, resume } = req.body;
+  const { name, year, admissionNumber, domain, photo, resume, phone } =
+    req.body;
   const userId = req.user.userId;
 
   const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -27,6 +28,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   if (domain?.trim()) updateData.domain = domain;
   if (photo) updateData.photo = photo;
   if (resume) updateData.resume = resume;
+  if (phone) updateData.phone = phone;
 
   if (Object.keys(updateData).length === 0) {
     return res
