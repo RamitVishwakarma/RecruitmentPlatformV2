@@ -7,17 +7,12 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
   let accessToken = req.cookies?.accessToken;
   const refreshToken = req.cookies?.refreshToken;
 
-  // Handle Google OAuth authentication
-  if (req.isAuthenticated?.()) {
-    const userId = req.user?.id; // Access user directly from req.user set by Passport
-
-    if (!userId) {
-      return res.status(401).json({ message: "Invalid Google user session" });
-    }
+  if (req.isAuthenticated?.() && req.session?.passport?.user) {
+    const userId = req.session.passport.user;
 
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      return res.status(401).json({ message: "Invalid Google user session" });
     }
 
     req.user = {
@@ -28,7 +23,6 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
     return next();
   }
 
-  // Handle JWT authentication
   if (!accessToken) {
     return res.status(401).json({ message: "Unauthorized request" });
   }
@@ -47,6 +41,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
       process.env.ACCESS_TOKEN_SECRET,
     );
     req.user = decodedToken;
+    // console.log(req.user);
     return next();
   } catch (err) {
     if (err.name === "TokenExpiredError" && refreshToken) {
