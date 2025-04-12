@@ -11,9 +11,9 @@ services:
       - "5000:5000" # Adjust the port as necessary
     environment:
       DATABASE_URL: ${DATABASE_URL} # Using value from .env
-    depends_on:
-      db:
-        condition: service_healthy
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
 #   db:
 #     image: postgres:latest
 #     restart: always
