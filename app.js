@@ -12,6 +12,7 @@ import {
   notificationRoutes,
   questionRoutes,
   answerRoutes,
+  contestSubmissionRoutes,
 } from "./routes/index.js";
 import swaggerSpecs from "./utils/swaggerconfig.js";
 import swaggerUi from "swagger-ui-express";
@@ -61,6 +62,7 @@ app.use("/users", userAptitudeRoutes);
 app.use("/questions", questionRoutes);
 app.use("/questions", answerRoutes);
 app.use("/notification", notificationRoutes);
+app.use("/api/contest", contestSubmissionRoutes);
 
 // Global error handler
 app.use((err, req, res, next) => {

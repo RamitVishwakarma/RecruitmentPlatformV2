@@ -14,6 +14,8 @@ model RefreshToken {
   createdAt DateTime @default(now())
   expiresAt DateTime
   user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model SocialLink {
@@ -25,6 +27,7 @@ model SocialLink {
   user      User    @relation(fields: [userId], references: [id])
 
   @@unique([userId, name])
+  @@index([userId])
 }
 
 model User {
@@ -51,11 +54,17 @@ model User {
   googleId           String?             @unique
   phone              String?             @unique
   isAdmin            Boolean             @default(false)
+  contestScore       Int                 @default(0)
   RefreshToken       RefreshToken[]
   socialLinks        SocialLink[]
   subscription       Subscription[]
   verificationTokens VerificationToken[]
   answer             Answer[]
+  contestSubmissions ContestSubmission[]
+
+  @@index([email])
+  @@index([domain])
+  @@index([year])
 }
 
 model Otp {
@@ -64,6 +73,8 @@ model Otp {
   createdAt DateTime @default(now())
   expiresAt DateTime
   otp       Int
+
+  @@index([email])
 }
 
 model VerificationToken {
@@ -74,6 +85,9 @@ model VerificationToken {
   expiresAt DateTime
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([token])
 }
 
 model Question {
@@ -83,6 +97,9 @@ model Question {
   year         Int
   quizTitle    String
   answer       Answer[]
+
+  @@index([year])
+  @@index([quizTitle])
 }
 
 model Answer {
@@ -95,57 +112,16 @@ model Answer {
   user       User     @relation(fields: [userId], references: [id])
 
   @@unique([questionId, userId])
+  @@index([questionId])
+  @@index([userId])
 }
+
 model BlackListToken {
   id        String   @id @default(uuid())
   token     String   @unique
   createdAt DateTime @default(now())
-}
 
-model Contest {
-  id          String           @id @default(uuid())
-  title       String
-  description String?
-  startDate   DateTime
-  endDate     DateTime
-  isDeleted   Boolean          @default(false)
-  problems    ContestProblem[]
-}
-
-model CodingQuestion {
-  id              String           @id @default(uuid())
-  title           String
-  description     String?
-  difficulty      String
-  constraints     String?
-  inputFormat     String?
-  outputFormat    String?
-  sampleInput     String?
-  sampleOutput    String?
-  timeLimit       Int?
-  memoryLimit     Int?
-  isDeleted       Boolean          @default(false)
-  contestProblems ContestProblem[]
-}
-
-model ContestProblem {
-  id               String         @id @default(uuid())
-  codingQuestionId String
-  contestId        String
-  year             Int
-  isDeleted        Boolean        @default(false)
-  codingQuestion   CodingQuestion @relation(fields: [codingQuestionId], references: [id])
-  contest          Contest        @relation(fields: [contestId], references: [id])
-  testCases        TestCase[]
-}
-
-model TestCase {
-  id             String         @id @default(uuid())
-  problemId      String
-  input          String
-  expectedOutput String
-  isDeleted      Boolean        @default(false)
-  contestProblem ContestProblem @relation(fields: [problemId], references: [id])
+  @@index([token])
 }
 
 model Notification {
@@ -155,6 +131,9 @@ model Notification {
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
   url       String?
+
+  @@index([createdAt])
+  @@index([isRead])
 }
 
 model Subscription {
@@ -164,4 +143,25 @@ model Subscription {
   auth     String
   p256dh   String
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model ContestSubmission {
+  id               String         @id @default(uuid())
+  userId           String
+  user             User           @relation(fields: [userId], references: [id])
+  contestProblemId String
+  code             String
+  language         String
+  status           String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  isDeleted        Boolean        @default(false)
+
+  @@index([userId])
+  @@index([contestProblemId])
+  @@index([language])
+  @@index([status])
+  @@index([createdAt])
 }

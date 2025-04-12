@@ -9,6 +9,7 @@ import userAptitudeRoutes from "./userAptitudeRoutes.js";
 import notificationRoutes from "./notificationRoutes.js";
 import answerRoutes from "./answerRoutes.js";
 import questionRoutes from "./questionsRoutes.js";
+import contestSubmissionRoutes from "./contestSubmissionRoutes.js";
 
 const router = express.Router();
 
@@ -22,6 +23,7 @@ router.use("/", userAptitudeRoutes);
 router.use("/", notificationRoutes);
 router.use("/", questionRoutes);
 router.use("/", answerRoutes);
+router.use("/contest", contestSubmissionRoutes);
 
 export {
   authRoutes,
@@ -34,4 +36,5 @@ export {
   notificationRoutes,
   questionRoutes,
   answerRoutes,
+  contestSubmissionRoutes,
 };

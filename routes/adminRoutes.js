@@ -7,7 +7,6 @@ import aptitudeRoutes from "./aptitudeRoutes.js";
 import userAptitudeDetailsRoutes from "./userAptitudeDetailsRoutes.js";
 import contestProblemRoutes from "./contestProblemRoutes.js";
 import contestRoutes from "./contestRoutes.js";
-import testcaseRoutes from "./testcaseRoutes.js";
 import codingQuestionsRoutes from "./codingQuestionsRoutes.js";
 import adminAuthRoutes from "./adminAuthRoutes.js";
 import { adminAuthMiddleware } from "../middlewares/adminAuthMiddleware.js";
@@ -29,7 +28,6 @@ router.use("/aptitude", aptitudeRoutes);
 router.use("/users", userAptitudeDetailsRoutes);
 router.use("/contest", contestProblemRoutes);
 router.use("/contest", contestRoutes);
-router.use("/contest", testcaseRoutes);
 router.use("/problems", codingQuestionsRoutes);
 
 export default router;
