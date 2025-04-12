@@ -28,12 +28,12 @@ const submitSolution = asyncHandler(async (req, res) => {
     });
   }
   // Check if user has programmer domain access
-  if (req.user.domain !== "programmer") {
-    return res.status(statusCode.Forbidden403).json({
-      success: false,
-      message: "Only users with programmer domain access can submit solutions",
-    });
-  }
+  // if (req.user.domain !== "programmer") {
+  //   return res.status(statusCode.Forbidden403).json({
+  //     success: false,
+  //     message: "Only users with programmer domain access can submit solutions",
+  //   });
+  // }
 
   // Default to year 1 if not provided
   const userYear = year || 1;

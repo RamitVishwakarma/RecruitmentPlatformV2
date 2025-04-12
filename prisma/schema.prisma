@@ -98,7 +98,6 @@ model Question {
   answer       Answer[]
 
   @@index([year])
-  @@index([quizTitle])
 }
 
 model Answer {
