@@ -6,6 +6,7 @@ import {
   updateUserShortlistStatus,
   updateUserInterviewStatus,
   updateUserProjectStatus,
+  updateUserAptitudeStatus,
 } from "../controllers/userController.js";
 import { paginationMiddleware } from "../middlewares/paginationMiddleware.js";
 
@@ -174,6 +175,63 @@ router.route("/update-interview-status").put(updateUserInterviewStatus);
  *                   example: User not found.
  */
 router.route("/update-project-status").put(updateUserProjectStatus);
+
+/**
+ * @swagger
+ * /admin/users/update-aptitude-status:
+ *   put:
+ *     summary: Update user aptitude status
+ *     tags: [Admin - User]
+ *     description: Update the aptitude status of a user after quiz submission.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: The unique ID of the user.
+ *               quizSubmitted:
+ *                 type: string
+ *                 description: The new aptitude status of the user (expects "true" or "false").
+ *     responses:
+ *       200:
+ *         description: User aptitude status updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User aptitude status updated successfully
+ *                 user:
+ *                   type: object
+ *                   description: The updated user object.
+ *       400:
+ *         description: Invalid input data.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid user ID or quiz status.
+ *       404:
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found!
+ */
+router.route("/update-aptitude-status").put(updateUserAptitudeStatus);
 
 /**
  * @swagger

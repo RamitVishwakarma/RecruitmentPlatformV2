@@ -33,6 +33,11 @@ const createAnswer = asyncHandler(async (req, res) => {
     });
   }
 
+  await prisma.user.update({
+    where: { id: userId },
+    data: { aptitudeStatus: true },
+  });
+
   return res
     .status(statusCode.Created201)
     .json({ message: "All answers submitted successfully" });

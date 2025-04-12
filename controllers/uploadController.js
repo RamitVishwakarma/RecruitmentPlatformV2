@@ -44,7 +44,7 @@ const submitTaskLink = asyncHandler(async (req, res) => {
   }
   const updatedUser = await prisma.user.update({
     where: { id, isDeleted: false },
-    data: { taskLink },
+    data: { taskLink, projectStatus: true },
   });
 
   return res
