@@ -1,5 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
+import prisma from "../utils/prisma.js";
 import { uploadToS3 } from "../utils/upload.js";
 
 const uploadPhoto = asyncHandler(async (req, res) => {
