@@ -167,7 +167,7 @@ const registerUser = asyncHandler(async (req, res) => {
     domain,
     year,
     socialLinks,
-    photoUrl,
+    photo,
     resume,
   } = req.body;
 
@@ -229,7 +229,7 @@ const registerUser = asyncHandler(async (req, res) => {
       password: hashedPassword,
       admissionNumber,
       phone,
-      photo: photoUrl ?? null,
+      photo: photo ?? null,
       resume: resume ?? null,
       domain: domain ?? null,
       year: year ?? null,
