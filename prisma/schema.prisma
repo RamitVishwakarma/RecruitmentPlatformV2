@@ -95,7 +95,6 @@ model Question {
   questionText String
   isDeleted    Boolean  @default(false)
   year         Int
-  quizTitle    String
   answer       Answer[]
 
   @@index([year])

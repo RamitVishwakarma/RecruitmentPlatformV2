@@ -16,9 +16,9 @@ const createQuestion = asyncHandler(async (req, res) => {
   const createdQuestions = [];
 
   for (const q of questions) {
-    if (!q.questionText || !q.year || !q.quizTitle) {
+    if (!q.questionText || !q.year) {
       return res.status(statusCode.BadRequest400).json({
-        error: "Each question must have questionText, year, and quizTitle",
+        error: "Each question must have questionText and year",
       });
     }
 
@@ -26,7 +26,6 @@ const createQuestion = asyncHandler(async (req, res) => {
       data: {
         questionText: q.questionText,
         year: q.year,
-        quizTitle: q.quizTitle,
       },
     });
 
