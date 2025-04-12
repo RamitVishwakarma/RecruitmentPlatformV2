@@ -81,7 +81,6 @@ model Question {
   questionText String
   isDeleted    Boolean  @default(false)
   year         Int
-  quizTitle    String
   answer       Answer[]
 }
 
@@ -96,6 +95,7 @@ model Answer {
 
   @@unique([questionId, userId])
 }
+
 model BlackListToken {
   id        String   @id @default(uuid())
   token     String   @unique

@@ -10,6 +10,7 @@ import contestRoutes from "./contestRoutes.js";
 import testcaseRoutes from "./testcaseRoutes.js";
 import codingQuestionsRoutes from "./codingQuestionsRoutes.js";
 import adminAuthRoutes from "./adminAuthRoutes.js";
+import exportRoutes from "./exportRoutes.js";
 import { adminAuthMiddleware } from "../middlewares/adminAuthMiddleware.js";
 import { createQuestion } from "../controllers/questionsController.js";
 import { sendNotification } from "../controllers/notificationController.js";
@@ -31,5 +32,6 @@ router.use("/contest", contestProblemRoutes);
 router.use("/contest", contestRoutes);
 router.use("/contest", testcaseRoutes);
 router.use("/problems", codingQuestionsRoutes);
+router.use("/excel", exportRoutes);
 
 export default router;
