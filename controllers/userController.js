@@ -10,7 +10,7 @@ const getUserById = asyncHandler(async (req, res) => {
 
   const user = await prisma.user.findUnique({
     where: { id, isDeleted: false },
-    include: { socialLinks: true },
+    include: { socialLinks: true, answer: { include: { question: true } } },
   });
 
   if (!user) {
