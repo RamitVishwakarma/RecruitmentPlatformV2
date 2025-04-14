@@ -9,7 +9,6 @@ import {
 import { validatePassword } from "../utils/validators.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
-import { RequestManagedCertInstance } from "twilio/lib/rest/messaging/v1/requestManagedCert.js";
 
 const cookieOptions = {
   httpOnly: true,
