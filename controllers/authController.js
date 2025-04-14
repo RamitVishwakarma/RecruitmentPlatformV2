@@ -9,10 +9,14 @@ import {
 import { validatePassword } from "../utils/validators.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { statusCode } from "../utils/statusCodes.js";
+import { RequestManagedCertInstance } from "twilio/lib/rest/messaging/v1/requestManagedCert.js";
 
 const cookieOptions = {
   httpOnly: true,
-  secure: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+  maxAge: 1000 * 60 * 60 * 24 * 3, // 3 days in ms
+  path: "/",
 };
 
 const loginUser = asyncHandler(async (req, res, next) => {
@@ -81,14 +85,16 @@ const loginUser = asyncHandler(async (req, res, next) => {
 const logoutUser = asyncHandler(async (req, res, next) => {
   const token = req.cookies?.accessToken;
   if (!token) {
-    res
+    return res
       .status(statusCode.Unauthorized401)
       .json({ message: "Token is missing" });
   }
 
   const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
   if (!decodedToken)
-    res.status(statusCode.BadRequest400).json({ message: "Invalid token" });
+    return res
+      .status(statusCode.BadRequest400)
+      .json({ message: "Invalid token" });
 
   await prisma.blackListToken.create({
     data: {
@@ -96,8 +102,8 @@ const logoutUser = asyncHandler(async (req, res, next) => {
     },
   });
 
-  res.clearCookie("accessToken", cookieOptions);
-  res.clearCookie("refreshToken", cookieOptions);
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
 
   return res
     .status(statusCode.Ok200)
@@ -107,7 +113,7 @@ const logoutUser = asyncHandler(async (req, res, next) => {
 const refreshAccessToken = asyncHandler(async (req, res, next) => {
   const { refresh_Token } = req.body;
   if (!refresh_Token) {
-    res
+    return res
       .status(statusCode.Unauthorized401)
       .json({ message: "Refresh token required" });
   }
