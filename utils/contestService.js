@@ -437,6 +437,7 @@ const pollSingleSubmissionResult = async (token) => {
       );
 
       const result = response.data;
+      console.log(result);
 
       // If submission is finished (not in queue or processing)
       if (result.status.id !== 1 && result.status.id !== 2) {
