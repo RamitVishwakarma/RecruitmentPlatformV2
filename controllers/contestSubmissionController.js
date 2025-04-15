@@ -28,6 +28,7 @@ const submitSolution = asyncHandler(async (req, res) => {
     });
   }
   // Check if user has programmer domain access
+  // console.log(req.user);
   // if (req.user.domain !== "programmer") {
   //   return res.status(statusCode.Forbidden403).json({
   //     success: false,
@@ -51,7 +52,9 @@ const submitSolution = asyncHandler(async (req, res) => {
       success: true,
       message: result.allTestsPassed
         ? "Submission accepted"
-        : "Submission rejected",
+        : result.passedTestCount > 0
+          ? `Partially correct (${result.passedTestCount}/${result.totalTests} test cases passed)`
+          : "Submission rejected",
       data: result,
     });
   } catch (error) {
@@ -77,6 +80,7 @@ const runCode = asyncHandler(async (req, res) => {
         "Please provide all required fields: questionId, code, and languageId",
     });
   }
+  // console.log(req.user);
 
   // if (req.user.domain !== "programmer") {
   //   return res.status(statusCode.Forbidden403).json({

@@ -146,20 +146,19 @@ model Subscription {
 }
 
 model ContestSubmission {
-  id               String         @id @default(uuid())
-  userId           String
-  user             User           @relation(fields: [userId], references: [id])
-  contestProblemId String
-  code             String
-  language         String
-  status           String
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  isDeleted        Boolean        @default(false)
+  id                String   @id @default(uuid())
+  userId            String
+  contestProblemId  String
+  code              String
+  language          String
+  status            String   // PENDING, ACCEPTED, REJECTED, ERROR, PARTIAL
+  score             Int      @default(0)
+  timeElapsed       Int      @default(0) // Time elapsed since contest start in minutes
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  isDeleted         Boolean  @default(false)
+  user              User     @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([contestProblemId])
-  @@index([language])
-  @@index([status])
-  @@index([createdAt])
 }

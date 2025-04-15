@@ -98,6 +98,18 @@ router.use(authMiddleware);
  *                     allTestsPassed:
  *                       type: boolean
  *                       example: true
+ *                     score:
+ *                       type: integer
+ *                       description: Percentage of test cases passed (0-100)
+ *                       example: 100
+ *                     passedTestCount:
+ *                       type: integer
+ *                       description: Number of test cases passed
+ *                       example: 5
+ *                     totalTests:
+ *                       type: integer
+ *                       description: Total number of test cases
+ *                       example: 5
  *       400:
  *         description: Bad request
  *       401:
@@ -297,8 +309,12 @@ router.get("/submissions/:problemId", getProblemSubmissionsList);
  *           example: "93"
  *         status:
  *           type: string
- *           enum: [PENDING, ACCEPTED, REJECTED, ERROR]
+ *           enum: [PENDING, ACCEPTED, REJECTED, ERROR, PARTIAL]
  *           example: ACCEPTED
+ *         score:
+ *           type: integer
+ *           description: Percentage of test cases passed (0-100)
+ *           example: 100
  *         createdAt:
  *           type: string
  *           format: date-time
