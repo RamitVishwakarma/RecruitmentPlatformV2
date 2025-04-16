@@ -1062,7 +1062,7 @@ export const generateEmailTemplate = (type, token) => {
               <p class="greeting">Hi ${token},</p>
               <p class="message">🎉 Congratulations! You've have been shortlisted for the interview round.</p>
               <p class="greeting">
-                🕒 Interview Date & Time: 17th April,after 1 PM onwards<br>
+                🕒 Interview Date & Time: 17th April,1 PM onwards<br>
                 📍 Location: AB3
               </p>
               <p class="message">Please make sure to arrive 10–15 minutes early and carry your laptop with project that you have submitted.</p>
