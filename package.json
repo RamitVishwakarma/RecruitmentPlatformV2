@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "migrate": "prisma migrate dev",
-    "prepare": "husky install",
+    "prepare": "husky install || echo 'Husky install failed, continuing...'",
     "studio": "prisma studio",
     "start": "node server.js"
   },
