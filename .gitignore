@@ -2,3 +2,5 @@
 /node_modules
 .env.production
 .env.development
+backup2.sql
+data_only.sql

@@ -19,6 +19,8 @@ import swaggerUi from "swagger-ui-express";
 import session from "express-session";
 import passport from "passport";
 import requestLogger from "./middlewares/requestLogger.js";
+import wakeDbRoutes from "./routes/wakeDbRoutes.js";
+
 
 const app = express();
 app.use(
@@ -46,6 +48,8 @@ app.get("/", (req, res) => {
   );
 });
 
+
+
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(express.static("public"));
@@ -53,6 +57,7 @@ app.use(cookieParser());
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 app.use("/users", authRoutes);
+app.use("/", wakeDbRoutes);
 app.use("/auth", oauthRoutes);
 app.use("/social", socialRoutes);
 app.use("/users", userDetailsUpdateRoutes);
